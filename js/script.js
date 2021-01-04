@@ -101,7 +101,7 @@ function displayCards(result) {
 }
 
 function showAllEmployeesGrid() {
-    
+
     $.ajax({
         url: "libs/php/getAll.php",
         type: 'POST',
@@ -123,6 +123,30 @@ function showAllEmployeesGrid() {
     }); 
 }
 
+function showAllEmployeesByFirstName() {
+
+    $.ajax({
+        url: "libs/php/sortAllEmployeesByFirstName.php",
+        type: 'POST',
+        dataType: 'json',
+        success: function(result) {
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    displayCards(result);
+
+                }
+                
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
 // **************************************************************************************** //
 
 // ********************** Click event to display grid view of employees ******************* //
@@ -133,6 +157,16 @@ $(document).on("click", "#grid-view", function(e) {
     $("#all-employees tbody").remove();
 
     showAllEmployeesGrid();
+
+});
+
+$(document).on("click", "#sort-fname", function(e) { 
+ 
+    $("#all-employees thead").remove();
+    $("#all-employees tbody").remove();
+    $(".employee-card").remove();
+
+    showAllEmployeesByFirstName();
 
 });
 
