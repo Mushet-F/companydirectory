@@ -37,16 +37,6 @@ function showAllEmployeesTable() {
                     const department = result.data[i]['department'];
                     const location = result.data[i]['location'];
 
-
-                    // let html = `<div class='col-md-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
-                    // <h3 class='name'>${name}</h3>                            
-                    // <p class="title">${job}</p>
-                    // <p class="description">${email}</p>
-                    // <p class="description">${department}</p>
-                    // <p class="description">${location}</p></div></div>`;
-
-                    // $("#employees").append(html);
-
                     let tbody = `<tr>
                     <td value="cell-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
                     <td value="cell-name">${name} <i class="fas fa-expand-alt"></i></td>
@@ -87,7 +77,31 @@ $(document).on("click", "#table-view", function(e) {
 
 // ********************** Displaying main employees grid ********************************** //
 
+function displayCards(result) {
+
+    const id = result.data[i]['id'];
+    const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
+    // NO JOB TITLE IN TABLE
+    // const job = result.data[i]['jobTitle']; 
+    const job = "JobTitle";
+    const email = result.data[i]['email'];
+    const department = result.data[i]['department'];
+    const location = result.data[i]['location'];
+
+
+    let html = `<div class='col-md-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
+    <h3 class='name'>${name}</h3>                            
+    <p class="title">${job}</p>
+    <p class="description">${email}</p>
+    <p class="description">${department}</p>
+    <p class="description">${location}</p></div></div>`;
+
+    $("div .people").append(html);
+
+}
+
 function showAllEmployeesGrid() {
+    
     $.ajax({
         url: "libs/php/getAll.php",
         type: 'POST',
@@ -97,25 +111,8 @@ function showAllEmployeesGrid() {
 
                 for (i = 0; i < result.data.length ; i++) {
 
-                    const id = result.data[i]['id'];
-                    const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
-                    // NO JOB TITLE IN TABLE
-                    // const job = result.data[i]['jobTitle']; 
-                    const job = "JobTitle";
-                    const email = result.data[i]['email'];
-                    const department = result.data[i]['department'];
-                    const location = result.data[i]['location'];
+                    displayCards(result);
 
-
-                    let html = `<div class='col-md-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
-                    <h3 class='name'>${name}</h3>                            
-                    <p class="title">${job}</p>
-                    <p class="description">${email}</p>
-                    <p class="description">${department}</p>
-                    <p class="description">${location}</p></div></div>`;
-
-                    $("div .people").append(html);
-                    
                 }
                 
             }
@@ -286,8 +283,12 @@ function sortTableNum() {
         one from current row and one from the next:*/
         x = rows[i].getElementsByTagName("TD")[0];
         y = rows[i + 1].getElementsByTagName("TD")[0];
+
+        xNum = Number(x.innerHTML.replace('<i class="fas fa-grip-lines-vertical"></i>', ''));
+        yNum = Number(y.innerHTML.replace('<i class="fas fa-grip-lines-vertical"></i>', ''));
+
         //check if the two rows should switch place:
-        if (Number(x.innerHTML) > Number(y.innerHTML)) {
+        if (xNum > yNum) {
           //if so, mark as a switch and break the loop:
           shouldSwitch = true;
           break;
@@ -303,3 +304,35 @@ function sortTableNum() {
 }
 
 // **************************************************************************************** //
+
+// ********************** Side bar and its actions  *************************************** //
+
+$(document).on("click", "#table-view", function(e) { 
+ 
+    $(".employee-card").remove();
+    $("#all-employees thead").remove();
+    $("#all-employees tbody").remove();
+
+    showAllEmployeesTable();
+
+});
+
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+    var openDropdown = dropdowns[i];
+    if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+    }
+    }
+}
+}
