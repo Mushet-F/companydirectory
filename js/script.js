@@ -1,43 +1,19 @@
-// ********************** Displaying main employees table ********************************* //
-
-function showAllEmployeesTable() {
-    $.ajax({
-        url: "libs/php/getAll.php",
-        type: 'POST',
-        dataType: 'json',
-        success: function(result) {
-            if (result.status.name == "ok") { 
-
-                createTable(result);
-                
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
-}
-
-showAllEmployeesTable();
-
-// **************************************************************************************** //
-
 // ********************** Creating main employees table *********************************** //
 
 function createTable(result) {
     
-    let table = `                
+    let table = `  
         <thead>
             <tr>
-                <th onclick="sortTableNum()">ID</th>
-                <th onclick="sortTableWord(1)">Name</th>
-                <th onclick="sortTableWord(2)">Job Title</th>
-                <th onclick="sortTableWord(3)">Email</th>
-                <th onclick="sortTableWord(4)">Department</th>
-                <th onclick="sortTableWord(5)">Location</th>
+                <th value="th-id">ID</th>
+                <th value="th-name">Name</th>
+                <th value="th-job">Job Title</th>
+                <th value="th-email">Email</th>
+                <th value="th-department">Department</th>
+                <th value="th-location">Location</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody-employees">
 
         </tbody>`;
 
@@ -55,37 +31,26 @@ function createTable(result) {
         const location = result.data[i]['location'];
 
         let tbody = `<tr>
-        <td value="cell-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td value="cell-name">${name} <i class="fas fa-expand-alt"></i></td>
-        <td value="cell-job"><span class="red-highlight">${job}</span></td>
-        <td value="cell-email">${email}</td>
-        <td value="cell-department">${department} <i class="fas fa-expand-alt"></i></td>
-        <td value="cell-location">${location} <i class="fas fa-expand-alt"></i></td>
+        <td value="td-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
+        <td value="td-name">${name} <i class="fas fa-expand-alt"></i></td>
+        <td value="td-job"><span class="red-highlight">${job}</span></td>
+        <td value="td-email">${email}</td>
+        <td value="td-department">${department} <i class="fas fa-expand-alt"></i></td>
+        <td value="td-location">${location} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
         $("#all-employees").append(tbody);
         
     }
+
+    currentView = 'table';
 }
-
-// **************************************************************************************** //
-
-// ********************** Click event to display table view of employees ****************** //
-
-$(document).on("click", "#table-view", function(e) { 
- 
-    $(".employee-card").remove();
-
-    showAllEmployeesTable();
-
-});
-
 
 // **************************************************************************************** //
 
 // ********************** Displaying main employees grid ********************************** //
 
-function displayCards(result) {
+function createCards(result) {
 
     for (i = 0; i < result.data.length ; i++) {
 
@@ -110,18 +75,33 @@ function displayCards(result) {
 
     }
 
+    currentView = 'cards';
+
 }
 
-function showAllEmployeesGrid() {
+// **************************************************************************************** //
+
+// ********************** Display all  **************************************************** //
+
+// Sort employees by last name
+function displayAllEmployeesByLastName() {
 
     $.ajax({
-        url: "libs/php/getAll.php",
+        url: "libs/php/sortAllEmployeesByLastName.php",
         type: 'POST',
         dataType: 'json',
         success: function(result) {
             if (result.status.name == "ok") { 
 
-                displayCards(result);
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'cards') {
+                        createCards(result);
+                    }
+
+                }
                 
             }
         },
@@ -129,9 +109,16 @@ function showAllEmployeesGrid() {
             reject(errorThrown);
         }
     }); 
+
 }
 
-function showAllEmployeesByFirstName() {
+// Set loading view to table and by employees last names
+let currentView = 'table';
+
+displayAllEmployeesByLastName();
+
+// Sort employees by last name
+function displayAllEmployeesByFirstName() {
 
     $.ajax({
         url: "libs/php/sortAllEmployeesByFirstName.php",
@@ -142,7 +129,11 @@ function showAllEmployeesByFirstName() {
 
                 for (i = 0; i < result.data.length ; i++) {
 
-                    displayCards(result);
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'cards') {
+                        createCards(result);
+                    }
 
                 }
                 
@@ -157,33 +148,10 @@ function showAllEmployeesByFirstName() {
 
 // **************************************************************************************** //
 
-// ********************** Click event to display grid view of employees ******************* //
-
-$(document).on("click", "#grid-view", function(e) { 
- 
-    $("#all-employees thead").remove();
-    $("#all-employees tbody").remove();
-
-    showAllEmployeesGrid();
-
-});
-
-$(document).on("click", "#sort-fname", function(e) { 
- 
-    $("#all-employees thead").remove();
-    $("#all-employees tbody").remove();
-    $(".employee-card").remove();
-
-    showAllEmployeesByFirstName();
-
-});
-
-
-// **************************************************************************************** //
-
 // ********************** Displaying employees details ************************************ //
 
-function showEmployeeDetails(id) {
+// Employee details
+function displayEmployeeDetails(id) {
     $.ajax({
         url: "libs/php/getPersonnel.php",
         type: 'POST',
@@ -201,30 +169,77 @@ function showEmployeeDetails(id) {
     
 }
 
-// Show employees details clicked event
-$(document).on("click", ".employee-card", function(e) {
+// **************************************************************************************** //
+
+// ********************** Click events for side bar **************************************** //
+
+// Table view option is selected
+$(document).on("click", "#table-view", function(e) { 
  
-    let id = $(this).attr('value');
-    showEmployeeDetails(id);
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
+
+    currentView = 'table';
+
+    displayAllEmployeesByLastName();
+
+});
+
+// Grid view option is selected
+$(document).on("click", "#grid-view", function(e) { 
+ 
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
+
+    currentView = 'grid';
+
+    displayAllEmployeesByLastName();
+
+});
+
+// Sort all employees by first name
+$(document).on("click", "#sort-fname", function(e) { 
+ 
+    $("#all-employees thead").remove();
+    $("#all-employees tbody").remove();
+    $(".employee-card").remove();
+
+    displayAllEmployeesByFirstName();
+
+});
+
+// Sort all employees by last name
+$(document).on("click", "#sort-lname", function(e) { 
+ 
+    $("#all-employees thead").remove();
+    $("#all-employees tbody").remove();
+    $(".employee-card").remove();
+
+    displayAllEmployeesByLastName();
 
 });
 
 // **************************************************************************************** //
 
-// ********************** Main table and its actions  ************************************* //
+// ********************** Click events on table and cards ********************************* //
 
-$('tbody').on('click', 'tr:has(td)', function() {
-    console.log("clieckedqq");
-    if($(this).data('clicked')) {
-      return;
-    }
+// Click cards and display employee details
+$(document).on("click", ".employee-card", function(e) {
  
-    //some code;
- 
-    $(this).data('clicked', true);
- });
+    let id = $(this).attr('value');
+    displayEmployeeDetails(id);
 
-// Click table cell
+});
+
+// Click table data cell
 $("#all-employees").on("click", "td", function() {
 
     let value = $(this).attr('value');
@@ -232,15 +247,15 @@ $("#all-employees").on("click", "td", function() {
     console.log(value);
 
     switch (value) {
-        case 'cell-name':
+        case 'td-name':
             $(this).attr('data-toggle', 'modal');
             $(this).attr('data-target', '#employeeModal');
             break;
-        case 'cell-department':
+        case 'td-department':
             $(this).attr('data-toggle', 'modal');
             $(this).attr('data-target', '#departmentModal');
             break;
-        case 'cell-location':
+        case 'td-location':
             $(this).attr('data-toggle', 'modal');
             $(this).attr('data-target', '#locationModal');
             break;
@@ -250,114 +265,7 @@ $("#all-employees").on("click", "td", function() {
 
 });
 
-
-function sortTableWord(n) {
-    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-    table = document.getElementById("all-employees");
-    switching = true;
-    //Set the sorting direction to ascending:
-    dir = "asc"; 
-    /*Make a loop that will continue until
-    no switching has been done:*/
-    while (switching) {
-      //start by saying: no switching is done:
-      switching = false;
-      rows = table.rows;
-      /*Loop through all table rows (except the
-      first, which contains table headers):*/
-      for (i = 1; i < (rows.length - 1); i++) {
-        //start by saying there should be no switching:
-        shouldSwitch = false;
-        /*Get the two elements you want to compare,
-        one from current row and one from the next:*/
-        x = rows[i].getElementsByTagName("TD")[n];
-        y = rows[i + 1].getElementsByTagName("TD")[n];
-        /*check if the two rows should switch place,
-        based on the direction, asc or desc:*/
-        if (dir == "asc") {
-          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-            //if so, mark as a switch and break the loop:
-            shouldSwitch= true;
-            break;
-          }
-        } else if (dir == "desc") {
-          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-            //if so, mark as a switch and break the loop:
-            shouldSwitch = true;
-            break;
-          }
-        }
-      }
-      if (shouldSwitch) {
-        /*If a switch has been marked, make the switch
-        and mark that a switch has been done:*/
-        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-        switching = true;
-        //Each time a switch is done, increase this count by 1:
-        switchcount ++;      
-      } else {
-        /*If no switching has been done AND the direction is "asc",
-        set the direction to "desc" and run the while loop again.*/
-        if (switchcount == 0 && dir == "asc") {
-          dir = "desc";
-          switching = true;
-        }
-      }
-    }
-}
-
-function sortTableNum() {
-    var table, rows, switching, i, x, y, shouldSwitch;
-    table = document.getElementById("all-employees");
-    switching = true;
-    /*Make a loop that will continue until
-    no switching has been done:*/
-    while (switching) {
-      //start by saying: no switching is done:
-      switching = false;
-      rows = table.rows;
-      /*Loop through all table rows (except the
-      first, which contains table headers):*/
-      for (i = 1; i < (rows.length - 1); i++) {
-        //start by saying there should be no switching:
-        shouldSwitch = false;
-        /*Get the two elements you want to compare,
-        one from current row and one from the next:*/
-        x = rows[i].getElementsByTagName("TD")[0];
-        y = rows[i + 1].getElementsByTagName("TD")[0];
-
-        xNum = Number(x.innerHTML.replace('<i class="fas fa-grip-lines-vertical"></i>', ''));
-        yNum = Number(y.innerHTML.replace('<i class="fas fa-grip-lines-vertical"></i>', ''));
-
-        //check if the two rows should switch place:
-        if (xNum > yNum) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch = true;
-          break;
-        }
-      }
-      if (shouldSwitch) {
-        /*If a switch has been marked, make the switch
-        and mark that a switch has been done:*/
-        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-        switching = true;
-      }
-    }
-}
-
 // **************************************************************************************** //
-
-// ********************** Side bar and its actions  *************************************** //
-
-$(document).on("click", "#table-view", function(e) { 
- 
-    $(".employee-card").remove();
-    $("#all-employees thead").remove();
-    $("#all-employees tbody").remove();
-
-    showAllEmployeesTable();
-
-});
 
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
