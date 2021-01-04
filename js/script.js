@@ -8,47 +8,7 @@ function showAllEmployeesTable() {
         success: function(result) {
             if (result.status.name == "ok") { 
 
-                let table = `                
-                <!-- Table - All Employees -->
-                    <thead>
-                        <tr>
-                            <th onclick="sortTableNum()">ID</th>
-                            <th onclick="sortTableWord(1)">Name</th>
-                            <th onclick="sortTableWord(2)">Job Title</th>
-                            <th onclick="sortTableWord(3)">Email</th>
-                            <th onclick="sortTableWord(4)">Department</th>
-                            <th onclick="sortTableWord(5)">Location</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>`;
-
-                $("#all-employees").append(table);
-
-                for (i = 0; i < result.data.length ; i++) {
-
-                    const id = result.data[i]['id'];
-                    const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
-                    // NO JOB TITLE IN TABLE
-                    // const job = result.data[i]['jobTitle']; 
-                    const job = "JobTitle";
-                    const email = result.data[i]['email'];
-                    const department = result.data[i]['department'];
-                    const location = result.data[i]['location'];
-
-                    let tbody = `<tr>
-                    <td value="cell-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-                    <td value="cell-name">${name} <i class="fas fa-expand-alt"></i></td>
-                    <td value="cell-job"><span class="red-highlight">${job}</span></td>
-                    <td value="cell-email">${email}</td>
-                    <td value="cell-department">${department} <i class="fas fa-expand-alt"></i></td>
-                    <td value="cell-location">${location} <i class="fas fa-expand-alt"></i></td>
-                    </tr>`;
-
-                    $("#all-employees").append(tbody);
-                    
-                }
+                createTable(result);
                 
             }
         },
@@ -59,6 +19,54 @@ function showAllEmployeesTable() {
 }
 
 showAllEmployeesTable();
+
+// **************************************************************************************** //
+
+// ********************** Creating main employees table *********************************** //
+
+function createTable(result) {
+    
+    let table = `                
+        <thead>
+            <tr>
+                <th onclick="sortTableNum()">ID</th>
+                <th onclick="sortTableWord(1)">Name</th>
+                <th onclick="sortTableWord(2)">Job Title</th>
+                <th onclick="sortTableWord(3)">Email</th>
+                <th onclick="sortTableWord(4)">Department</th>
+                <th onclick="sortTableWord(5)">Location</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>`;
+
+    $("#all-employees").append(table);
+
+    for (i = 0; i < result.data.length ; i++) {
+
+        const id = result.data[i]['id'];
+        const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
+        // NO JOB TITLE IN TABLE
+        // const job = result.data[i]['jobTitle']; 
+        const job = "JobTitle";
+        const email = result.data[i]['email'];
+        const department = result.data[i]['department'];
+        const location = result.data[i]['location'];
+
+        let tbody = `<tr>
+        <td value="cell-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
+        <td value="cell-name">${name} <i class="fas fa-expand-alt"></i></td>
+        <td value="cell-job"><span class="red-highlight">${job}</span></td>
+        <td value="cell-email">${email}</td>
+        <td value="cell-department">${department} <i class="fas fa-expand-alt"></i></td>
+        <td value="cell-location">${location} <i class="fas fa-expand-alt"></i></td>
+        </tr>`;
+
+        $("#all-employees").append(tbody);
+        
+    }
+}
 
 // **************************************************************************************** //
 
@@ -79,24 +87,28 @@ $(document).on("click", "#table-view", function(e) {
 
 function displayCards(result) {
 
-    const id = result.data[i]['id'];
-    const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
-    // NO JOB TITLE IN TABLE
-    // const job = result.data[i]['jobTitle']; 
-    const job = "JobTitle";
-    const email = result.data[i]['email'];
-    const department = result.data[i]['department'];
-    const location = result.data[i]['location'];
+    for (i = 0; i < result.data.length ; i++) {
+
+        const id = result.data[i]['id'];
+        const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
+        // NO JOB TITLE IN TABLE
+        // const job = result.data[i]['jobTitle']; 
+        const job = "JobTitle";
+        const email = result.data[i]['email'];
+        const department = result.data[i]['department'];
+        const location = result.data[i]['location'];
 
 
-    let html = `<div class='col-md-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
-    <h3 class='name'>${name}</h3>                            
-    <p class="title">${job}</p>
-    <p class="description">${email}</p>
-    <p class="description">${department}</p>
-    <p class="description">${location}</p></div></div>`;
+        let html = `<div class='col-md-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
+        <h3 class='name'>${name}</h3>                            
+        <p class="title">${job}</p>
+        <p class="description">${email}</p>
+        <p class="description">${department}</p>
+        <p class="description">${location}</p></div></div>`;
 
-    $("div .people").append(html);
+        $("div .people").append(html);
+
+    }
 
 }
 
@@ -109,11 +121,7 @@ function showAllEmployeesGrid() {
         success: function(result) {
             if (result.status.name == "ok") { 
 
-                for (i = 0; i < result.data.length ; i++) {
-
-                    displayCards(result);
-
-                }
+                displayCards(result);
                 
             }
         },
