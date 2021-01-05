@@ -42,8 +42,43 @@
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="sidebar-sticky pt-3">
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Actions</span>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="sidebar-item">
+                        Search
+                    </li>
+                    <li onclick="sortDropdown()" class="sidebar-item dropbtn">
+                        Sort
+                        <div id="sortDropdown" class="dropdown-content">
+                            <a href="#" id="sort-fname">First Name</a>
+                            <a href="#" id="sort-lname">Last Name</a>
+                            <a href="#" id="sort-id">Employee ID</a>
+                            <a href="#" id="sort-job">Job Title</a>
+                            <a href="#" id="sort-department">Department</a>
+                            <a href="#" id="sort-location">Location</a>
+                        </div>
+                    </li>
+                    <li onclick="filterDropdown()" class="sidebar-item dropbtn">
+                        Filter
+                        <div id="filterDropdown" class="dropdown-content">
+                            <a href="#" onclick="filterJobDropdown()" class="dropbtn" id="filter-job">Job Title</a>
+                            <div id="filterJobDropdown" class="dropdown-content">
+                                <a href="#" id="sort-fname" class="dropbtn">First Name</a>
+                                <a href="#" id="sort-lname" class="dropbtn">Last Name</a>
+                                <a href="#" id="sort-id" class="dropbtn">Employee ID</a>
+                            </div>
+                            <a href="#" id="filter-department">Department</a>
+                            <a href="#" id="filter-location">Location</a>
+                        </div>
+                    </li>
+                    <li class="sidebar-item">
+                        Add New Employee
+                    </li>
+                </ul>
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                     <span>View</span>
-                    </h6>
+                </h6>
                 <ul class="nav flex-column">
                     <li class="sidebar-item" id="table-view">
                         Employees Table
@@ -56,38 +91,6 @@
                     </li>
                     <li class="sidebar-item">
                         Group by Location
-                    </li>
-                </ul>
-
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                <span>Actions</span>
-                </h6>
-                <ul class="nav flex-column mb-2">
-                    <li class="sidebar-item">
-                        Search
-                    </li>
-                    <!-- <li class="sidebar-item">
-                        <div class=".sidebar-item dropdown">
-                            <button onclick="myFunction()" class="dropbtn">Sort</button>
-                            <div id="myDropdown" class="dropdown-content">
-                            <a href="#" id="sort-fname">First Name</a>
-                            <a href="#" id="sort-lname">Last Name</a>
-                            </div>
-                        </div>
-                    </li> -->
-                    <li onclick="myFunction()" class="sidebar-item dropbtn">
-                            Sort
-                            <div id="myDropdown" class="dropdown-content">
-                            <a href="#" id="sort-fname">First Name</a>
-                            <a href="#" id="sort-lname">Last Name</a>
-                            <a href="#" id="sort-id">Employee ID</a>
-                            <a href="#" id="sort-job">Job Title</a>
-                            <a href="#" id="sort-department">Department</a>
-                            <a href="#" id="sort-location">Location</a>
-                            </div>
-                    </li>
-                    <li class="sidebar-item">
-                        Add New Employee
                     </li>
                 </ul>
             </div>
@@ -105,7 +108,6 @@
                         </div>
                     </div> 
                 </div> 
-
 
                 <!-- Modal - Employee Details-->
                 <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">

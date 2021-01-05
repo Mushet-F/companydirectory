@@ -441,12 +441,23 @@ $("#all-employees").on("click", "td", function() {
 
 // **************************************************************************************** //
 
-/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-    console.log('myFunction');
-    document.getElementById("myDropdown").classList.toggle("show");
+// ********************** Dropdown menu for sort and filter ******************************* //
+
+function sortDropdown() {
+    document.getElementById("sortDropdown").classList.toggle("show");
+    document.getElementById("filterDropdown").classList.remove("show");
 }
+
+function filterDropdown() {
+    document.getElementById("filterDropdown").classList.toggle("show");
+    document.getElementById("sortDropdown").classList.remove("show");
+}
+
+function filterJobDropdown() {
+    document.getElementById("filterDropdown").classList.toggle("show");
+    document.getElementById("filterJobDropdown").classList.toggle("show");
+}
+
 
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
