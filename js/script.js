@@ -417,8 +417,6 @@ $(document).on("click", ".employee-card", function(e) {
 $("#all-employees").on("click", "td", function() {
 
     let value = $(this).attr('value');
-    console.log('clicked!!');
-    console.log(value);
 
     switch (value) {
         case 'td-name':
@@ -458,17 +456,106 @@ function filterJobDropdown() {
     document.getElementById("filterJobDropdown").classList.toggle("show");
 }
 
+function filterDepartmentDropdown() {
+    document.getElementById("filterDropdown").classList.toggle("show");
+    document.getElementById("filterDepartmentDropdown").classList.toggle("show");
+}
 
-// Close the dropdown if the user clicks outside of it
+function filterLocationDropdown() {
+    document.getElementById("filterDropdown").classList.toggle("show");
+    document.getElementById("filterLocationDropdown").classList.toggle("show");
+}
+ 
+$(document).on("click", ".sidebar-main-item", function(e) { 
+
+    console.log('HELLO MAIN');
+
+    if(!filterSelected) {
+
+        var actives = document.getElementsByClassName("active-dropdown");
+        var i;
+        let selected = $(this);
+        
+        console.log('this main', $(this));
+        
+        if(actives.length > 0) {
+            for (i = 0; i < actives.length; i++) {
+                if(actives[i] !== selected[0]) {
+                    actives[i].classList.remove('active-dropdown');
+                    selected.addClass('active-dropdown');
+                } else {
+                    actives[i].classList.remove('active-dropdown');
+                }
+            }
+        } else {
+            selected.addClass('active-dropdown');
+        }
+    } 
+
+    filterSelected = false;
+
+});
+
+let filterSelected;
+
+$(document).on("click", ".sidebar-filter-item", function(e) { 
+
+    console.log('HELLO FILTER');
+
+    filterSelected = true;
+
+    var actives = document.getElementsByClassName("active-dropdown-filter");
+    var i;
+    let selected = $(this);
+
+    console.log('a, ', actives);
+    console.log('s ', selected);
+    
+    if(actives.length > 0) {
+        for (i = 0; i < actives.length; i++) {
+            console.log('filtered actives[i] ', actives[i]);
+            console.log('filtered selected ', selected[0]);
+
+            if(actives[i] !== selected[0]) {
+                console.log('a[i] !== s[0]');
+                actives[i].classList.remove('active-dropdown-filter');
+                selected.addClass('active-dropdown-filter');
+            } else {
+                console.log('selected');
+                actives[i].classList.remove('active-dropdown-filter');
+            }
+        }
+    } else {
+        selected.addClass('active-dropdown-filter');
+    }
+
+    let currentDropdown = document.getElementsByClassName("show");
+
+    if(currentDropdown.length > 2) {
+        currentDropdown[2].classList.remove("show");
+    }
+
+});
+
+// Close the dropdown OR removes active highlight if the user clicks outside of it
 window.onclick = function(event) {
 if (!event.target.matches('.dropbtn')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {
-    var openDropdown = dropdowns[i];
-    if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+        }
     }
+
+    if (!event.target.matches('.sidebar-item')) {
+        var actives = document.getElementsByClassName("active-dropdown");
+        var i;
+        for (i = 0; i < actives.length; i++) {
+            actives[i].classList.remove('active-dropdown');
+        }
     }
+
 }
 }

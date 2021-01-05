@@ -45,10 +45,10 @@
                     <span>Actions</span>
                 </h6>
                 <ul class="nav flex-column mb-2">
-                    <li class="sidebar-item">
+                    <li class="sidebar-item sidebar-main-item">
                         Search
                     </li>
-                    <li onclick="sortDropdown()" class="sidebar-item dropbtn">
+                    <li onclick="sortDropdown()" class="sidebar-item sidebar-main-item dropbtn">
                         Sort
                         <div id="sortDropdown" class="dropdown-content">
                             <a href="#" id="sort-fname">First Name</a>
@@ -59,20 +59,41 @@
                             <a href="#" id="sort-location">Location</a>
                         </div>
                     </li>
-                    <li onclick="filterDropdown()" class="sidebar-item dropbtn">
+                    <li onclick="filterDropdown()" id="sidebar-item-filter" class="sidebar-item sidebar-main-item dropbtn">
                         Filter
                         <div id="filterDropdown" class="dropdown-content">
-                            <a href="#" onclick="filterJobDropdown()" class="dropbtn" id="filter-job">Job Title</a>
-                            <div id="filterJobDropdown" class="dropdown-content">
-                                <a href="#" id="sort-fname" class="dropbtn">First Name</a>
-                                <a href="#" id="sort-lname" class="dropbtn">Last Name</a>
-                                <a href="#" id="sort-id" class="dropbtn">Employee ID</a>
+                            <a href="#" onclick="filterJobDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-job">Job Title</a>
+                            <div id="filterJobDropdown" class="dropdown-content dropdown-content-filter">
+                                <a href="#" class="dropbtn">Job One</a>
+                                <a href="#" class="dropbtn">Job Two</a>
+                                <a href="#" class="dropbtn">Job Two</a>
                             </div>
-                            <a href="#" id="filter-department">Department</a>
-                            <a href="#" id="filter-location">Location</a>
+                            <a href="#" onclick="filterDepartmentDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-department">Department</a>
+                            <div id="filterDepartmentDropdown" class="dropdown-content dropdown-content-filter">
+                                <a href="#" class="dropbtn">Department One</a>
+                                <a href="#" class="dropbtn">Department Two</a>
+                                <a href="#" class="dropbtn">Department Two</a>
+                                <a href="#" class="dropbtn">Department One</a>
+                                <a href="#" class="dropbtn">Department Two</a>
+                                <a href="#" class="dropbtn">Department Two</a>
+                                <a href="#" class="dropbtn">Department One</a>
+                                <a href="#" class="dropbtn">Department Two</a>
+                                <a href="#" class="dropbtn">Department Two</a>
+                                <a href="#" class="dropbtn">Department One</a>
+                                <a href="#" class="dropbtn">Department Two</a>
+                                <a href="#" class="dropbtn">Department Two</a>
+                            </div>
+                            <a href="#" onclick="filterLocationDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-location">Location</a>
+                            <div id="filterLocationDropdown" class="dropdown-content dropdown-content-filter">
+                                <a href="#" class="dropbtn">Location One</a>
+                                <a href="#" class="dropbtn">Location Two</a>
+                                <a href="#" class="dropbtn">Location Two</a>
+                                <a href="#" class="dropbtn">Location One</a>
+                            </div>
+                            <a href="#" id="filter-apply">APPLY</a>
                         </div>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item sidebar-main-item">
                         Add New Employee
                     </li>
                 </ul>
@@ -92,7 +113,7 @@
                     <li class="sidebar-item">
                         Group by Location
                     </li>
-                </ul>
+                </ul>   
             </div>
             </nav>
 

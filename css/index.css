@@ -79,7 +79,6 @@ body {
   background-color: #2980B9;
 }
 
-
 .dropdown-content {
   display: none;
   position: absolute;
@@ -106,8 +105,21 @@ body {
   background-color: #ddd;
 }
 
+.dropdown-content-filter {
+  max-height:250px;/* you can change as you need it */
+  overflow:auto;/* to get scroll */
+}
+
 .show {
   display: block;
+}
+
+.active-dropdown {
+  background-color: #2980B9;
+}
+
+.active-dropdown-filter {
+  background-color: #2980B9;
 }
 
 /* Table */
