@@ -75,7 +75,7 @@ function createCards(result) {
 
     }
 
-    currentView = 'cards';
+    currentView = 'grid';
 
 }
 
@@ -93,14 +93,10 @@ function displayAllEmployeesByLastName() {
         success: function(result) {
             if (result.status.name == "ok") { 
 
-                for (i = 0; i < result.data.length ; i++) {
-
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'cards') {
-                        createCards(result);
-                    }
-
+                if(currentView === 'table') {
+                    createTable(result);     
+                } else if (currentView === 'grid') {
+                    createCards(result);
                 }
                 
             }
@@ -112,7 +108,7 @@ function displayAllEmployeesByLastName() {
 
 }
 
-// Set loading view to table and by employees last names
+// Set loading view to table and sort by employees last names
 let currentView = 'table';
 
 displayAllEmployeesByLastName();
@@ -131,7 +127,7 @@ function displayAllEmployeesByFirstName() {
 
                     if(currentView === 'table') {
                         createTable(result);
-                    } else if (currentView === 'cards') {
+                    } else if (currentView === 'grid') {
                         createCards(result);
                     }
 
@@ -191,7 +187,7 @@ $(document).on("click", "#table-view", function(e) {
 
 // Grid view option is selected
 $(document).on("click", "#grid-view", function(e) { 
- 
+    console.log('grid clicked');
     if(currentView === 'table') {
         $("#all-employees thead").remove();
         $("#all-employees tbody").remove();
@@ -270,6 +266,7 @@ $("#all-employees").on("click", "td", function() {
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
 function myFunction() {
+    console.log('myFunction');
     document.getElementById("myDropdown").classList.toggle("show");
 }
 

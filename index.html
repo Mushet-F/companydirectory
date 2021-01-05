@@ -45,16 +45,16 @@
                     <span>View</span>
                     </h6>
                 <ul class="nav flex-column">
-                    <li id="table-view">
+                    <li class="sidebar-item" id="table-view">
                         Employees Table
                     </li>
-                    <li id="grid-view">
+                    <li class="sidebar-item" id="grid-view">
                         Employees Grid
                     </li>
-                    <li>
+                    <li class="sidebar-item">
                         Group by Department
                     </li>
-                    <li>
+                    <li class="sidebar-item">
                         Group by Location
                     </li>
                 </ul>
@@ -63,17 +63,26 @@
                 <span>Actions</span>
                 </h6>
                 <ul class="nav flex-column mb-2">
-                    <li>
+                    <li class="sidebar-item">
                         Search
                     </li>
-                    <div class="dropdown">
-                        <button onclick="myFunction()" class="dropbtn">Sort</button>
-                        <div id="myDropdown" class="dropdown-content">
-                          <a href="#" id="sort-fname">First Name</a>
-                          <a href="#" id="sort-lname">Last Name</a>
+                    <!-- <li class="sidebar-item">
+                        <div class=".sidebar-item dropdown">
+                            <button onclick="myFunction()" class="dropbtn">Sort</button>
+                            <div id="myDropdown" class="dropdown-content">
+                            <a href="#" id="sort-fname">First Name</a>
+                            <a href="#" id="sort-lname">Last Name</a>
+                            </div>
                         </div>
-                      </div>
-                    <li>
+                    </li> -->
+                    <li onclick="myFunction()" class="sidebar-item dropbtn">
+                            Sort
+                            <div id="myDropdown" class="dropdown-content">
+                            <a href="#" id="sort-fname">First Name</a>
+                            <a href="#" id="sort-lname">Last Name</a>
+                            </div>
+                    </li>
+                    <li class="sidebar-item">
                         Add New Employee
                     </li>
                 </ul>
