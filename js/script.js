@@ -5,12 +5,12 @@ function createTable(result) {
     let table = `  
         <thead>
             <tr>
-                <th value="th-id">ID</th>
-                <th value="th-name">Name</th>
-                <th value="th-job">Job Title</th>
-                <th value="th-email">Email</th>
-                <th value="th-department">Department</th>
-                <th value="th-location">Location</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Job Title</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Location</th>
             </tr>
         </thead>
         <tbody id="tbody-employees">
@@ -142,6 +142,122 @@ function displayAllEmployeesByFirstName() {
 
 }
 
+// Sort employees by id
+function displayAllEmployeesById() {
+
+    $.ajax({
+        url: "libs/php/sortAllEmployeesById.php",
+        type: 'POST',
+        dataType: 'json',
+        success: function(result) {
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
+// Sort employees by job title
+function displayAllEmployeesByJobTitle() {
+
+    $.ajax({
+        url: "libs/php/sortAllEmployeesByJobTitle.php",
+        type: 'POST',
+        dataType: 'json',
+        success: function(result) {
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
+// Sort employees by department
+function displayAllEmployeesByDepartment() {
+
+    $.ajax({
+        url: "libs/php/sortAllEmployeesByDepartment.php",
+        type: 'POST',
+        dataType: 'json',
+        success: function(result) {
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
+// Sort employees by location
+function displayAllEmployeesByLocation() {
+
+    $.ajax({
+        url: "libs/php/sortAllEmployeesByLocation.php",
+        type: 'POST',
+        dataType: 'json',
+        success: function(result) {
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
 // **************************************************************************************** //
 
 // ********************** Displaying employees details ************************************ //
@@ -187,7 +303,7 @@ $(document).on("click", "#table-view", function(e) {
 
 // Grid view option is selected
 $(document).on("click", "#grid-view", function(e) { 
-    console.log('grid clicked');
+
     if(currentView === 'table') {
         $("#all-employees thead").remove();
         $("#all-employees tbody").remove();
@@ -204,10 +320,13 @@ $(document).on("click", "#grid-view", function(e) {
 // Sort all employees by first name
 $(document).on("click", "#sort-fname", function(e) { 
  
-    $("#all-employees thead").remove();
-    $("#all-employees tbody").remove();
-    $(".employee-card").remove();
-
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
+    
     displayAllEmployeesByFirstName();
 
 });
@@ -215,11 +334,70 @@ $(document).on("click", "#sort-fname", function(e) {
 // Sort all employees by last name
 $(document).on("click", "#sort-lname", function(e) { 
  
-    $("#all-employees thead").remove();
-    $("#all-employees tbody").remove();
-    $(".employee-card").remove();
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
 
     displayAllEmployeesByLastName();
+
+});
+
+// Sort all employees by id
+$(document).on("click", "#sort-id", function(e) { 
+ 
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
+
+    displayAllEmployeesById();
+
+});
+
+// Sort all employees by job title
+$(document).on("click", "#sort-job", function(e) { 
+ 
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
+
+    displayAllEmployeesByJobTitle();
+
+});
+
+// Sort all employees by department
+$(document).on("click", "#sort-department", function(e) { 
+ 
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
+
+    displayAllEmployeesByDepartment();
+
+});
+
+// Sort all employees by location
+$(document).on("click", "#sort-location", function(e) { 
+ 
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
+
+    displayAllEmployeesByLocation();
 
 });
 
