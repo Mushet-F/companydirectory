@@ -272,7 +272,7 @@ function displayEmployeeDetails(id) {
             id: id
         },
         success: function(result) {
-            console.log(result);
+
         },
         error: function(jqXHR, textStatus, errorThrown) {
             reject(errorThrown);
@@ -443,105 +443,59 @@ $("#all-employees").on("click", "td", function() {
 
 // ********************** Dropdown menu for sort and filter ******************************* //
 
+let insideFilterDropdown = false;
+
 function sortDropdown() {
     document.getElementById("sortDropdown").classList.toggle("show");
     document.getElementById("filterDropdown").classList.remove("show");
 }
 
 function filterDropdown() {
-    document.getElementById("filterDropdown").classList.toggle("show");
-    document.getElementById("sortDropdown").classList.remove("show");
+
+    $("#sidebar-item-filter").addClass("active-dropdown");
+    if(!insideFilterDropdown) {
+        document.getElementById("filterDropdown").classList.toggle("show");
+        document.getElementById("sortDropdown").classList.remove("show");
+    }
+
+    insideFilterDropdown = false;
 }
 
 function filterJobDropdown() {
-    document.getElementById("filterDropdown").classList.toggle("show");
+
+    $("#filter-job").toggleClass("active-dropdown");
+
     document.getElementById("filterJobDropdown").classList.toggle("show");
+    insideFilterDropdown =  true;
 }
 
 function filterDepartmentDropdown() {
+
+    $("#filter-department").toggleClass("active-dropdown");
+
     document.getElementById("filterDropdown").classList.toggle("show");
     document.getElementById("filterDepartmentDropdown").classList.toggle("show");
 }
 
 function filterLocationDropdown() {
+
+    $("#filter-location").toggleClass("active-dropdown");
+
     document.getElementById("filterDropdown").classList.toggle("show");
     document.getElementById("filterLocationDropdown").classList.toggle("show");
 }
  
-$(document).on("click", ".sidebar-main-item", function(e) { 
+$(document).on("click", ".input-drop", function(e) { 
 
-    console.log('HELLO MAIN');
-
-    if(!filterSelected) {
-
-        var actives = document.getElementsByClassName("active-dropdown");
-        var i;
-        let selected = $(this);
-        
-        console.log('this main', $(this));
-        
-        if(actives.length > 0) {
-            for (i = 0; i < actives.length; i++) {
-                if(actives[i] !== selected[0]) {
-                    actives[i].classList.remove('active-dropdown');
-                    selected.addClass('active-dropdown');
-                } else {
-                    actives[i].classList.remove('active-dropdown');
-                }
-            }
-        } else {
-            selected.addClass('active-dropdown');
-        }
-    } 
-
-    filterSelected = false;
-
-});
-
-let filterSelected;
-
-$(document).on("click", ".sidebar-filter-item", function(e) { 
-
-    console.log('HELLO FILTER');
-
-    filterSelected = true;
-
-    var actives = document.getElementsByClassName("active-dropdown-filter");
-    var i;
-    let selected = $(this);
-
-    console.log('a, ', actives);
-    console.log('s ', selected);
+    $("#filterDropdown").addClass("show");
+    $("#sidebar-item-filter").addClass("active-dropdown");
     
-    if(actives.length > 0) {
-        for (i = 0; i < actives.length; i++) {
-            console.log('filtered actives[i] ', actives[i]);
-            console.log('filtered selected ', selected[0]);
-
-            if(actives[i] !== selected[0]) {
-                console.log('a[i] !== s[0]');
-                actives[i].classList.remove('active-dropdown-filter');
-                selected.addClass('active-dropdown-filter');
-            } else {
-                console.log('selected');
-                actives[i].classList.remove('active-dropdown-filter');
-            }
-        }
-    } else {
-        selected.addClass('active-dropdown-filter');
-    }
-
-    let currentDropdown = document.getElementsByClassName("show");
-
-    if(currentDropdown.length > 2) {
-        currentDropdown[2].classList.remove("show");
-    }
-
 });
 
 // Close the dropdown OR removes active highlight if the user clicks outside of it
 window.onclick = function(event) {
-if (!event.target.matches('.dropbtn')) {
+if (!event.target.matches('.sidebar-item') && !event.target.matches('.input-drop')  && !event.target.matches('.check-filter')  && !event.target.matches('label')) {
+    console.log('INSIDE CLOSE DROPDOWN');
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {

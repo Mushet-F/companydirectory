@@ -46,10 +46,10 @@
                 </h6>
                 <ul class="nav flex-column mb-2">
                     <li class="sidebar-item sidebar-main-item">
-                        Search
+                        <span class="side-main-item-margin">Search</span>
                     </li>
                     <li onclick="sortDropdown()" class="sidebar-item sidebar-main-item dropbtn">
-                        Sort
+                        <span class="side-main-item-margin">Sort</span>
                         <div id="sortDropdown" class="dropdown-content">
                             <a href="#" id="sort-fname">First Name</a>
                             <a href="#" id="sort-lname">Last Name</a>
@@ -60,59 +60,117 @@
                         </div>
                     </li>
                     <li onclick="filterDropdown()" id="sidebar-item-filter" class="sidebar-item sidebar-main-item dropbtn">
-                        Filter
+                        <span class="side-main-item-margin">Filter</span>
                         <div id="filterDropdown" class="dropdown-content">
-                            <a href="#" onclick="filterJobDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-job">Job Title</a>
+                            <span onclick="filterJobDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-job">Job Title</span>
                             <div id="filterJobDropdown" class="dropdown-content dropdown-content-filter">
-                                <a href="#" class="dropbtn">Job One</a>
-                                <a href="#" class="dropbtn">Job Two</a>
-                                <a href="#" class="dropbtn">Job Two</a>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter" type="checkbox" id="check-jobone" name="check-jobone">
+                                    <label for="check-jobone">Job One</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter" type="checkbox" id="check-jobtwo" name="check-jobtwo">
+                                    <label for="check-jobtwo">Job Two</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter" type="checkbox" id="check-jobthree" name="check-jobthree">
+                                    <label for="check-jobthree">Job Three</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter" type="checkbox" id="check-jobfour" name="check-jobfour">
+                                    <label for="check-jobfour">Job Four</label>
+                                </div>
                             </div>
-                            <a href="#" onclick="filterDepartmentDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-department">Department</a>
+                            <span href="#" onclick="filterDepartmentDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-department">Department</span>
                             <div id="filterDepartmentDropdown" class="dropdown-content dropdown-content-filter">
-                                <a href="#" class="dropbtn">Human Resources</a>
-                                <a href="#" class="dropbtn">Sales</a>
-                                <a href="#" class="dropbtn">Marketing</a>
-                                <a href="#" class="dropbtn">Legal</a>
-                                <a href="#" class="dropbtn">Services</a>
-                                <a href="#" class="dropbtn">Research and Development</a>
-                                <a href="#" class="dropbtn">Product Managemen</a>
-                                <a href="#" class="dropbtn">Training</a>
-                                <a href="#" class="dropbtn">Support</a>
-                                <a href="#" class="dropbtn">Engineering</a>
-                                <a href="#" class="dropbtn">Accounting</a>
-                                <a href="#" class="dropbtn">Business Development</a>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter" type="checkbox" id="check-hr" name="check-hr">
+                                    <label for="check-hr">Human Resources</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter" type="checkbox" id="check-sales" name="check-sales">
+                                    <label for="check-sales">Sales</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter" type="checkbox" id="check-marketing" name="check-marketing">
+                                    <label for="check-marketing">Marketing</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter" type="checkbox" id="check-legal" name="check-legal">
+                                    <label for="check-legal">Legal</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-services" name="check-services">
+                                    <label for="check-services">Services</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-research" name="check-research">
+                                    <label for="check-research">Research and Development</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-product" name="check-product">
+                                    <label for="check-product">Product Management</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-training" name="check-training">
+                                    <label for="check-training">Training</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-support" name="check-support">
+                                    <label for="check-support">Support</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-engineering" name="check-engineering">
+                                    <label for="check-engineering">Engineering</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-accounting" name="check-accounting">
+                                    <label for="check-accounting">Accounting</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-business" name="check-business">
+                                    <label for="check-business">Business Development</label>
+                                </div>
                             </div>
-                            <a href="#" onclick="filterLocationDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-location">Location</a>
+                            <span href="#" onclick="filterLocationDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-location">Location</span>
                             <div id="filterLocationDropdown" class="dropdown-content dropdown-content-filter">
-                                <a href="#" class="dropbtn">London</a>
-                                <a href="#" class="dropbtn">Munich</a>
-                                <a href="#" class="dropbtn">New York</a>
-                                <a href="#" class="dropbtn">Paris</a>
-                                <a href="#" class="dropbtn">Rome</a>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-london" name="check-london">
+                                    <label for="check-london">London</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-munich" name="check-munich">
+                                    <label for="check-munich">Munich</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-newyork" name="check-newyork">
+                                    <label for="check-newyork">New York</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-paris" name="check-paris">
+                                    <label for="check-paris">Paris</label>
+                                </div>
+                                <div class="dropbtn input-drop">
+                                    <input class="check-filter"  type="checkbox" id="check-rome" name="check-rome">
+                                    <label for="check-rome">Rome</label>
+                                </div>
                             </div>
-                            <a href="#" id="filter-apply">APPLY</a>
+                            <span href="#" id="filter-apply">APPLY</span>
                         </div>
                     </li>
                     <li class="sidebar-item sidebar-main-item">
-                        Add New Employee
+                        <span class="side-main-item-margin">Add New Employee</span>
                     </li>
                 </ul>
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                     <span>View</span>
                 </h6>
                 <ul class="nav flex-column">
-                    <li class="sidebar-item" id="table-view">
-                        Employees Table
+                    <li class="sidebar-item sidebar-main-item" id="table-view">
+                        <span class="side-main-item-margin">Employees Table</span>
                     </li>
-                    <li class="sidebar-item" id="grid-view">
-                        Employees Grid
-                    </li>
-                    <li class="sidebar-item">
-                        Group by Department
-                    </li>
-                    <li class="sidebar-item">
-                        Group by Location
+                    <li class="sidebar-item sidebar-main-item" id="grid-view">
+                        <span class="side-main-item-margin">Employees Grid</span>
                     </li>
                 </ul>   
             </div>
@@ -283,8 +341,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                                        <label class="form-check-label" for="exampleCheck2">Check me out</label>
                                     </div>
                                 </form>
                             </div>
