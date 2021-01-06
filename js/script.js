@@ -1,7 +1,7 @@
 // ********************** Creating main employees table *********************************** //
 
 function createTable(result) {
-    
+ 
     let table = `  
         <thead>
             <tr>
@@ -293,6 +293,7 @@ $(document).on("click", "#table-view", function(e) {
         $("#all-employees tbody").remove();
     } else if(currentView === 'grid') {
         $(".employee-card").remove();
+        $( "#table-div" ).addClass( "tableFixHead" );
     }
 
     currentView = 'table';
@@ -307,6 +308,7 @@ $(document).on("click", "#grid-view", function(e) {
     if(currentView === 'table') {
         $("#all-employees thead").remove();
         $("#all-employees tbody").remove();
+        $("#table-div").removeClass( "tableFixHead" );
     } else if(currentView === 'grid') {
         $(".employee-card").remove();
     }
