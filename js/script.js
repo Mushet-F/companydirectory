@@ -403,6 +403,110 @@ $(document).on("click", "#sort-location", function(e) {
 
 });
 
+// Filter apply button is clicked
+$('#filter-apply').click(function() {
+
+    let checkedBoxes = $(".check-filter:checkbox:checked").map(function(){
+        return $(this).attr("value");
+    }).get();
+
+    const request = createFilterRequest(checkedBoxes);
+
+    $.ajax({
+        url: "libs/php/filterAllEmployees.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            request: request
+        },
+        success: function(result) {
+            console.log('result ', result);
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+    
+});
+
+const createFilterRequest = filterRequest => {
+
+    console.log(filterRequest);
+    let request = '';
+    let count = 0;
+
+    if(filterRequest.length > 0) {
+
+        filterRequest.forEach(function (filter) {
+            if(count > 0) {
+                request += " OR ";
+            }
+            switch(filter) {
+                case 'hr':
+                    request += "d.name =  \'Human Resources\'";
+                    break;
+                case 'sales':
+                    request += "d.name =  \'Sales\'";
+                    break;
+                case 'marketing':
+                    request += "d.name =  \'Marketing\'";
+                    break;
+                case 'legal':
+                    request += "d.name = \'Legal\'";
+                    break;
+                case 'services':
+                    request += "d.name = \'Services\'";
+                    break;
+                case 'research':
+                    request += "d.name = \'Research and Development\'";
+                    break;
+                case 'product':
+                    request += "d.name = \'Product Management\'";
+                    break;
+                case 'training':
+                    request += "d.name = \'Training\'";
+                    break;
+                case 'support':
+                    request += "d.name = \'Support\'";
+                    break;
+                case 'engineering':
+                    request += "d.name = \'Engineering\'";
+                    break;
+                case 'accounting':
+                    request += "d.name = \'Accounting\'";
+                    break;
+                case 'business':
+                    request += "d.name = \'Business Development\'";
+                    break;
+                case 'london':
+                    request += "l.name = \'London\'";
+                    break;
+                case 'munich':
+                    request += "l.name = \'Munich\'";
+                    break;
+                case 'newyork':
+                    request += "l.name = \'New York\'";
+                    break;
+                case 'paris':
+                    request += "l.name = \'Paris\'";
+                    break;
+                case 'rome':
+                    request += "l.name = \'Rome\'";
+                    break;
+                default:
+
+            }
+
+            count++;
+
+        });
+
+        console.log(request);
+        return request;
+
+    } 
+}
 // **************************************************************************************** //
 
 // ********************** Click events on table and cards ********************************* //
@@ -446,17 +550,24 @@ $("#all-employees").on("click", "td", function() {
 let insideFilterDropdown = false;
 
 function sortDropdown() {
+
+    console.log('sortDropdown()');
+
+    $("#sidebar-item-sort").toggleClass("active-dropdown");
+
     document.getElementById("sortDropdown").classList.toggle("show");
     document.getElementById("filterDropdown").classList.remove("show");
+    $("#sidebar-item-filter").removeClass("active-dropdown");
 }
 
 function filterDropdown() {
 
-    $("#sidebar-item-filter").addClass("active-dropdown");
     if(!insideFilterDropdown) {
         document.getElementById("filterDropdown").classList.toggle("show");
         document.getElementById("sortDropdown").classList.remove("show");
-    }
+        $("#sidebar-item-filter").toggleClass("active-dropdown");
+        $("#sidebar-item-sort").removeClass("active-dropdown");
+    } 
 
     insideFilterDropdown = false;
 }
@@ -473,16 +584,16 @@ function filterDepartmentDropdown() {
 
     $("#filter-department").toggleClass("active-dropdown");
 
-    document.getElementById("filterDropdown").classList.toggle("show");
     document.getElementById("filterDepartmentDropdown").classList.toggle("show");
+    insideFilterDropdown =  true;
 }
 
 function filterLocationDropdown() {
 
     $("#filter-location").toggleClass("active-dropdown");
 
-    document.getElementById("filterDropdown").classList.toggle("show");
     document.getElementById("filterLocationDropdown").classList.toggle("show");
+    insideFilterDropdown =  true;
 }
  
 $(document).on("click", ".input-drop", function(e) { 
