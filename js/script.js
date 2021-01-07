@@ -98,6 +98,77 @@ function clearCurrentResults() {
 
 // ********************** Functions for sorting employees ********************************* //
 
+const createSortRequest = sortRequest => {
+
+    let request = '';
+    let count = 0;
+
+    if(count > 0) {
+        request += " OR ";
+    }
+    switch(sortRequest) {
+        case 'sort-fname':
+            request += "p.firstName, p.lastName, d.name, l.name";
+            break;
+        case 'sort-lname':
+            request += "p.lastName, p.firstName, d.name, l.name";
+            break;
+        case 'sort-id':
+            request += "p.id";
+            break;
+        case 'sort-job':
+            request += "p.jobTitle, p.lastName, p.firstName, d.name, l.name";
+            break;
+        case 'sort-department':
+            request += "d.name, p.lastName, p.firstName";
+            break;
+        case 'sort-location':
+            request += "l.name, d.name, p.lastName, p.firstName";
+            break;
+        default:
+    }
+
+    count++;
+
+    return request;
+
+}
+
+function applySortRequest(request) {
+
+    $.ajax({
+        url: "libs/php/sortAllEmployees.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            request: request
+        },
+        success: function(result) {
+
+            clearCurrentResults();
+
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
 // Sort employees by last name
 function displayAllEmployeesByLastName() {
 
@@ -279,11 +350,12 @@ function displayAllEmployeesByLocation() {
 
 const createFilterRequest = filterRequest => {
 
-    console.log(filterRequest);
     let request = '';
     let count = 0;
 
     if(filterRequest.length > 0) {
+
+        request += "WHERE ";
 
         filterRequest.forEach(function (filter) {
             if(count > 0) {
@@ -434,7 +506,12 @@ $(document).on("click", "#table-view", function(e) {
 
     currentView = 'table';
 
-    displayAllEmployeesByLastName();
+    if(filterActive) {
+        applyFilterRequest(filterRequest);
+    } else {
+        displayAllEmployeesByLastName();
+    }
+
 
 });
 
@@ -449,7 +526,11 @@ $(document).on("click", "#grid-view", function(e) {
 
     currentView = 'grid';
 
-    displayAllEmployeesByLastName();
+    if(filterActive) {
+        applyFilterRequest(filterRequest);
+    } else {
+        displayAllEmployeesByLastName();
+    }
 
 });
 
@@ -462,7 +543,15 @@ $(document).on("click", "#sort-fname", function(e) {
  
     clearCurrentResults();
 
-    displayAllEmployeesByFirstName();
+    let selectedSort = $(this).attr("id");
+
+    if(filterActive) {
+
+    }
+
+    const sortRequest = createSortRequest(selectedSort);
+
+    applySortRequest(sortRequest);
 
 });
 
@@ -471,7 +560,15 @@ $(document).on("click", "#sort-lname", function(e) {
  
     clearCurrentResults();
 
-    displayAllEmployeesByLastName();
+    let selectedSort = $(this).attr("id");
+    
+    if(filterActive) {
+
+    }
+
+    const sortRequest = createSortRequest(selectedSort);
+
+    applySortRequest(sortRequest);
 
 });
 
@@ -480,7 +577,15 @@ $(document).on("click", "#sort-id", function(e) {
  
     clearCurrentResults();
 
-    displayAllEmployeesById();
+    let selectedSort = $(this).attr("id");
+    
+    if(filterActive) {
+
+    }
+
+    const sortRequest = createSortRequest(selectedSort);
+
+    applySortRequest(sortRequest);
 
 });
 
@@ -489,7 +594,15 @@ $(document).on("click", "#sort-job", function(e) {
  
     clearCurrentResults();
 
-    displayAllEmployeesByJobTitle();
+    let selectedSort = $(this).attr("id");
+    
+    if(filterActive) {
+
+    }
+
+    const sortRequest = createSortRequest(selectedSort);
+
+    applySortRequest(sortRequest);
 
 });
 
@@ -498,7 +611,15 @@ $(document).on("click", "#sort-department", function(e) {
  
     clearCurrentResults();
 
-    displayAllEmployeesByDepartment();
+    let selectedSort = $(this).attr("id");
+    
+    if(filterActive) {
+
+    }
+
+    const sortRequest = createSortRequest(selectedSort);
+
+    applySortRequest(sortRequest);
 
 });
 
@@ -507,7 +628,15 @@ $(document).on("click", "#sort-location", function(e) {
  
     clearCurrentResults();
 
-    displayAllEmployeesByLocation();
+    let selectedSort = $(this).attr("id");
+    
+    if(filterActive) {
+
+    }
+
+    const sortRequest = createSortRequest(selectedSort);
+
+    applySortRequest(sortRequest);
 
 });
 
@@ -595,8 +724,6 @@ let insideFilterDropdown = false;
 
 function sortDropdown() {
 
-    console.log('sortDropdown()');
-
     $("#sidebar-item-sort").toggleClass("active-dropdown");
 
     document.getElementById("sortDropdown").classList.toggle("show");
@@ -650,7 +777,7 @@ $(document).on("click", ".input-drop", function(e) {
 // Close the dropdown OR removes active highlight if the user clicks outside of it
 window.onclick = function(event) {
 if (!event.target.matches('.sidebar-item') && !event.target.matches('.input-drop')  && !event.target.matches('.check-filter')  && !event.target.matches('label')) {
-    console.log('INSIDE CLOSE DROPDOWN');
+
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
     for (i = 0; i < dropdowns.length; i++) {
