@@ -199,150 +199,188 @@ let currentView = 'table';
 
 displayAllEmployeesByLastName();
 
+
+
+function applySortAndFilterRequest(filterRequest, sortRequest) {
+
+    $.ajax({
+        url: "libs/php/sortEmployeesWithFilter.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            filterRequest: filterRequest,
+            sortRequest: sortRequest
+        },
+        success: function(result) {
+
+            clearCurrentResults();
+
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
 // Sort employees by last name
-function displayAllEmployeesByFirstName() {
+// function displayAllEmployeesByFirstName() {
 
-    $.ajax({
-        url: "libs/php/sortAllEmployeesByFirstName.php",
-        type: 'POST',
-        dataType: 'json',
-        success: function(result) {
-            if (result.status.name == "ok") { 
+//     $.ajax({
+//         url: "libs/php/sortAllEmployeesByFirstName.php",
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(result) {
+//             if (result.status.name == "ok") { 
 
-                for (i = 0; i < result.data.length ; i++) {
+//                 for (i = 0; i < result.data.length ; i++) {
 
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'grid') {
-                        createCards(result);
-                    }
+//                     if(currentView === 'table') {
+//                         createTable(result);
+//                     } else if (currentView === 'grid') {
+//                         createCards(result);
+//                     }
 
-                }
+//                 }
                 
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
+//             }
+//         },
+//         error: function(jqXHR, textStatus, errorThrown) {
+//             reject(errorThrown);
+//         }
+//     }); 
 
-}
+// }
 
-// Sort employees by id
-function displayAllEmployeesById() {
+// // Sort employees by id
+// function displayAllEmployeesById() {
 
-    $.ajax({
-        url: "libs/php/sortAllEmployeesById.php",
-        type: 'POST',
-        dataType: 'json',
-        success: function(result) {
-            if (result.status.name == "ok") { 
+//     $.ajax({
+//         url: "libs/php/sortAllEmployeesById.php",
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(result) {
+//             if (result.status.name == "ok") { 
 
-                for (i = 0; i < result.data.length ; i++) {
+//                 for (i = 0; i < result.data.length ; i++) {
 
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'grid') {
-                        createCards(result);
-                    }
+//                     if(currentView === 'table') {
+//                         createTable(result);
+//                     } else if (currentView === 'grid') {
+//                         createCards(result);
+//                     }
 
-                }
+//                 }
                 
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
+//             }
+//         },
+//         error: function(jqXHR, textStatus, errorThrown) {
+//             reject(errorThrown);
+//         }
+//     }); 
 
-}
+// }
 
-// Sort employees by job title
-function displayAllEmployeesByJobTitle() {
+// // Sort employees by job title
+// function displayAllEmployeesByJobTitle() {
 
-    $.ajax({
-        url: "libs/php/sortAllEmployeesByJobTitle.php",
-        type: 'POST',
-        dataType: 'json',
-        success: function(result) {
-            if (result.status.name == "ok") { 
+//     $.ajax({
+//         url: "libs/php/sortAllEmployeesByJobTitle.php",
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(result) {
+//             if (result.status.name == "ok") { 
 
-                for (i = 0; i < result.data.length ; i++) {
+//                 for (i = 0; i < result.data.length ; i++) {
 
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'grid') {
-                        createCards(result);
-                    }
+//                     if(currentView === 'table') {
+//                         createTable(result);
+//                     } else if (currentView === 'grid') {
+//                         createCards(result);
+//                     }
 
-                }
+//                 }
                 
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
+//             }
+//         },
+//         error: function(jqXHR, textStatus, errorThrown) {
+//             reject(errorThrown);
+//         }
+//     }); 
 
-}
+// }
 
-// Sort employees by department
-function displayAllEmployeesByDepartment() {
+// // Sort employees by department
+// function displayAllEmployeesByDepartment() {
 
-    $.ajax({
-        url: "libs/php/sortAllEmployeesByDepartment.php",
-        type: 'POST',
-        dataType: 'json',
-        success: function(result) {
-            if (result.status.name == "ok") { 
+//     $.ajax({
+//         url: "libs/php/sortAllEmployeesByDepartment.php",
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(result) {
+//             if (result.status.name == "ok") { 
 
-                for (i = 0; i < result.data.length ; i++) {
+//                 for (i = 0; i < result.data.length ; i++) {
 
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'grid') {
-                        createCards(result);
-                    }
+//                     if(currentView === 'table') {
+//                         createTable(result);
+//                     } else if (currentView === 'grid') {
+//                         createCards(result);
+//                     }
 
-                }
+//                 }
                 
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
+//             }
+//         },
+//         error: function(jqXHR, textStatus, errorThrown) {
+//             reject(errorThrown);
+//         }
+//     }); 
 
-}
+// }
 
-// Sort employees by location
-function displayAllEmployeesByLocation() {
+// // Sort employees by location
+// function displayAllEmployeesByLocation() {
 
-    $.ajax({
-        url: "libs/php/sortAllEmployeesByLocation.php",
-        type: 'POST',
-        dataType: 'json',
-        success: function(result) {
-            if (result.status.name == "ok") { 
+//     $.ajax({
+//         url: "libs/php/sortAllEmployeesByLocation.php",
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(result) {
+//             if (result.status.name == "ok") { 
 
-                for (i = 0; i < result.data.length ; i++) {
+//                 for (i = 0; i < result.data.length ; i++) {
 
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'grid') {
-                        createCards(result);
-                    }
+//                     if(currentView === 'table') {
+//                         createTable(result);
+//                     } else if (currentView === 'grid') {
+//                         createCards(result);
+//                     }
 
-                }
+//                 }
                 
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
+//             }
+//         },
+//         error: function(jqXHR, textStatus, errorThrown) {
+//             reject(errorThrown);
+//         }
+//     }); 
 
-}
+// }
 
 // **************************************************************************************** //
 
@@ -545,13 +583,13 @@ $(document).on("click", "#sort-fname", function(e) {
 
     let selectedSort = $(this).attr("id");
 
-    if(filterActive) {
-
-    }
-
     const sortRequest = createSortRequest(selectedSort);
 
-    applySortRequest(sortRequest);
+    if(filterActive) {
+        applySortAndFilterRequest(filterRequest, sortRequest);
+    } else {
+        applySortRequest(sortRequest);
+    }
 
 });
 
@@ -562,13 +600,13 @@ $(document).on("click", "#sort-lname", function(e) {
 
     let selectedSort = $(this).attr("id");
     
-    if(filterActive) {
-
-    }
-
     const sortRequest = createSortRequest(selectedSort);
 
-    applySortRequest(sortRequest);
+    if(filterActive) {
+        applySortAndFilterRequest(filterRequest, sortRequest);
+    } else {
+        applySortRequest(sortRequest);
+    }
 
 });
 
@@ -579,13 +617,13 @@ $(document).on("click", "#sort-id", function(e) {
 
     let selectedSort = $(this).attr("id");
     
-    if(filterActive) {
-
-    }
-
     const sortRequest = createSortRequest(selectedSort);
 
-    applySortRequest(sortRequest);
+    if(filterActive) {
+        applySortAndFilterRequest(filterRequest, sortRequest);
+    } else {
+        applySortRequest(sortRequest);
+    }
 
 });
 
@@ -596,13 +634,13 @@ $(document).on("click", "#sort-job", function(e) {
 
     let selectedSort = $(this).attr("id");
     
-    if(filterActive) {
-
-    }
-
     const sortRequest = createSortRequest(selectedSort);
 
-    applySortRequest(sortRequest);
+    if(filterActive) {
+        applySortAndFilterRequest(filterRequest, sortRequest);
+    } else {
+        applySortRequest(sortRequest);
+    }
 
 });
 
@@ -613,13 +651,13 @@ $(document).on("click", "#sort-department", function(e) {
 
     let selectedSort = $(this).attr("id");
     
-    if(filterActive) {
-
-    }
-
     const sortRequest = createSortRequest(selectedSort);
 
-    applySortRequest(sortRequest);
+    if(filterActive) {
+        applySortAndFilterRequest(filterRequest, sortRequest);
+    } else {
+        applySortRequest(sortRequest);
+    }
 
 });
 
@@ -630,13 +668,13 @@ $(document).on("click", "#sort-location", function(e) {
 
     let selectedSort = $(this).attr("id");
     
-    if(filterActive) {
-
-    }
-
     const sortRequest = createSortRequest(selectedSort);
 
-    applySortRequest(sortRequest);
+    if(filterActive) {
+        applySortAndFilterRequest(filterRequest, sortRequest);
+    } else {
+        applySortRequest(sortRequest);
+    }
 
 });
 
