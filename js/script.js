@@ -762,6 +762,8 @@ let insideFilterDropdown = false;
 
 function sortDropdown() {
 
+    console.log('sortDropdown()');
+
     $("#sidebar-item-sort").toggleClass("active-dropdown");
 
     document.getElementById("sortDropdown").classList.toggle("show");
@@ -770,6 +772,8 @@ function sortDropdown() {
 }
 
 function filterDropdown() {
+
+    console.log('filterDropdown()');
 
     if(!insideFilterDropdown) {
         document.getElementById("filterDropdown").classList.toggle("show");
@@ -783,26 +787,47 @@ function filterDropdown() {
 
 function filterJobDropdown() {
 
+    console.log('filterJobDropdown()');
+
     $("#filter-job").toggleClass("active-dropdown");
 
     document.getElementById("filterJobDropdown").classList.toggle("show");
     insideFilterDropdown =  true;
+
+    $("#filter-department").removeClass("active-dropdown");
+    $("#filterDepartmentDropdown").removeClass("show");
+    $("#filter-location").removeClass("active-dropdown");
+    $("#filterLocationDropdown").removeClass("show");
 }
 
 function filterDepartmentDropdown() {
+
+    console.log('filterDepartmentDropdown()');
 
     $("#filter-department").toggleClass("active-dropdown");
 
     document.getElementById("filterDepartmentDropdown").classList.toggle("show");
     insideFilterDropdown =  true;
+
+    $("#filter-job").removeClass("active-dropdown");
+    $("#filterJobDropdown").removeClass("show");
+    $("#filter-location").removeClass("active-dropdown");
+    $("#filterLocationDropdown").removeClass("show");
 }
 
 function filterLocationDropdown() {
+
+    console.log('filterLocationDropdown()');   
 
     $("#filter-location").toggleClass("active-dropdown");
 
     document.getElementById("filterLocationDropdown").classList.toggle("show");
     insideFilterDropdown =  true;
+
+    $("#filter-job").removeClass("active-dropdown");
+    $("#filterJobDropdown").removeClass("show");
+    $("#filter-department").removeClass("active-dropdown");
+    $("#filterDepartmentDropdown").removeClass("show");
 }
  
 $(document).on("click", ".input-drop", function(e) { 
