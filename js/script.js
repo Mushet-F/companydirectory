@@ -81,7 +81,22 @@ function createCards(result) {
 
 // **************************************************************************************** //
 
-// ********************** Display all  **************************************************** //
+// ********************** Clear table or grid to produce new set of results *************** //
+
+function clearCurrentResults() {
+
+    if(currentView === 'table') {
+        $("#all-employees thead").remove();
+        $("#all-employees tbody").remove();
+    } else if(currentView === 'grid') {
+        $(".employee-card").remove();
+    }
+
+}
+
+// **************************************************************************************** //
+
+// ********************** Functions for sorting employees ********************************* //
 
 // Sort employees by last name
 function displayAllEmployeesByLastName() {
@@ -260,175 +275,7 @@ function displayAllEmployeesByLocation() {
 
 // **************************************************************************************** //
 
-// ********************** Displaying employees details ************************************ //
-
-// Employee details
-function displayEmployeeDetails(id) {
-    $.ajax({
-        url: "libs/php/getPersonnel.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            id: id
-        },
-        success: function(result) {
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
-    
-}
-
-// **************************************************************************************** //
-
-// ********************** Click events for side bar **************************************** //
-
-// Table view option is selected
-$(document).on("click", "#table-view", function(e) { 
- 
-    if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
-    } else if(currentView === 'grid') {
-        $(".employee-card").remove();
-        $( "#table-div" ).addClass( "tableFixHead" );
-    }
-
-    currentView = 'table';
-
-    displayAllEmployeesByLastName();
-
-});
-
-// Grid view option is selected
-$(document).on("click", "#grid-view", function(e) { 
-
-    if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
-        $("#table-div").removeClass( "tableFixHead" );
-    } else if(currentView === 'grid') {
-        $(".employee-card").remove();
-    }
-
-    currentView = 'grid';
-
-    displayAllEmployeesByLastName();
-
-});
-
-// Sort all employees by first name
-$(document).on("click", "#sort-fname", function(e) { 
- 
-    if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
-    } else if(currentView === 'grid') {
-        $(".employee-card").remove();
-    }
-    
-    displayAllEmployeesByFirstName();
-
-});
-
-// Sort all employees by last name
-$(document).on("click", "#sort-lname", function(e) { 
- 
-    if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
-    } else if(currentView === 'grid') {
-        $(".employee-card").remove();
-    }
-
-    displayAllEmployeesByLastName();
-
-});
-
-// Sort all employees by id
-$(document).on("click", "#sort-id", function(e) { 
- 
-    if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
-    } else if(currentView === 'grid') {
-        $(".employee-card").remove();
-    }
-
-    displayAllEmployeesById();
-
-});
-
-// Sort all employees by job title
-$(document).on("click", "#sort-job", function(e) { 
- 
-    if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
-    } else if(currentView === 'grid') {
-        $(".employee-card").remove();
-    }
-
-    displayAllEmployeesByJobTitle();
-
-});
-
-// Sort all employees by department
-$(document).on("click", "#sort-department", function(e) { 
- 
-    if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
-    } else if(currentView === 'grid') {
-        $(".employee-card").remove();
-    }
-
-    displayAllEmployeesByDepartment();
-
-});
-
-// Sort all employees by location
-$(document).on("click", "#sort-location", function(e) { 
- 
-    if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
-    } else if(currentView === 'grid') {
-        $(".employee-card").remove();
-    }
-
-    displayAllEmployeesByLocation();
-
-});
-
-// Filter apply button is clicked
-$('#filter-apply').click(function() {
-
-    let checkedBoxes = $(".check-filter:checkbox:checked").map(function(){
-        return $(this).attr("value");
-    }).get();
-
-    const request = createFilterRequest(checkedBoxes);
-
-    $.ajax({
-        url: "libs/php/filterAllEmployees.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            request: request
-        },
-        success: function(result) {
-            console.log('result ', result);
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
-    
-});
+// ********************** Functions for filtering employees ******************************* //
 
 const createFilterRequest = filterRequest => {
 
@@ -443,6 +290,9 @@ const createFilterRequest = filterRequest => {
                 request += " OR ";
             }
             switch(filter) {
+                case 'jobTitle':
+                    request += "p.jobTitle =  \'\'";
+                    break;
                 case 'hr':
                     request += "d.name =  \'Human Resources\'";
                     break;
@@ -507,6 +357,200 @@ const createFilterRequest = filterRequest => {
 
     } 
 }
+
+function applyFilterRequest(request) {
+
+    $.ajax({
+        url: "libs/php/filterAllEmployees.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            request: request
+        },
+        success: function(result) {
+
+            filterActive = true;
+            $("#filter-reset").css("display", "block");
+
+            clearCurrentResults();
+
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
+// **************************************************************************************** //
+
+// ********************** Displaying employees details ************************************ //
+
+// Employee details
+function displayEmployeeDetails(id) {
+    $.ajax({
+        url: "libs/php/getPersonnel.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            id: id
+        },
+        success: function(result) {
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+    
+}
+
+// **************************************************************************************** //
+
+// ********************** Click events for selecting view ********************************* //
+
+// Table view option is selected
+$(document).on("click", "#table-view", function(e) { 
+ 
+    clearCurrentResults(); 
+
+    if(currentView === 'grid') {
+        $( "#table-div" ).addClass( "tableFixHead" );
+    }
+
+    currentView = 'table';
+
+    displayAllEmployeesByLastName();
+
+});
+
+// Grid view option is selected
+$(document).on("click", "#grid-view", function(e) { 
+
+    clearCurrentResults();
+
+    if(currentView === 'table') {
+        $("#table-div").removeClass( "tableFixHead" );
+    } 
+
+    currentView = 'grid';
+
+    displayAllEmployeesByLastName();
+
+});
+
+// **************************************************************************************** //
+
+// ********************** Click events for soritng employees ****************************** //
+
+// Sort all employees by first name
+$(document).on("click", "#sort-fname", function(e) { 
+ 
+    clearCurrentResults();
+
+    displayAllEmployeesByFirstName();
+
+});
+
+// Sort all employees by last name
+$(document).on("click", "#sort-lname", function(e) { 
+ 
+    clearCurrentResults();
+
+    displayAllEmployeesByLastName();
+
+});
+
+// Sort all employees by id
+$(document).on("click", "#sort-id", function(e) { 
+ 
+    clearCurrentResults();
+
+    displayAllEmployeesById();
+
+});
+
+// Sort all employees by job title
+$(document).on("click", "#sort-job", function(e) { 
+ 
+    clearCurrentResults();
+
+    displayAllEmployeesByJobTitle();
+
+});
+
+// Sort all employees by department
+$(document).on("click", "#sort-department", function(e) { 
+ 
+    clearCurrentResults();
+
+    displayAllEmployeesByDepartment();
+
+});
+
+// Sort all employees by location
+$(document).on("click", "#sort-location", function(e) { 
+ 
+    clearCurrentResults();
+
+    displayAllEmployeesByLocation();
+
+});
+
+// **************************************************************************************** //
+
+// ********************** Click events for filtering employees **************************** //
+
+let filterActive = false;
+let filterRequest;
+
+// Filter apply button is clicked
+$('#filter-apply').click(function() {
+
+    let checkedBoxes = $(".check-filter:checkbox:checked").map(function(){
+        return $(this).attr("value");
+    }).get();
+
+    filterRequest = createFilterRequest(checkedBoxes);
+
+    applyFilterRequest(filterRequest);
+    
+});
+
+// Filter reset button is clicked
+$('#filter-reset').click(function() {
+    
+    filterActive = false;
+
+    $("#filter-reset").css("display", "none");
+
+    let checkedBoxes = $(".check-filter:checkbox:checked");
+    for(let i = 0; i < checkedBoxes.length; i++){
+        if(checkedBoxes[i].type=='checkbox') {
+            checkedBoxes[i].checked=false;
+        }
+    }
+
+    clearCurrentResults();
+
+    displayAllEmployeesByLastName();
+
+});
+
 // **************************************************************************************** //
 
 // ********************** Click events on table and cards ********************************* //
