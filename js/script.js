@@ -98,6 +98,37 @@ function clearCurrentResults() {
 
 // ********************** Functions for sorting employees ********************************* //
 
+// Sort employees by last name
+function displayAllEmployeesByLastName() {
+
+    $.ajax({
+        url: "libs/php/sortAllEmployeesByLastName.php",
+        type: 'POST',
+        dataType: 'json',
+        success: function(result) {
+            if (result.status.name == "ok") { 
+
+                if(currentView === 'table') {
+                    createTable(result);     
+                } else if (currentView === 'grid') {
+                    createCards(result);
+                }
+                
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
+// Set loading view to table and sort by employees last names
+let currentView = 'table';
+
+displayAllEmployeesByLastName();
+
+// create the sort request to be sent to php
 const createSortRequest = sortRequest => {
 
     let request = '';
@@ -134,6 +165,7 @@ const createSortRequest = sortRequest => {
 
 }
 
+// ajax call to php to retrieve and display sorted data
 function applySortRequest(request) {
 
     $.ajax({
@@ -169,38 +201,7 @@ function applySortRequest(request) {
 
 }
 
-// Sort employees by last name
-function displayAllEmployeesByLastName() {
-
-    $.ajax({
-        url: "libs/php/sortAllEmployeesByLastName.php",
-        type: 'POST',
-        dataType: 'json',
-        success: function(result) {
-            if (result.status.name == "ok") { 
-
-                if(currentView === 'table') {
-                    createTable(result);     
-                } else if (currentView === 'grid') {
-                    createCards(result);
-                }
-                
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
-
-}
-
-// Set loading view to table and sort by employees last names
-let currentView = 'table';
-
-displayAllEmployeesByLastName();
-
-
-
+// ajax call to php to retrieve and display filtered and sorted data
 function applySortAndFilterRequest(filterRequest, sortRequest) {
 
     $.ajax({
@@ -237,155 +238,11 @@ function applySortAndFilterRequest(filterRequest, sortRequest) {
 
 }
 
-// Sort employees by last name
-// function displayAllEmployeesByFirstName() {
-
-//     $.ajax({
-//         url: "libs/php/sortAllEmployeesByFirstName.php",
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(result) {
-//             if (result.status.name == "ok") { 
-
-//                 for (i = 0; i < result.data.length ; i++) {
-
-//                     if(currentView === 'table') {
-//                         createTable(result);
-//                     } else if (currentView === 'grid') {
-//                         createCards(result);
-//                     }
-
-//                 }
-                
-//             }
-//         },
-//         error: function(jqXHR, textStatus, errorThrown) {
-//             reject(errorThrown);
-//         }
-//     }); 
-
-// }
-
-// // Sort employees by id
-// function displayAllEmployeesById() {
-
-//     $.ajax({
-//         url: "libs/php/sortAllEmployeesById.php",
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(result) {
-//             if (result.status.name == "ok") { 
-
-//                 for (i = 0; i < result.data.length ; i++) {
-
-//                     if(currentView === 'table') {
-//                         createTable(result);
-//                     } else if (currentView === 'grid') {
-//                         createCards(result);
-//                     }
-
-//                 }
-                
-//             }
-//         },
-//         error: function(jqXHR, textStatus, errorThrown) {
-//             reject(errorThrown);
-//         }
-//     }); 
-
-// }
-
-// // Sort employees by job title
-// function displayAllEmployeesByJobTitle() {
-
-//     $.ajax({
-//         url: "libs/php/sortAllEmployeesByJobTitle.php",
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(result) {
-//             if (result.status.name == "ok") { 
-
-//                 for (i = 0; i < result.data.length ; i++) {
-
-//                     if(currentView === 'table') {
-//                         createTable(result);
-//                     } else if (currentView === 'grid') {
-//                         createCards(result);
-//                     }
-
-//                 }
-                
-//             }
-//         },
-//         error: function(jqXHR, textStatus, errorThrown) {
-//             reject(errorThrown);
-//         }
-//     }); 
-
-// }
-
-// // Sort employees by department
-// function displayAllEmployeesByDepartment() {
-
-//     $.ajax({
-//         url: "libs/php/sortAllEmployeesByDepartment.php",
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(result) {
-//             if (result.status.name == "ok") { 
-
-//                 for (i = 0; i < result.data.length ; i++) {
-
-//                     if(currentView === 'table') {
-//                         createTable(result);
-//                     } else if (currentView === 'grid') {
-//                         createCards(result);
-//                     }
-
-//                 }
-                
-//             }
-//         },
-//         error: function(jqXHR, textStatus, errorThrown) {
-//             reject(errorThrown);
-//         }
-//     }); 
-
-// }
-
-// // Sort employees by location
-// function displayAllEmployeesByLocation() {
-
-//     $.ajax({
-//         url: "libs/php/sortAllEmployeesByLocation.php",
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(result) {
-//             if (result.status.name == "ok") { 
-
-//                 for (i = 0; i < result.data.length ; i++) {
-
-//                     if(currentView === 'table') {
-//                         createTable(result);
-//                     } else if (currentView === 'grid') {
-//                         createCards(result);
-//                     }
-
-//                 }
-                
-//             }
-//         },
-//         error: function(jqXHR, textStatus, errorThrown) {
-//             reject(errorThrown);
-//         }
-//     }); 
-
-// }
-
 // **************************************************************************************** //
 
 // ********************** Functions for filtering employees ******************************* //
 
+// create the filter request to be sent to php
 const createFilterRequest = filterRequest => {
 
     let request = '';
@@ -462,12 +319,12 @@ const createFilterRequest = filterRequest => {
 
         });
 
-        console.log(request);
         return request;
 
     } 
 }
 
+// ajax call to php to retrieve and display filtered data
 function applyFilterRequest(request) {
 
     $.ajax({
@@ -478,9 +335,6 @@ function applyFilterRequest(request) {
             request: request
         },
         success: function(result) {
-
-            filterActive = true;
-            $("#filter-reset").css("display", "block");
 
             clearCurrentResults();
 
@@ -574,7 +428,7 @@ $(document).on("click", "#grid-view", function(e) {
 
 // **************************************************************************************** //
 
-// ********************** Click events for soritng employees ****************************** //
+// ********************** Click events for sorting employees ****************************** //
 
 // Sort all employees by first name
 $(document).on("click", "#sort-fname", function(e) { 
@@ -688,6 +542,9 @@ let filterRequest;
 // Filter apply button is clicked
 $('#filter-apply').click(function() {
 
+    filterActive = true;
+    $("#filter-reset").css("display", "block");
+
     let checkedBoxes = $(".check-filter:checkbox:checked").map(function(){
         return $(this).attr("value");
     }).get();
@@ -702,7 +559,6 @@ $('#filter-apply').click(function() {
 $('#filter-reset').click(function() {
     
     filterActive = false;
-
     $("#filter-reset").css("display", "none");
 
     let checkedBoxes = $(".check-filter:checkbox:checked");
