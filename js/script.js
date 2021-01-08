@@ -31,12 +31,12 @@ function createTable(result) {
         const location = result.data[i]['location'];
 
         let tbody = `<tr>
-        <td value="td-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td value="td-name">${name} <i class="fas fa-expand-alt"></i></td>
-        <td value="td-job"><span class="red-highlight">${job}</span></td>
-        <td value="td-email">${email}</td>
-        <td value="td-department">${department} <i class="fas fa-expand-alt"></i></td>
-        <td value="td-location">${location} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
+        <td class="td-name"  data-toggle="modal" data-target="#employeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-job"><span class="red-highlight">${job}</span></td>
+        <td class="td-email">${email}</td>
+        <td class="td-department">${department} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-location">${location} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
         $("#all-employees").append(tbody);
@@ -362,26 +362,52 @@ function applyFilterRequest(request) {
 
 // **************************************************************************************** //
 
-// ********************** Displaying employees details ************************************ //
+// ********************** Retrieving and displaying data for Modals *********************** //
+
+let employeeDetails;
 
 // Employee details
-function displayEmployeeDetails(id) {
-    $.ajax({
-        url: "libs/php/getPersonnel.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            id: id
-        },
-        success: function(result) {
+const getEmployeeDetails = async id => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getEmployeeDetails.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id
+            },
+            success: function(result) {
 
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
-    
+                const employee = result['data'][0];
+
+                console.log('employee ',  employee);
+
+                resolve(employee);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
 }
+
+// Displaying the data for employee details modal
+function displayEmployeeDetailsModal(employee) {
+
+    const name = employee['firstName'] + ' ' + employee['lastName'];
+
+    $('#modal-employee-id').html(employee['id']);
+    $('#modal-employee-name').html(name);
+    // $('#modal-employee-job').html(result['data'][0]['jobTitle']);
+    $('#modal-employee-job').html('Job Title');
+    $('#modal-employee-email').html(employee['email']);
+    $('#modal-employee-department').html(employee['department']);
+    $('#modal-employee-location').html(employee['location']);
+
+}
+
+// Edit employee details
 
 // **************************************************************************************** //
 
@@ -579,22 +605,24 @@ $('#filter-reset').click(function() {
 // ********************** Click events on table and cards ********************************* //
 
 // Click cards and display employee details
-$(document).on("click", ".employee-card", function(e) {
+$(document).on("click", ".employee-card", async function(e) {
  
-    let id = $(this).attr('value');
-    displayEmployeeDetails(id);
+    let employeeId = $(this).attr('value');
+    employeeDetails = await getEmployeeDetails(employeeId);
+    displayEmployeeDetailsModal(employeeDetails);
 
 });
 
 // Click table data cell
-$("#all-employees").on("click", "td", function() {
+$("#all-employees").on("click", "td", async function() {
 
-    let value = $(this).attr('value');
+    let typeOfCellSelect = $(this).attr('class');
+    let employeeId = $(this).attr('value');
 
-    switch (value) {
+    switch (typeOfCellSelect) {
         case 'td-name':
-            $(this).attr('data-toggle', 'modal');
-            $(this).attr('data-target', '#employeeModal');
+            employeeDetails = await getEmployeeDetails(employeeId);
+            displayEmployeeDetailsModal(employeeDetails);
             break;
         case 'td-department':
             $(this).attr('data-toggle', 'modal');
@@ -618,8 +646,6 @@ let insideFilterDropdown = false;
 
 function sortDropdown() {
 
-    console.log('sortDropdown()');
-
     $("#sidebar-item-sort").toggleClass("active-dropdown");
 
     document.getElementById("sortDropdown").classList.toggle("show");
@@ -628,8 +654,6 @@ function sortDropdown() {
 }
 
 function filterDropdown() {
-
-    console.log('filterDropdown()');
 
     if(!insideFilterDropdown) {
         document.getElementById("filterDropdown").classList.toggle("show");
@@ -642,8 +666,6 @@ function filterDropdown() {
 }
 
 function filterJobDropdown() {
-
-    console.log('filterJobDropdown()');
 
     $("#filter-job").toggleClass("active-dropdown");
 
@@ -658,8 +680,6 @@ function filterJobDropdown() {
 
 function filterDepartmentDropdown() {
 
-    console.log('filterDepartmentDropdown()');
-
     $("#filter-department").toggleClass("active-dropdown");
 
     document.getElementById("filterDepartmentDropdown").classList.toggle("show");
@@ -672,8 +692,6 @@ function filterDepartmentDropdown() {
 }
 
 function filterLocationDropdown() {
-
-    console.log('filterLocationDropdown()');   
 
     $("#filter-location").toggleClass("active-dropdown");
 
