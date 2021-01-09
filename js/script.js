@@ -24,8 +24,8 @@ function createTable(result) {
         const id = result.data[i]['id'];
         const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
         // NO JOB TITLE IN TABLE
-        // const job = result.data[i]['jobTitle']; 
-        const job = "JobTitle";
+        const job = result.data[i]['jobTitle']; 
+        // const job = "JobTitle";
         const email = result.data[i]['email'];
         const department = result.data[i]['department'];
         const location = result.data[i]['location'];
@@ -57,8 +57,8 @@ function createCards(result) {
         const id = result.data[i]['id'];
         const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
         // NO JOB TITLE IN TABLE
-        // const job = result.data[i]['jobTitle']; 
-        const job = "JobTitle";
+        const job = result.data[i]['jobTitle']; 
+        // const job = "JobTitle";
         const email = result.data[i]['email'];
         const department = result.data[i]['department'];
         const location = result.data[i]['location'];
@@ -362,9 +362,57 @@ function applyFilterRequest(request) {
 
 // **************************************************************************************** //
 
+// ********************** Function to convert deparment name to department id ************* //
+
+const deparmentNameToID = name => {
+
+    switch(name) {
+        case 'Human Resources':
+            return 1;
+            break;
+        case 'Sales':
+            return 2;
+            break;
+        case 'Marketing':
+            return 3;
+            break;
+        case 'Legal':
+            return 4;
+            break;
+        case 'Services':
+            return 5;
+            break;
+        case 'Research and Development':
+            return 6;
+            break;
+        case 'Product Management':
+            return 7;
+            break;
+        case 'Training':
+            return 8;
+            break;
+        case 'Support':
+            return 9;
+            break;
+        case 'Engineering':
+            return 10;
+            break;
+        case 'Accounting':
+            return 11;
+            break;
+        case 'Business Development':
+            return 12;
+            break;
+        default:
+
+    }
+}
+
+// **************************************************************************************** //
+
 // ********************** Retrieving and displaying data for Modals *********************** //
 
-let employeeDetails;
+let employeeDetailsResult;
 
 // Employee details
 const getEmployeeDetails = async id => {
@@ -379,8 +427,6 @@ const getEmployeeDetails = async id => {
             success: function(result) {
 
                 const employee = result['data'][0];
-
-                console.log('employee ',  employee);
 
                 resolve(employee);
 
@@ -399,15 +445,77 @@ function displayEmployeeDetailsModal(employee) {
 
     $('#modal-employee-id').html(employee['id']);
     $('#modal-employee-name').html(name);
-    // $('#modal-employee-job').html(result['data'][0]['jobTitle']);
-    $('#modal-employee-job').html('Job Title');
+    $('#modal-employee-job').html(employee['jobTitle']);
+    // $('#modal-employee-job').html('Job Title');
     $('#modal-employee-email').html(employee['email']);
     $('#modal-employee-department').html(employee['department']);
     $('#modal-employee-location').html(employee['location']);
 
 }
 
-// Edit employee details
+// Edit employee details modal form to be updated to match employee details
+function populateEditEmployeeDetailsModal(employee) {
+
+    console.log(employee);
+    $('#edit-firstName').val(employee['firstName']);
+    $('#edit-lastName').val(employee['lastName']);
+    $('#edit-jobTitle').val(employee['jobTitle']);
+    $('#edit-email').val(employee['email']);
+
+    const departmentID = deparmentNameToID(employee['department']);
+    $('#edit-department').val(departmentID);
+
+    $('#edit-location').val(employee['location']);
+
+}
+
+// Update employee details modal
+function updateEmployeeDetails() {
+
+    const id = employeeDetailsResult['id'];
+
+    const firstName = $('#edit-firstName').val();
+    const lastName = $('#edit-lastName').val();
+    const jobTitle = $('#edit-jobTitle').val();
+    const email = $('#edit-email').val();
+    const departmentID = $('#edit-department option:selected').val();
+
+    $.ajax({
+        url: "libs/php/updateEmployeeDetails.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            jobTitle: jobTitle,
+            email: email,
+            departmentID: departmentID
+        },
+        success: async function(result) {
+
+            if(result['status']['code'] === '200') {
+                
+                employeeDetailsResult = await getEmployeeDetails(id);
+                displayEmployeeDetailsModal(employeeDetailsResult);
+                populateEditEmployeeDetailsModal(employeeDetailsResult);
+                clearCurrentResults();
+
+                if(currentView === 'table') {
+                    $( "#table-div" ).addClass( "tableFixHead" );
+                }
+
+                displayAllEmployeesByLastName();
+
+            }
+            
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+}
 
 // **************************************************************************************** //
 
@@ -608,8 +716,9 @@ $('#filter-reset').click(function() {
 $(document).on("click", ".employee-card", async function(e) {
  
     let employeeId = $(this).attr('value');
-    employeeDetails = await getEmployeeDetails(employeeId);
-    displayEmployeeDetailsModal(employeeDetails);
+    employeeDetailsResult = await getEmployeeDetails(employeeId);
+    displayEmployeeDetailsModal(employeeDetailsResult);
+    populateEditEmployeeDetailsModal(employeeDetailsResult);
 
 });
 
@@ -621,8 +730,9 @@ $("#all-employees").on("click", "td", async function() {
 
     switch (typeOfCellSelect) {
         case 'td-name':
-            employeeDetails = await getEmployeeDetails(employeeId);
-            displayEmployeeDetailsModal(employeeDetails);
+            employeeDetailsResult = await getEmployeeDetails(employeeId);
+            displayEmployeeDetailsModal(employeeDetailsResult);
+            populateEditEmployeeDetailsModal(employeeDetailsResult);
             break;
         case 'td-department':
             $(this).attr('data-toggle', 'modal');
