@@ -35,7 +35,7 @@ function createTable(result) {
         <td class="td-name"  data-toggle="modal" data-target="#employeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
         <td class="td-job"><span class="red-highlight">${job}</span></td>
         <td class="td-email">${email}</td>
-        <td class="td-department">${department} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-department" data-toggle="modal" data-target="#departmentModal" value="${department}">${department} <i class="fas fa-expand-alt"></i></td>
         <td class="td-location">${location} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
@@ -410,7 +410,7 @@ const deparmentNameToID = name => {
 
 // **************************************************************************************** //
 
-// ********************** Retrieving and displaying data for Modals *********************** //
+// ************ Retrieving and displaying data for Employee Modals ************************ //
 
 let employeeDetailsResult;
 
@@ -446,17 +446,21 @@ function displayEmployeeDetailsModal(employee) {
     $('#modal-employee-id').html(employee['id']);
     $('#modal-employee-name').html(name);
     $('#modal-employee-job').html(employee['jobTitle']);
-    // $('#modal-employee-job').html('Job Title');
     $('#modal-employee-email').html(employee['email']);
     $('#modal-employee-department').html(employee['department']);
     $('#modal-employee-location').html(employee['location']);
+
+    if(throughDepartmentModal) {
+        console.log('throughDepartmentModal');
+        $('#employeeCloseBtn').attr('data-toggle', 'modal');
+        $('#employeeCloseBtn').attr('data-target', '#departmentModal');
+    }
 
 }
 
 // Edit employee details modal form to be updated to match employee details
 function populateEditEmployeeDetailsModal(employee) {
 
-    console.log(employee);
     $('#edit-firstName').val(employee['firstName']);
     $('#edit-lastName').val(employee['lastName']);
     $('#edit-jobTitle').val(employee['jobTitle']);
@@ -516,6 +520,92 @@ function updateEmployeeDetails() {
         }
     }); 
 }
+
+// **************************************************************************************** //
+
+// ************ Retrieving and displaying data for Department Modals ********************** //
+
+let departmentDetailsResult;
+let throughDepartmentModal = false;
+
+// Department details
+const getDepartmentDetails = async id => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getDepartmentDetailsByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id
+            },
+            success: function(result) {
+
+                const deparment = result['data'];
+
+                resolve(deparment);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Displaying the data for department details modal
+function displayDepartmentDetailsModal(department) {
+
+    console.log(department);
+
+    $('#modal-department-id').html(department[0]['id']);
+    $('#modal-department-name').html(department[0]['department']);
+    $('#modal-department-location').html(department[0]['location']);
+    $('#modal-department-number-employees').html(department.length);
+
+    employeeListHtml = '';
+
+    for(let i = 0; i < department.length; i++) {
+        let employee = department[i]['firstName'] + ' ' + department[i]['lastName'];
+        let employeeID = department[i]['id'];
+        let html = `<span class="employee-highlight department-employee" data-toggle="modal" data-target="#employeeModal" value="${employeeID}">${employee}</span> , `;
+    
+        employeeListHtml += html;
+    }
+
+    console.log(employeeListHtml);
+
+    $('#modal-department-employees').html(employeeListHtml);
+
+}
+
+// **************************************************************************************** //
+
+// ********************** Click events for modals ***************************************** //
+
+// Selecting an employee in department modal
+$(document).on("click", ".department-employee", async function(e) {
+
+    $('#departmentModal').modal('hide');
+    throughDepartmentModal = true;
+
+    let employeeId = $(this).attr('value');
+    employeeDetailsResult = await getEmployeeDetails(employeeId);
+    displayEmployeeDetailsModal(employeeDetailsResult);
+    populateEditEmployeeDetailsModal(employeeDetailsResult);
+
+});
+
+// Click employees modal close button and whether to redirect to another modal
+$(document).on("click", "#employeeCloseBtn", async function(e) {
+
+    if(throughDepartmentModal) {
+        $('#employeeCloseBtn').removeAttr('data-toggle');
+        $('#employeeCloseBtn').removeAttr('data-target');
+
+        throughDepartmentModal = false;
+    }
+
+});
 
 // **************************************************************************************** //
 
@@ -726,17 +816,19 @@ $(document).on("click", ".employee-card", async function(e) {
 $("#all-employees").on("click", "td", async function() {
 
     let typeOfCellSelect = $(this).attr('class');
-    let employeeId = $(this).attr('value');
 
     switch (typeOfCellSelect) {
         case 'td-name':
+            let employeeId = $(this).attr('value');
             employeeDetailsResult = await getEmployeeDetails(employeeId);
             displayEmployeeDetailsModal(employeeDetailsResult);
             populateEditEmployeeDetailsModal(employeeDetailsResult);
             break;
         case 'td-department':
-            $(this).attr('data-toggle', 'modal');
-            $(this).attr('data-target', '#departmentModal');
+            let departmentName = $(this).attr('value');
+            const departmentID = deparmentNameToID(departmentName);
+            departmentDetailsResult = await getDepartmentDetails(departmentID);
+            displayDepartmentDetailsModal(departmentDetailsResult);
             break;
         case 'td-location':
             $(this).attr('data-toggle', 'modal');
