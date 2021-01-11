@@ -23,20 +23,20 @@ function createTable(result) {
 
         const id = result.data[i]['id'];
         const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
-        // NO JOB TITLE IN TABLE
         const job = result.data[i]['jobTitle']; 
-        // const job = "JobTitle";
         const email = result.data[i]['email'];
         const department = result.data[i]['department'];
+        const departmentID = result.data[i]['departmentID'];
         const location = result.data[i]['location'];
+        const locationID = result.data[i]['locationID'];
 
         let tbody = `<tr>
         <td class="td-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
         <td class="td-name"  data-toggle="modal" data-target="#employeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
         <td class="td-job"><span class="red-highlight">${job}</span></td>
         <td class="td-email">${email}</td>
-        <td class="td-department" data-toggle="modal" data-target="#departmentModal" value="${department}">${department} <i class="fas fa-expand-alt"></i></td>
-        <td class="td-location">${location} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-department" data-toggle="modal" data-target="#departmentModal" value="${departmentID}">${department} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-location" data-toggle="modal" data-target="#locationModal" value="${locationID}">${location} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
         $("#all-employees").append(tbody);
@@ -451,7 +451,6 @@ function displayEmployeeDetailsModal(employee) {
     $('#modal-employee-location').html(employee['location']);
 
     if(throughDepartmentModal) {
-        console.log('throughDepartmentModal');
         $('#employeeCloseBtn').attr('data-toggle', 'modal');
         $('#employeeCloseBtn').attr('data-target', '#departmentModal');
     }
@@ -465,10 +464,7 @@ function populateEditEmployeeDetailsModal(employee) {
     $('#edit-lastName').val(employee['lastName']);
     $('#edit-jobTitle').val(employee['jobTitle']);
     $('#edit-email').val(employee['email']);
-
-    const departmentID = deparmentNameToID(employee['department']);
-    $('#edit-department').val(departmentID);
-
+    $('#edit-department').val(employee['departmentID']);
     $('#edit-location').val(employee['location']);
 
 }
@@ -555,26 +551,106 @@ const getDepartmentDetails = async id => {
 // Displaying the data for department details modal
 function displayDepartmentDetailsModal(department) {
 
-    console.log(department);
-
     $('#modal-department-id').html(department[0]['id']);
     $('#modal-department-name').html(department[0]['department']);
     $('#modal-department-location').html(department[0]['location']);
     $('#modal-department-number-employees').html(department.length);
 
-    employeeListHtml = '';
+    let employeeListHtml = '';
 
     for(let i = 0; i < department.length; i++) {
+
         let employee = department[i]['firstName'] + ' ' + department[i]['lastName'];
         let employeeID = department[i]['id'];
-        let html = `<span class="employee-highlight department-employee" data-toggle="modal" data-target="#employeeModal" value="${employeeID}">${employee}</span> , `;
+        let html = `<span class="employee-highlight department-employee" data-toggle="modal" data-target="#employeeModal" value="${employeeID}">${employee}</span> `;
+        let comma = ' , ';
+
+        if(i !== department.length - 1) {
+            html += comma;
+        }
     
         employeeListHtml += html;
     }
 
-    console.log(employeeListHtml);
-
     $('#modal-department-employees').html(employeeListHtml);
+
+}
+
+// **************************************************************************************** //
+
+// ************ Retrieving and displaying data for Location Modals ********************** //
+
+let locationDetailsResult;
+let throughLocationModal = false;
+
+// Department details
+const getLocationDetails = async id => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getLocationDetailsByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id
+            },
+            success: function(result) {
+
+                const locationDetails = result;
+
+                resolve(locationDetails);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Displaying the data for location details modal
+function displayLocationDetailsModal(location) {
+
+    console.log(location);
+
+    $('#modal-location-id').html(location['data2'][0]['locationID']);
+    $('#modal-location-name').html(location['data2'][0]['location']);
+
+    let departmentListHtml = '';
+
+    for(let i = 0; i < location['data2'].length; i++) {
+        let department = location['data2'][i]['department'];
+        let departmentID = location['data2'][i]['departmentID'];
+        let html = `<span class="department-highlight location-department" data-toggle="modal" data-target="#departmentModal" value="${departmentID}">${department}</span> `;
+        let comma = ' , ';
+
+        if(i !== location['data2'].length - 1) {
+            html += comma;
+        }
+    
+        departmentListHtml += html;
+    }
+
+    $('#modal-location-departments').html(departmentListHtml);
+
+    $('#modal-location-number-employees').html(location['data'].length);
+
+    let employeeListHtml = '';
+
+    for(let i = 0; i < location['data'].length; i++) {
+
+        let employee = location['data'][i]['firstName'] + ' ' + location['data'][i]['lastName'];
+        let employeeID = location['data'][i]['id'];
+        let html = `<span class="employee-highlight location-employee" data-toggle="modal" data-target="#employeeModal" value="${employeeID}">${employee}</span> `;
+        let comma = ' , ';
+
+        if(i !== location['data'].length - 1) {
+            html += comma;
+        }
+    
+        employeeListHtml += html;
+    }
+
+    $('#modal-location-employees').html(employeeListHtml);
 
 }
 
@@ -825,14 +901,14 @@ $("#all-employees").on("click", "td", async function() {
             populateEditEmployeeDetailsModal(employeeDetailsResult);
             break;
         case 'td-department':
-            let departmentName = $(this).attr('value');
-            const departmentID = deparmentNameToID(departmentName);
+            let departmentID = $(this).attr('value');
             departmentDetailsResult = await getDepartmentDetails(departmentID);
             displayDepartmentDetailsModal(departmentDetailsResult);
             break;
         case 'td-location':
-            $(this).attr('data-toggle', 'modal');
-            $(this).attr('data-target', '#locationModal');
+            let locationID = $(this).attr('value');
+            locationDetailsResult = await getLocationDetails(locationID);
+            displayLocationDetailsModal(locationDetailsResult);
             break;
         default:
             break;

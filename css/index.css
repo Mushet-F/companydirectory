@@ -201,6 +201,12 @@ th {
   border-radius: 10px;
 }
 
+.department-highlight {
+  background-color: #9ffa92;
+  padding: 1.5px;
+  border-radius: 10px;
+}
+
 /* Cards */
 .team-boxed {
   color:#313437;
