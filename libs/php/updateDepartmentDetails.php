@@ -32,7 +32,8 @@
 
 	}	
 
-	$query = 'SELECT p.id as employeeID, p.firstName, p.lastName, p.departmentID as id, d.name as department, l.id as locationID, l.name as location FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) LEFT JOIN location l ON (l.id = d.locationID) WHERE departmentID = ' . $_REQUEST['id'];
+	// $query = 'UPDATE personnel SET firstName = \'' . $_REQUEST['firstName'] . '\', lastName = \'' . $_REQUEST['lastName'] . '\', jobTitle = \'' . $_REQUEST['jobTitle'] . '\', email = \'' . $_REQUEST['email'] . '\', departmentID = \'' . $_REQUEST['departmentID'] . '\' WHERE personnel.id = \'' . $_REQUEST['id'] . '\'';
+	$query = 'UPDATE department SET name = \'' . $_REQUEST['name'] . '\', locationID = ' . $_REQUEST['locationID'] . ' WHERE department.id = ' . $_REQUEST['id'];
 
 	$result = $conn->query($query);
 	
@@ -50,20 +51,12 @@
 		exit;
 
 	}
-   
-   	$data = [];
-
-	while ($row = mysqli_fetch_assoc($result)) {
-
-		array_push($data, $row);
-
-	}
 
 	$output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data'] = $data;
+	$output['data'] = $result;
 	
 	mysqli_close($conn);
 

@@ -239,23 +239,23 @@
                                 <form>
                                     <div class="form-group">
                                         <label for="firstName">First Name</label>
-                                        <input type="text" class="form-control" id="edit-firstName">
+                                        <input type="text" class="form-control" id="employee-edit-firstName">
                                     </div>
                                     <div class="form-group">
                                         <label for="lastName">Last Name</label>
-                                        <input type="text" class="form-control" id="edit-lastName">
+                                        <input type="text" class="form-control" id="employee-edit-lastName">
                                     </div>
                                     <div class="form-group">
                                         <label for="jobTitle">Job Title</label>
-                                        <input type="text" class="form-control" id="edit-jobTitle">
+                                        <input type="text" class="form-control" id="employee-edit-jobTitle">
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Email address</label>
-                                        <input type="email" class="form-control" id="edit-email" aria-describedby="emailHelp">
+                                        <input type="email" class="form-control" id="employee-edit-email" aria-describedby="emailHelp">
                                     </div>
                                     <div class="form-group">
                                         <label for="department">Department</label>
-                                        <select class="form-control" id="edit-department">
+                                        <select class="form-control" id="employee-edit-department">
                                             <option value="1">Human Resources</option>
                                             <option value="2">Sales</option>
                                             <option value="3">Marketing</option>
@@ -329,16 +329,16 @@
                                 <form>
                                     <div class="form-group">
                                         <label for="firstName">Department Name</label>
-                                        <input type="text" class="form-control" id="departmentName">
+                                        <input type="text" class="form-control" id="department-edit-name">
                                     </div>
                                     <div class="form-group">
                                         <label for="department">Location</label>
-                                        <select class="form-control" id="department-location">
-                                            <option>London</option>
-                                            <option>Munich</option>
-                                            <option>New York</option>
-                                            <option>Paris</option>
-                                            <option>Rome</option>
+                                        <select class="form-control" id="department-edit-location">
+                                            <option value="1">London</option>
+                                            <option value="2">New York</option>
+                                            <option value="3">Paris</option>
+                                            <option value="4">Munich</option>
+                                            <option value="5">Rome</option>
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
@@ -349,7 +349,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal">Close</button>
-                                <button type="submit" class="btn btn btn-outline-primary" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal">Save</button>
+                                <button type="submit" class="btn btn btn-outline-primary" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" onclick="updateDepartmentDetails()">Save</button>
                             </div>
                         </div>
                     </div>
