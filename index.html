@@ -224,7 +224,7 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="employeeCloseBtn">Close</button>
                                 <button type="button" class="btn btn btn-outline-success" data-dismiss="modal" data-toggle="modal" data-target="#editEmployeeModal">Edit</button>
-                                <button type="button" class="btn btn btn-outline-danger">Delete</button>
+                                <button type="button" class="btn btn btn-outline-danger" data-dismiss="modal" data-toggle="modal" data-target="#deleteEmployeeModal" id="show-delete-form">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -343,6 +343,27 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
                                 <button type="submit" class="btn btn btn-outline-success" data-dismiss="modal" onclick="createEmployee()">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal - Delete Employee -->
+                <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteEmployeeModalLabel">Delete Employee</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="delete-info">You sure you want to delete employee, <span id="employee-delete-name"></span>?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" data-target="#editEmployeeModal">Close</button>
+                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteEmployeeByID()">Delete</button>
                             </div>
                         </div>
                     </div>

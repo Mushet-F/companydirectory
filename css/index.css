@@ -247,7 +247,7 @@ th {
   max-width:160px;
 }
 
-/* Employee Modal */
+/* Modal */
 
 .labels {
   font-size: medium;
@@ -256,5 +256,9 @@ th {
 }
 
 .labels-values {
+  font-size: large;
+}
+
+.delete-info {
   font-size: large;
 }

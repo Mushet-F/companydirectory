@@ -577,6 +577,40 @@ function updateEmployeeDetails() {
 }
 
 // Delete
+// Delete selected employee 
+function deleteEmployeeByID() {
+
+    const id = employeeDetailsResult['id'];
+    console.log('id');
+
+    $.ajax({
+        url: "libs/php/deleteEmployeeByID.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            id: id
+        },
+        success: async function(result) {
+
+            if(result['status']['code'] === '200') {
+                
+                clearCurrentResults();
+
+                if(currentView === 'table') {
+                    $( "#table-div" ).addClass( "tableFixHead" );
+                }
+
+                displayAllEmployeesByLastName();
+
+            }    
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+}
+
 
 // **************************************************************************************** //
 
@@ -727,6 +761,7 @@ function updateDepartmentDetails() {
 }
 
 // Delete
+
 
 // **************************************************************************************** //
 
@@ -922,6 +957,12 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
         }
     } 
 
+});
+
+// Clicking employee delete button
+$(document).on("click", "#show-delete-form", async function(e) {
+    const name = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
+    $('#employee-delete-name').html(name);
 });
 
 
@@ -1313,6 +1354,7 @@ $("#all-employees").on("click", "td", async function() {
         case 'td-name':
             let employeeId = $(this).attr('value');
             employeeDetailsResult = await getEmployeeDetails(employeeId);
+            console.log(employeeDetailsResult);
             displayEmployeeDetailsModal(employeeDetailsResult);
             populateEditEmployeeDetailsModal(employeeDetailsResult);
             break;
