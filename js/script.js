@@ -450,10 +450,16 @@ function displayEmployeeDetailsModal(employee) {
     $('#modal-employee-department').html(employee['department']);
     $('#modal-employee-location').html(employee['location']);
 
-    if(throughDepartmentModal) {
-        $('#employeeCloseBtn').attr('data-toggle', 'modal');
-        $('#employeeCloseBtn').attr('data-target', '#departmentModal');
-    }
+    $('#modal-employee-department').attr('value', employee['departmentID']);
+
+    if(trackingModals.length === 0) {
+        let modalType = '#employeeModal';
+        let currentModal = {
+            details: employee, 
+            type: modalType
+        };
+        trackingModals.push(currentModal);
+    } 
 
 }
 
@@ -522,7 +528,6 @@ function updateEmployeeDetails() {
 // ************ Retrieving and displaying data for Department Modals ********************** //
 
 let departmentDetailsResult;
-let throughDepartmentModal = false;
 
 // Department details
 const getDepartmentDetails = async id => {
@@ -562,7 +567,7 @@ function displayDepartmentDetailsModal(department) {
 
         let employee = department[i]['firstName'] + ' ' + department[i]['lastName'];
         let employeeID = department[i]['id'];
-        let html = `<span class="employee-highlight department-employee" data-toggle="modal" data-target="#employeeModal" value="${employeeID}">${employee}</span> `;
+        let html = `<span class="employee-highlight department-employee"  data-dismiss="modal" data-toggle="modal" data-target="#employeeModal" value="${employeeID}">${employee}</span> `;
         let comma = ' , ';
 
         if(i !== department.length - 1) {
@@ -573,6 +578,15 @@ function displayDepartmentDetailsModal(department) {
     }
 
     $('#modal-department-employees').html(employeeListHtml);
+
+    if(trackingModals.length === 0) {
+        let modalType = '#departmentModal';
+        let currentModal = {
+            details: department, 
+            type: modalType
+        };
+        trackingModals.push(currentModal);
+    }
 
 }
 
@@ -609,8 +623,6 @@ const getLocationDetails = async id => {
 
 // Displaying the data for location details modal
 function displayLocationDetailsModal(location) {
-
-    console.log(location);
 
     $('#modal-location-id').html(location['data2'][0]['locationID']);
     $('#modal-location-name').html(location['data2'][0]['location']);
@@ -656,30 +668,117 @@ function displayLocationDetailsModal(location) {
 
 // **************************************************************************************** //
 
-// ********************** Click events for modals ***************************************** //
+// ********************** Click events for employee modal ********************************* //
 
-// Selecting an employee in department modal
-$(document).on("click", ".department-employee", async function(e) {
+// Selecting to open a modal from another modal tracker
+let trackingModals = [];
 
-    $('#departmentModal').modal('hide');
-    throughDepartmentModal = true;
+// Selecting an department in employee modal
+$(document).on("click", "#modal-employee-department", async function(e) {
 
-    let employeeId = $(this).attr('value');
-    employeeDetailsResult = await getEmployeeDetails(employeeId);
-    displayEmployeeDetailsModal(employeeDetailsResult);
-    populateEditEmployeeDetailsModal(employeeDetailsResult);
+    let departmentID = $(this).attr('value');
+    departmentDetailsResult = await getDepartmentDetails(departmentID);
+    displayDepartmentDetailsModal(departmentDetailsResult);
+
+    let modalType = '#departmentModal';
+    let currentModal = {
+        details: departmentDetailsResult, 
+        type: modalType
+    };
+    trackingModals.push(currentModal);
+
+    if (trackingModals.length > 1) {
+        let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+        $('#departmentCloseBtn').attr('data-toggle', 'modal');
+        $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
+    }
 
 });
 
 // Click employees modal close button and whether to redirect to another modal
 $(document).on("click", "#employeeCloseBtn", async function(e) {
 
-    if(throughDepartmentModal) {
+    if(trackingModals.length > 0) {
+        trackingModals.pop();
+
         $('#employeeCloseBtn').removeAttr('data-toggle');
         $('#employeeCloseBtn').removeAttr('data-target');
 
-        throughDepartmentModal = false;
+        if(trackingModals.length > 0) {
+            let nextModal = trackingModals[trackingModals.length - 1];
+    
+            if (nextModal['type'] === '#departmentModal'){
+                departmentDetailsResult = nextModal['details'];
+                displayDepartmentDetailsModal(departmentDetailsResult);
+
+                if (trackingModals.length > 1) {
+                    let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+                    $('#departmentCloseBtn').attr('data-toggle', 'modal');
+                    $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
+                }
+
+            } else if (nextModal['type'] === '#employeeModal') {
+                console.log('employee modal');
+            }
+        }
+    } 
+
+});
+
+
+// **************************************************************************************** //
+
+// ********************** Click events for department modal ******************************* //
+
+// Selecting an employee in department modal
+$(document).on("click", ".department-employee", async function(e) {
+
+    let employeeId = $(this).attr('value');
+    employeeDetailsResult = await getEmployeeDetails(employeeId);
+    displayEmployeeDetailsModal(employeeDetailsResult);
+    populateEditEmployeeDetailsModal(employeeDetailsResult);
+
+    let modalType = '#employeeModal';
+    let currentModal = {
+        details: employeeDetailsResult, 
+        type: modalType
+    };
+    trackingModals.push(currentModal);
+
+    if (trackingModals.length > 1) {
+        let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+        $('#employeeCloseBtn').attr('data-toggle', 'modal');
+        $('#employeeCloseBtn').attr('data-target', `${closeBtnTarget}`);
     }
+
+});
+
+// Click department modal close button and whether to redirect to another modal
+$(document).on("click", "#departmentCloseBtn", async function(e) {
+
+    if(trackingModals.length > 0) {
+        trackingModals.pop();
+        $('#departmentCloseBtn').removeAttr('data-toggle');
+        $('#departmentCloseBtn').removeAttr('data-target');
+
+        if(trackingModals.length > 0) {
+            let nextModal = trackingModals[trackingModals.length - 1];
+
+            if (nextModal['type'] === '#employeeModal'){
+                employeeDetailsResult = nextModal['details'];
+                displayEmployeeDetailsModal(employeeDetailsResult);
+
+                if (trackingModals.length > 1) {
+                    let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+                    $('#employeeCloseBtn').attr('data-toggle', 'modal');
+                    $('#employeeCloseBtn').attr('data-target', `${closeBtnTarget}`);
+                }
+
+            } else if (nextModal['type'] === '#locationModal') {
+
+            }
+        }
+    } 
 
 });
 
