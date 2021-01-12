@@ -415,6 +415,7 @@ const departmentNameToID = name => {
 let employeeDetailsResult;
 
 // Create 
+// Create employee
 function createEmployee() {
 
     const firstName = $('#employee-create-firstName').val();
@@ -462,6 +463,7 @@ function createEmployee() {
         }
     }); 
 }
+
 // Read
 // Employee details
 const getEmployeeDetails = async id => {
@@ -582,6 +584,31 @@ function updateEmployeeDetails() {
 
 let departmentDetailsResult;
 
+// Create
+// Create employee
+function createDepartment() {
+
+    const name = $('#department-create-name').val();
+    const locationID = $('#department-create-location').val();
+
+    $.ajax({
+        url: "libs/php/createDepartment.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            name: name,
+            locationID: locationID
+        },
+        success: async function(result) {
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+}
+
+// Read
 // Department details
 const getDepartmentDetails = async id => {
     return new Promise((resolve, reject) => {
@@ -648,6 +675,7 @@ function displayDepartmentDetailsModal(department) {
 
 }
 
+// Update
 // Edit department details modal form to be updated to match department details
 function populateEditDepartmentDetailsModal(department) {
 
@@ -698,12 +726,36 @@ function updateDepartmentDetails() {
     }); 
 }
 
+// Delete
+
 // **************************************************************************************** //
 
 // ************ Retrieving and displaying data for Location Modals ********************** //
 
 let locationDetailsResult;
+// Create
+// Create employee
+function createLocation() {
 
+    const name = $('#location-create-name').val();
+
+    $.ajax({
+        url: "libs/php/createLocation.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            name: name,
+        },
+        success: async function(result) {
+            console.log(result);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+}
+
+// Read
 // Department details
 const getLocationDetails = async id => {
     return new Promise((resolve, reject) => {
@@ -1287,12 +1339,24 @@ $("#all-employees").on("click", "td", async function() {
 
 let insideFilterDropdown = false;
 
+function addDropdown() {
+    $("#sidebar-item-add").toggleClass("active-dropdown");
+
+    document.getElementById("addDropdown").classList.toggle("show");
+    document.getElementById("sortDropdown").classList.remove("show");
+    document.getElementById("filterDropdown").classList.remove("show");
+    $("#sidebar-item-sort").removeClass("active-dropdown");
+    $("#sidebar-item-filter").removeClass("active-dropdown");
+}
+
 function sortDropdown() {
 
     $("#sidebar-item-sort").toggleClass("active-dropdown");
 
     document.getElementById("sortDropdown").classList.toggle("show");
+    document.getElementById("addDropdown").classList.remove("show");
     document.getElementById("filterDropdown").classList.remove("show");
+    $("#sidebar-item-add").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
 }
 
@@ -1301,8 +1365,10 @@ function filterDropdown() {
     if(!insideFilterDropdown) {
         document.getElementById("filterDropdown").classList.toggle("show");
         document.getElementById("sortDropdown").classList.remove("show");
+        document.getElementById("addDropdown").classList.remove("show");
         $("#sidebar-item-filter").toggleClass("active-dropdown");
         $("#sidebar-item-sort").removeClass("active-dropdown");
+        $("#sidebar-item-add").removeClass("active-dropdown");
     } 
 
     insideFilterDropdown = false;

@@ -159,8 +159,13 @@
                             <button id="filter-reset" class="sidebar-button">RESET</button>
                         </div>
                     </li>
-                    <li class="sidebar-item sidebar-main-item" data-toggle="modal" data-target="#createEmployeeModal">
-                        <span class="side-main-item-margin">Add New Employee</span>
+                    <li onclick="addDropdown()" id="sidebar-item-add" class="sidebar-item sidebar-main-item dropbtn">
+                        <span class="side-main-item-margin">Add New</span>
+                        <div id="addDropdown" class="dropdown-content">
+                            <span class="sidebar-item" data-toggle="modal" data-target="#createEmployeeModal">Employee</span>
+                            <span class="sidebar-item" data-toggle="modal" data-target="#createDepartmentModal">Department</span>
+                            <span class="sidebar-item" data-toggle="modal" data-target="#createLocationModal">Location</span>
+                        </div>
                     </li>
                 </ul>
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -284,12 +289,12 @@
                     </div>
                 </div>
 
-                <!-- Modal - Create Employee -->
+                <!-- Modal - Create New Employee -->
                 <div class="modal fade" id="createEmployeeModal" tabindex="-1" aria-labelledby="createEmployeeModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="createEmployeeModalLabel">Employee Details</h5>
+                                <h5 class="modal-title" id="createEmployeeModalLabel">Create New Employee</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -401,14 +406,54 @@
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck2">
-                                        <label class="form-check-label" for="exampleCheck2">Check me out</label>
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck8">
+                                        <label class="form-check-label" for="exampleCheck8">Check me out</label>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal">Close</button>
                                 <button type="submit" class="btn btn btn-outline-primary" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" onclick="updateDepartmentDetails()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal - Create New Department -->
+                <div class="modal fade" id="createDepartmentModal" tabindex="-1" aria-labelledby="createDepartmentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createDepartmentModalLabel">Create New Department</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="firstName">Department Name</label>
+                                        <input type="text" class="form-control" id="department-create-name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="department">Location</label>
+                                        <select class="form-control" id="department-create-location">
+                                            <option value="1">London</option>
+                                            <option value="2">New York</option>
+                                            <option value="3">Paris</option>
+                                            <option value="4">Munich</option>
+                                            <option value="5">Rome</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                                        <label class="form-check-label" for="exampleCheck2">Check me out</label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
+                                <button type="submit" class="btn btn btn-outline-success" data-dismiss="modal" onclick="createDepartment()">Create</button>
                             </div>
                         </div>
                     </div>
@@ -439,6 +484,37 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="locationCloseBtn">Close</button>
                                 <button type="button" class="btn btn btn-outline-danger">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal - Location Details-->
+                <div class="modal fade" id="createLocationModal" tabindex="-1" aria-labelledby="createLocationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createLocationModalLabel">Create New Location</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="locationName">Location</label>
+                                        <input type="text" class="form-control" id="location-create-name">
+                                    </div>
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck12">
+                                        <label class="form-check-label" for="exampleCheck12">Check me out</label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
+                                <button type="submit" class="btn btn btn-outline-success" data-dismiss="modal" onclick="createLocation()">Create</button>
                             </div>
                         </div>
                     </div>
