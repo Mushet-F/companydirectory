@@ -32,7 +32,7 @@
 
 	}	
 
-	$query = 'SELECT p.id, p.firstName, p.lastName, d.name as department, l.id ,l.name as location FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) LEFT JOIN location l ON (l.id = d.locationID) WHERE locationID = ' . $_REQUEST['id'] . ' ORDER BY d.name, p.lastName, p.firstName;';
+	$query = 'SELECT p.id as employeeID, p.firstName, p.lastName, d.name as department, l.id ,l.name as location FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) LEFT JOIN location l ON (l.id = d.locationID) WHERE locationID = ' . $_REQUEST['id'] . ' ORDER BY d.name, p.lastName, p.firstName;';
 	$query .= 'SELECT DISTINCT p.departmentID, d.name as department,l.id as locationID , l.name as location FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) LEFT JOIN location l ON (l.id = d.locationID) WHERE locationID = '  . $_REQUEST['id'] . ' ORDER BY p.departmentID';
 
 	$result = $conn->query($query);

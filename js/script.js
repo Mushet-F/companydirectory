@@ -362,9 +362,9 @@ function applyFilterRequest(request) {
 
 // **************************************************************************************** //
 
-// ********************** Function to convert deparment name to department id ************* //
+// ********************** Function to convert department name to department id ************* //
 
-const deparmentNameToID = name => {
+const departmentNameToID = name => {
 
     switch(name) {
         case 'Human Resources':
@@ -451,6 +451,7 @@ function displayEmployeeDetailsModal(employee) {
     $('#modal-employee-location').html(employee['location']);
 
     $('#modal-employee-department').attr('value', employee['departmentID']);
+    $('#modal-employee-location').attr('value', employee['locationID']);
 
     if(trackingModals.length === 0) {
         let modalType = '#employeeModal';
@@ -460,6 +461,8 @@ function displayEmployeeDetailsModal(employee) {
         };
         trackingModals.push(currentModal);
     } 
+
+    console.log('displayEmployee trackingModals', trackingModals);
 
 }
 
@@ -541,9 +544,9 @@ const getDepartmentDetails = async id => {
             },
             success: function(result) {
 
-                const deparment = result['data'];
+                const department = result['data'];
 
-                resolve(deparment);
+                resolve(department);
 
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -579,6 +582,8 @@ function displayDepartmentDetailsModal(department) {
 
     $('#modal-department-employees').html(employeeListHtml);
 
+    $('#modal-department-location').attr('value', department['locationID']);
+
     if(trackingModals.length === 0) {
         let modalType = '#departmentModal';
         let currentModal = {
@@ -595,7 +600,6 @@ function displayDepartmentDetailsModal(department) {
 // ************ Retrieving and displaying data for Location Modals ********************** //
 
 let locationDetailsResult;
-let throughLocationModal = false;
 
 // Department details
 const getLocationDetails = async id => {
@@ -632,7 +636,7 @@ function displayLocationDetailsModal(location) {
     for(let i = 0; i < location['data2'].length; i++) {
         let department = location['data2'][i]['department'];
         let departmentID = location['data2'][i]['departmentID'];
-        let html = `<span class="department-highlight location-department" data-toggle="modal" data-target="#departmentModal" value="${departmentID}">${department}</span> `;
+        let html = `<span class="department-highlight location-departments" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" value="${departmentID}">${department}</span> `;
         let comma = ' , ';
 
         if(i !== location['data2'].length - 1) {
@@ -651,8 +655,8 @@ function displayLocationDetailsModal(location) {
     for(let i = 0; i < location['data'].length; i++) {
 
         let employee = location['data'][i]['firstName'] + ' ' + location['data'][i]['lastName'];
-        let employeeID = location['data'][i]['id'];
-        let html = `<span class="employee-highlight location-employee" data-toggle="modal" data-target="#employeeModal" value="${employeeID}">${employee}</span> `;
+        let employeeID = location['data'][i]['employeeID'];
+        let html = `<span class="employee-highlight location-employee" data-dismiss="modal" data-toggle="modal" data-target="#employeeModal" value="${employeeID}">${employee}</span> `;
         let comma = ' , ';
 
         if(i !== location['data'].length - 1) {
@@ -663,6 +667,18 @@ function displayLocationDetailsModal(location) {
     }
 
     $('#modal-location-employees').html(employeeListHtml);
+
+    if(trackingModals.length === 0) {
+        let modalType = '#locationModal';
+        let currentModal = {
+            details: location, 
+            type: modalType
+        };
+        trackingModals.push(currentModal);
+        console.log('trackingModals push location ', trackingModals);
+    }
+
+    console.log('displayLocation tackingModals ', trackingModals);
 
 }
 
@@ -695,8 +711,32 @@ $(document).on("click", "#modal-employee-department", async function(e) {
 
 });
 
+// Selecting the location in employee modal
+$(document).on("click", "#modal-employee-location", async function(e) {
+
+    let locationID = $(this).attr('value');
+    locationDetailsResult = await getLocationDetails(locationID);
+    displayLocationDetailsModal(locationDetailsResult);
+
+    let modalType = '#locationModal';
+    let currentModal = {
+        details: locationDetailsResult, 
+        type: modalType
+    };
+    trackingModals.push(currentModal);
+
+    if (trackingModals.length > 1) {
+        let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+        $('#locationCloseBtn').attr('data-toggle', 'modal');
+        $('#locationCloseBtn').attr('data-target', `${closeBtnTarget}`);
+    }
+
+});
+
 // Click employees modal close button and whether to redirect to another modal
 $(document).on("click", "#employeeCloseBtn", async function(e) {
+
+    console.log('employeeCloseBtn tackingModals ', trackingModals);
 
     if(trackingModals.length > 0) {
         trackingModals.pop();
@@ -706,6 +746,7 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
 
         if(trackingModals.length > 0) {
             let nextModal = trackingModals[trackingModals.length - 1];
+            console.log('nextModal ',  nextModal);
     
             if (nextModal['type'] === '#departmentModal'){
                 departmentDetailsResult = nextModal['details'];
@@ -717,8 +758,16 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
                     $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
                 }
 
-            } else if (nextModal['type'] === '#employeeModal') {
-                console.log('employee modal');
+            } else if (nextModal['type'] === '#locationModal') {
+                locationDetailsResult = nextModal['details'];
+                console.log('locationDetailsResult close employee btn ', locationDetailsResult);
+                displayLocationDetailsModal(locationDetailsResult);
+
+                if (trackingModals.length > 1) {
+                    let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+                    $('#locationCloseBtn').attr('data-toggle', 'modal');
+                    $('#locationCloseBtn').attr('data-target', `${closeBtnTarget}`);
+                }
             }
         }
     } 
@@ -753,6 +802,28 @@ $(document).on("click", ".department-employee", async function(e) {
 
 });
 
+// Selecting the location in department modal
+$(document).on("click", "#modal-department-location", async function(e) {
+
+    let locationID = $(this).attr('value');
+    locationDetailsResult = await getLocationDetails(locationID);
+    displayLocationDetailsModal(locationDetailsResult);
+
+    let modalType = '#locationModal';
+    let currentModal = {
+        details: locationDetailsResult, 
+        type: modalType
+    };
+    trackingModals.push(currentModal);
+
+    if (trackingModals.length > 1) {
+        let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+        $('#locationCloseBtn').attr('data-toggle', 'modal');
+        $('#locationCloseBtn').attr('data-target', `${closeBtnTarget}`);
+    }
+
+});
+
 // Click department modal close button and whether to redirect to another modal
 $(document).on("click", "#departmentCloseBtn", async function(e) {
 
@@ -767,6 +838,7 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
             if (nextModal['type'] === '#employeeModal'){
                 employeeDetailsResult = nextModal['details'];
                 displayEmployeeDetailsModal(employeeDetailsResult);
+                populateEditEmployeeDetailsModal(employeeDetailsResult);
 
                 if (trackingModals.length > 1) {
                     let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
@@ -775,7 +847,102 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
                 }
 
             } else if (nextModal['type'] === '#locationModal') {
+                locationDetailsResult = nextModal['details'];
+                displayLocationDetailsModal(locationDetailsResult);
 
+                if (trackingModals.length > 1) {
+                    let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+                    $('#locationCloseBtn').attr('data-toggle', 'modal');
+                    $('#locationCloseBtn').attr('data-target', `${closeBtnTarget}`);
+                }
+            }
+        }
+    } 
+
+});
+
+// **************************************************************************************** //
+
+// ********************** Click events for location modal ********************************* //
+
+// Selecting an employee in location modal
+$(document).on("click", ".location-employee", async function(e) {
+
+    let employeeId = $(this).attr('value');
+    employeeDetailsResult = await getEmployeeDetails(employeeId);
+    displayEmployeeDetailsModal(employeeDetailsResult);
+    populateEditEmployeeDetailsModal(employeeDetailsResult);
+
+    let modalType = '#employeeModal';
+    let currentModal = {
+        details: employeeDetailsResult, 
+        type: modalType
+    };
+    trackingModals.push(currentModal);
+
+    if (trackingModals.length > 1) {
+        let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+        $('#employeeCloseBtn').attr('data-toggle', 'modal');
+        $('#employeeCloseBtn').attr('data-target', `${closeBtnTarget}`);
+    }
+
+});
+
+// Selecting an department in employee modal
+$(document).on("click", ".location-departments", async function(e) {
+
+    let departmentID = $(this).attr('value');
+    departmentDetailsResult = await getDepartmentDetails(departmentID);
+    displayDepartmentDetailsModal(departmentDetailsResult);
+
+    let modalType = '#departmentModal';
+    let currentModal = {
+        details: departmentDetailsResult, 
+        type: modalType
+    };
+    trackingModals.push(currentModal);
+
+    if (trackingModals.length > 1) {
+        let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+        $('#departmentCloseBtn').attr('data-toggle', 'modal');
+        $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
+    }
+
+});
+
+// Click department modal close button and whether to redirect to another modal
+$(document).on("click", "#locationCloseBtn", async function(e) {
+
+    console.log('locationCloseBtn tracking', trackingModals);
+
+    if(trackingModals.length > 0) {
+        trackingModals.pop();
+        $('#locationCloseBtn').removeAttr('data-toggle');
+        $('#locationCloseBtn').removeAttr('data-target');
+
+        if(trackingModals.length > 0) {
+            let nextModal = trackingModals[trackingModals.length - 1];
+
+            if (nextModal['type'] === '#employeeModal'){
+                employeeDetailsResult = nextModal['details'];
+                displayEmployeeDetailsModal(employeeDetailsResult);
+                populateEditEmployeeDetailsModal(employeeDetailsResult);
+
+                if (trackingModals.length > 1) {
+                    let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+                    $('#employeeCloseBtn').attr('data-toggle', 'modal');
+                    $('#employeeCloseBtn').attr('data-target', `${closeBtnTarget}`);
+                }
+
+            } else if (nextModal['type'] === '#departmentModal') {
+                departmentDetailsResult = nextModal['details'];
+                displayDepartmentDetailsModal(departmentDetailsResult);
+
+                if (trackingModals.length > 1) {
+                    let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+                    $('#departmentCloseBtn').attr('data-toggle', 'modal');
+                    $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
+                }
             }
         }
     } 
