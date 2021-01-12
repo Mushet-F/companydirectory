@@ -414,6 +414,55 @@ const departmentNameToID = name => {
 
 let employeeDetailsResult;
 
+// Create 
+function createEmployee() {
+
+    const firstName = $('#employee-create-firstName').val();
+    const lastName = $('#employee-create-lastName').val();
+    const jobTitle = $('#employee-create-jobTitle').val();
+    const email = $('#employee-create-email').val();
+    const departmentID = $('#employee-create-department option:selected').val();
+
+    console.log(firstName);
+    console.log(lastName);
+    console.log(jobTitle);
+    console.log(email);
+    console.log(departmentID);
+
+    $.ajax({
+        url: "libs/php/createEmployee.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            jobTitle: jobTitle,
+            email: email,
+            departmentID: departmentID
+        },
+        success: async function(result) {
+
+            console.log(result);
+            if(result['status']['code'] === '200') {
+                
+                clearCurrentResults();
+
+                if(currentView === 'table') {
+                    $( "#table-div" ).addClass( "tableFixHead" );
+                }
+
+                displayAllEmployeesByLastName();
+
+            }
+            
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+}
+// Read
 // Employee details
 const getEmployeeDetails = async id => {
     return new Promise((resolve, reject) => {
@@ -464,6 +513,7 @@ function displayEmployeeDetailsModal(employee) {
 
 }
 
+// Update
 // Edit employee details modal form to be updated to match employee details
 function populateEditEmployeeDetailsModal(employee) {
 
@@ -479,7 +529,7 @@ function populateEditEmployeeDetailsModal(employee) {
 // Update employee details modal
 function updateEmployeeDetails() {
 
-    const id = departmentDetailsResult['id'];
+    const id = employeeDetailsResult['id'];
 
     const firstName = $('#employee-edit-firstName').val();
     const lastName = $('#employee-edit-lastName').val();
@@ -523,6 +573,8 @@ function updateEmployeeDetails() {
         }
     }); 
 }
+
+// Delete
 
 // **************************************************************************************** //
 
@@ -611,10 +663,6 @@ function updateDepartmentDetails() {
 
     const name = $('#department-edit-name').val();
     const locationID = $('#department-edit-location').val();
-
-    console.log(id);
-    console.log(name);
-    console.log(locationID);
 
     $.ajax({
         url: "libs/php/updateDepartmentDetails.php",

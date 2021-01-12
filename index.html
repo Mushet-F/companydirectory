@@ -159,7 +159,7 @@
                             <button id="filter-reset" class="sidebar-button">RESET</button>
                         </div>
                     </li>
-                    <li class="sidebar-item sidebar-main-item">
+                    <li class="sidebar-item sidebar-main-item" data-toggle="modal" data-target="#createEmployeeModal">
                         <span class="side-main-item-margin">Add New Employee</span>
                     </li>
                 </ul>
@@ -279,6 +279,65 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#employeeModal">Close</button>
                                 <button type="submit" class="btn btn btn-outline-primary" data-dismiss="modal" data-toggle="modal" data-target="#employeeModal" onclick="updateEmployeeDetails()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal - Create Employee -->
+                <div class="modal fade" id="createEmployeeModal" tabindex="-1" aria-labelledby="createEmployeeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createEmployeeModalLabel">Employee Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" class="form-control" id="employee-create-firstName">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name</label>
+                                        <input type="text" class="form-control" id="employee-create-lastName">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jobTitle">Job Title</label>
+                                        <input type="text" class="form-control" id="employee-create-jobTitle">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email address</label>
+                                        <input type="email" class="form-control" id="employee-create-email" aria-describedby="emailHelp">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="department">Department</label>
+                                        <select class="form-control" id="employee-create-department">
+                                            <option value="1">Human Resources</option>
+                                            <option value="2">Sales</option>
+                                            <option value="3">Marketing</option>
+                                            <option value="4">Legal</option>
+                                            <option value="5">Services</option>
+                                            <option value="6">Research and Development</option>
+                                            <option value="7">Product Management</option>
+                                            <option value="8">Training</option>
+                                            <option value="9">Support</option>
+                                            <option value="10">Engineering</option>
+                                            <option value="11">Accounting</option>
+                                            <option value="12">Business Development</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck3">
+                                        <label class="form-check-label" for="exampleCheck3">Check me out</label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
+                                <button type="submit" class="btn btn btn-outline-success" data-dismiss="modal" onclick="createEmployee()">Create</button>
                             </div>
                         </div>
                     </div>
