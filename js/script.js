@@ -424,12 +424,6 @@ function createEmployee() {
     const email = $('#employee-create-email').val();
     const departmentID = $('#employee-create-department option:selected').val();
 
-    console.log(firstName);
-    console.log(lastName);
-    console.log(jobTitle);
-    console.log(email);
-    console.log(departmentID);
-
     $.ajax({
         url: "libs/php/createEmployee.php",
         type: 'POST',
@@ -443,7 +437,6 @@ function createEmployee() {
         },
         success: async function(result) {
 
-            console.log(result);
             if(result['status']['code'] === '200') {
                 
                 clearCurrentResults();
@@ -581,7 +574,6 @@ function updateEmployeeDetails() {
 function deleteEmployeeByID() {
 
     const id = employeeDetailsResult['id'];
-    console.log('id');
 
     $.ajax({
         url: "libs/php/deleteEmployeeByID.php",
@@ -670,9 +662,6 @@ const getDepartmentDetails = async id => {
 // Displaying the data for department details modal
 function displayDepartmentDetailsModal(department) {
 
-
-    console.log(department);
-
     $('#modal-department-id').html(department[0]['id']);
     $('#modal-department-name').html(department[0]['department']);
     $('#modal-department-location').html(department[0]['location']);
@@ -718,7 +707,7 @@ function populateEditDepartmentDetailsModal(department) {
 
 }
 
-// Update employee details modal
+// Update department details modal
 function updateDepartmentDetails() {
 
     const id = departmentDetailsResult[0]['id'];
@@ -761,6 +750,38 @@ function updateDepartmentDetails() {
 }
 
 // Delete
+// Delete selected department 
+function deleteDepartmentByID() {
+
+    const id = departmentDetailsResult[0]['id'];
+
+    $.ajax({
+        url: "libs/php/deleteDepartmentByID.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            id: id
+        },
+        success: async function(result) {
+
+            if(result['status']['code'] === '200') {
+                
+                clearCurrentResults();
+
+                if(currentView === 'table') {
+                    $( "#table-div" ).addClass( "tableFixHead" );
+                }
+
+                displayAllEmployeesByLastName();
+
+            }    
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+}
 
 
 // **************************************************************************************** //
@@ -782,7 +803,7 @@ function createLocation() {
             name: name,
         },
         success: async function(result) {
-            console.log(result);
+
         },
         error: function(jqXHR, textStatus, errorThrown) {
             reject(errorThrown);
@@ -791,7 +812,7 @@ function createLocation() {
 }
 
 // Read
-// Department details
+// Location details
 const getLocationDetails = async id => {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -869,6 +890,91 @@ function displayLocationDetailsModal(location) {
 
 }
 
+// Update
+// Edit location details modal form to be updated to match location details
+function populateEditLocationDetailsModal(location) {
+
+    $('#location-edit-name').val(location['data2'][0]['location']);
+
+}
+
+// Update location details modal
+function updateLocationDetails() {
+
+    const id = locationDetailsResult['data2'][0]['locationID'];
+
+    const name = $('#location-edit-name').val();
+
+    console.log(id);
+    console.log(name);
+
+    $.ajax({
+        url: "libs/php/updateLocationDetails.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            id: id,
+            name: name,
+        },
+        success: async function(result) {
+
+            if(result['status']['code'] === '200') {
+                
+                locationDetailsResult = await getLocationDetails(id);
+                displayLocationDetailsModal(locationDetailsResult);
+                populateEditLocationDetailsModal(locationDetailsResult);
+                clearCurrentResults();
+
+                if(currentView === 'table') {
+                    $( "#table-div" ).addClass( "tableFixHead" );
+                }
+
+                displayAllEmployeesByLastName();
+
+            }
+            
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+}
+
+// Delete
+// Delete selected location 
+function deleteLocationByID() {
+
+    const id = locationDetailsResult['data2'][0]['locationID'];
+
+    $.ajax({
+        url: "libs/php/deleteLocationByID.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            id: id
+        },
+        success: async function(result) {
+
+            if(result['status']['code'] === '200') {
+                
+                clearCurrentResults();
+
+                if(currentView === 'table') {
+                    $( "#table-div" ).addClass( "tableFixHead" );
+                }
+
+                displayAllEmployeesByLastName();
+
+            }    
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+}
+
 // **************************************************************************************** //
 
 // ********************** Click events for employee modal ********************************* //
@@ -905,6 +1011,7 @@ $(document).on("click", "#modal-employee-location", async function(e) {
     let locationID = $(this).attr('value');
     locationDetailsResult = await getLocationDetails(locationID);
     displayLocationDetailsModal(locationDetailsResult);
+    populateEditLocationDetailsModal(locationDetailsResult);
 
     let modalType = '#locationModal';
     let currentModal = {
@@ -947,6 +1054,7 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
             } else if (nextModal['type'] === '#locationModal') {
                 locationDetailsResult = nextModal['details'];
                 displayLocationDetailsModal(locationDetailsResult);
+                populateEditLocationDetailsModal(locationDetailsResult);
 
                 if (trackingModals.length > 1) {
                     let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
@@ -960,7 +1068,7 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
 });
 
 // Clicking employee delete button
-$(document).on("click", "#show-delete-form", async function(e) {
+$(document).on("click", "#employee-delete-form", async function(e) {
     const name = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
     $('#employee-delete-name').html(name);
 });
@@ -999,6 +1107,7 @@ $(document).on("click", "#modal-department-location", async function(e) {
     let locationID = $(this).attr('value');
     locationDetailsResult = await getLocationDetails(locationID);
     displayLocationDetailsModal(locationDetailsResult);
+    populateEditLocationDetailsModal(locationDetailsResult);
 
     let modalType = '#locationModal';
     let currentModal = {
@@ -1040,6 +1149,7 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
             } else if (nextModal['type'] === '#locationModal') {
                 locationDetailsResult = nextModal['details'];
                 displayLocationDetailsModal(locationDetailsResult);
+                populateEditLocationDetailsModal(locationDetailsResult);
 
                 if (trackingModals.length > 1) {
                     let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
@@ -1050,6 +1160,11 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
         }
     } 
 
+});
+
+// Clicking department delete button
+$(document).on("click", "#department-delete-form", async function(e) {
+    $('#department-delete-name').html(departmentDetailsResult[0]['department']);
 });
 
 // **************************************************************************************** //
@@ -1079,7 +1194,7 @@ $(document).on("click", ".location-employee", async function(e) {
 
 });
 
-// Selecting an department in employee modal
+// Selecting an department in location modal
 $(document).on("click", ".location-departments", async function(e) {
 
     let departmentID = $(this).attr('value');
@@ -1102,7 +1217,7 @@ $(document).on("click", ".location-departments", async function(e) {
 
 });
 
-// Click department modal close button and whether to redirect to another modal
+// Click location modal close button and whether to redirect to another modal
 $(document).on("click", "#locationCloseBtn", async function(e) {
 
     if(trackingModals.length > 0) {
@@ -1138,6 +1253,11 @@ $(document).on("click", "#locationCloseBtn", async function(e) {
         }
     } 
 
+});
+
+// Clicking department delete button
+$(document).on("click", "#location-delete-form", async function(e) {
+    $('#location-delete-name').html(locationDetailsResult['data2'][0]['location']);
 });
 
 // **************************************************************************************** //
@@ -1354,7 +1474,6 @@ $("#all-employees").on("click", "td", async function() {
         case 'td-name':
             let employeeId = $(this).attr('value');
             employeeDetailsResult = await getEmployeeDetails(employeeId);
-            console.log(employeeDetailsResult);
             displayEmployeeDetailsModal(employeeDetailsResult);
             populateEditEmployeeDetailsModal(employeeDetailsResult);
             break;
@@ -1368,6 +1487,7 @@ $("#all-employees").on("click", "td", async function() {
             let locationID = $(this).attr('value');
             locationDetailsResult = await getLocationDetails(locationID);
             displayLocationDetailsModal(locationDetailsResult);
+            populateEditLocationDetailsModal(locationDetailsResult);
             break;
         default:
             break;

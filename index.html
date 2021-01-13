@@ -224,7 +224,7 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="employeeCloseBtn">Close</button>
                                 <button type="button" class="btn btn btn-outline-success" data-dismiss="modal" data-toggle="modal" data-target="#editEmployeeModal">Edit</button>
-                                <button type="button" class="btn btn btn-outline-danger" data-dismiss="modal" data-toggle="modal" data-target="#deleteEmployeeModal" id="show-delete-form">Delete</button>
+                                <button type="button" class="btn btn btn-outline-danger" data-dismiss="modal" data-toggle="modal" data-target="#deleteEmployeeModal" id="employee-delete-form">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -235,7 +235,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editEmployeeModalLabel">Employee Details</h5>
+                                <h5 class="modal-title" id="editEmployeeModalLabel">Update Employee Details</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -394,7 +394,7 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="departmentCloseBtn">Close</button>
                                 <button type="button" class="btn btn btn-outline-success" data-dismiss="modal" data-toggle="modal" data-target="#editDepartmentModal">Edit</button>
-                                <button type="button" class="btn btn btn-outline-danger">Delete</button>
+                                <button type="button" class="btn btn btn-outline-danger" data-dismiss="modal" data-toggle="modal" data-target="#deleteDepartmentModal" id="department-delete-form">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -405,7 +405,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editDepartmentModalLabel">Department Details</h5>
+                                <h5 class="modal-title" id="editDepartmentModalLabel">Update Department Details</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -480,6 +480,27 @@
                     </div>
                 </div>
 
+                <!-- Modal - Delete Department -->
+                <div class="modal fade" id="deleteDepartmentModal" tabindex="-1" aria-labelledby="deleteDepartmentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteDepartmentModalLabel">Delete Department</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="delete-info">You sure you want to delete department, <span id="department-delete-name"></span>?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" data-target="#departmentModal">Close</button>
+                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteDepartmentByID()">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Modal - Location Details-->
                 <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -504,14 +525,44 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="locationCloseBtn">Close</button>
-                                <button type="button" class="btn btn btn-outline-danger">Delete</button>
+                                <button type="button" class="btn btn btn-outline-success" data-dismiss="modal" data-toggle="modal" data-target="#editLocationModal">Edit</button>
+                                <button type="button" class="btn btn btn-outline-danger" data-dismiss="modal" data-toggle="modal" data-target="#deleteLocationModal" id="location-delete-form">Delete</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Modal - Edit Location Details -->
+                <div class="modal fade" id="editLocationModal" tabindex="-1" aria-labelledby="editLocationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editLocationModalLabel">Update Location Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="firstName">Location Name</label>
+                                        <input type="text" class="form-control" id="location-edit-name">
+                                    </div>
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck18">
+                                        <label class="form-check-label" for="exampleCheck18">Check me out</label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#locationModal">Close</button>
+                                <button type="submit" class="btn btn btn-outline-primary" data-dismiss="modal" data-toggle="modal" data-target="#locationModal" onclick="updateLocationDetails()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Modal - Location Details-->
+                <!-- Modal - Create New Location -->
                 <div class="modal fade" id="createLocationModal" tabindex="-1" aria-labelledby="createLocationModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -536,6 +587,27 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
                                 <button type="submit" class="btn btn btn-outline-success" data-dismiss="modal" onclick="createLocation()">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal - Delete Location -->
+                <div class="modal fade" id="deleteLocationModal" tabindex="-1" aria-labelledby="deleteLocationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteLocationModalLabel">Delete Location</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="delete-info">You sure you want to delete location, <span id="location-delete-name"></span>?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" data-target="#locationModal">Close</button>
+                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteLocationByID()">Delete</button>
                             </div>
                         </div>
                     </div>
