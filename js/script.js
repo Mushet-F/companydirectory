@@ -5,12 +5,12 @@ function createTable(result) {
     let table = `  
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Job Title</th>
-                <th>Email</th>
-                <th>Department</th>
-                <th>Location</th>
+                <th id="id-column">ID</th>
+                <th id="name-column">Name</th>
+                <th id="job-column">Job Title</th>
+                <th id="email-column">Email</th>
+                <th id="department-column">Department</th>
+                <th id="location-column">Location</th>
             </tr>
         </thead>
         <tbody id="tbody-employees">
@@ -32,8 +32,8 @@ function createTable(result) {
 
         let tbody = `<tr>
         <td class="td-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td class="td-name"  data-toggle="modal" data-target="#employeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
-        <td class="td-job"><span class="red-highlight">${job}</span></td>
+        <td class="td-name" data-toggle="modal" data-target="#employeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-job">${job}</td>
         <td class="td-email">${email}</td>
         <td class="td-department" data-toggle="modal" data-target="#departmentModal" value="${departmentID}">${department} <i class="fas fa-expand-alt"></i></td>
         <td class="td-location" data-toggle="modal" data-target="#locationModal" value="${locationID}">${location} <i class="fas fa-expand-alt"></i></td>
@@ -64,7 +64,7 @@ function createCards(result) {
         const location = result.data[i]['location'];
 
 
-        let html = `<div class='col-md-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
+        let html = `<div class='col-sm-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
         <h3 class='name'>${name}</h3>                            
         <p class="title">${job}</p>
         <p class="description">${email}</p>
@@ -1103,8 +1103,8 @@ function displayLocationDetailsModal(location) {
     for(let i = 0; i < location['data2'].length; i++) {
         let department = location['data2'][i]['department'];
         let departmentID = location['data2'][i]['id'];
-        let html = `<span class="department-highlight location-departments" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" value="${departmentID}">${department}</span> `;
-        let comma = ' , ';
+        let html = `<span class="department-highlight location-departments" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" value="${departmentID}"> ${department} </span>  `;
+        let comma = '  , ';
 
         if(i !== location['data2'].length - 1) {
             html += comma;

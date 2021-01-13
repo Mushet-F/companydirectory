@@ -30,11 +30,6 @@
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button> 
-      <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
-        </li>
-      </ul>
     </nav>
 
     <div class="container-fluid">
@@ -45,9 +40,6 @@
                     <span>Actions</span>
                 </h6>
                 <ul class="nav flex-column mb-2">
-                    <li class="sidebar-item sidebar-main-item">
-                        <span class="side-main-item-margin">Search</span>
-                    </li>
                     <li onclick="sortDropdown()" id="sidebar-item-sort" class="sidebar-item sidebar-main-item dropbtn">
                         <span class="side-main-item-margin">Sort</span>
                         <div id="sortDropdown" class="dropdown-content">
@@ -173,10 +165,10 @@
                 </h6>
                 <ul class="nav flex-column">
                     <li class="sidebar-item sidebar-main-item" id="table-view">
-                        <span class="side-main-item-margin">Employees Table</span>
+                        <span class="side-main-item-margin">Table</span>
                     </li>
                     <li class="sidebar-item sidebar-main-item" id="grid-view">
-                        <span class="side-main-item-margin">Employees Grid</span>
+                        <span class="side-main-item-margin">Grid</span>
                     </li>
                 </ul>   
             </div>
@@ -211,15 +203,15 @@
                                 <p class="labels">Employee ID</p>
                                 <p class="labels-values"><span id="modal-employee-id"></span></p>
                                 <p class="labels">Name</p>
-                                <p class="labels-values"><span id="modal-employee-name"></span></p>
+                                <p class="labels-values"><span class="employee-highlight" id="modal-employee-name"></span></p>
                                 <p class="labels">Job Title</p>
                                 <p class="labels-values"><span id="modal-employee-job"></span></p>
                                 <p class="labels">Email</p>
                                 <p class="labels-values"><span id="modal-employee-email"></span></p>
                                 <p class="labels">Department</p>
-                                <p class="labels-values"><span data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" id="modal-employee-department"></span></p>
+                                <p class="labels-values"><span class="department-highlight" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" id="modal-employee-department"></span></p>
                                 <p class="labels">Location</p>
-                                <p class="labels-values"><span data-dismiss="modal" data-toggle="modal" data-target="#locationModal"  id="modal-employee-location"></span></p>
+                                <p class="labels-values"><span class="location-highlight" data-dismiss="modal" data-toggle="modal" data-target="#locationModal"  id="modal-employee-location"></span></p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="employeeCloseBtn">Close</button>
@@ -269,7 +261,7 @@
                                     </div>
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" id="employee-edit-checkbox">
-                                        <label class="form-check-label" for="employee-edit-checkbox">Check me out</label>
+                                        <label class="form-check-label" for="employee-edit-checkbox">Confirm changes</label>
                                         <p><span class="form-error-message" id="employee-error-checkbox"></span></p>
                                     </div>
                                 </form>
@@ -321,7 +313,7 @@
                                     </div>
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" id="employee-create-checkbox">
-                                        <label class="form-check-label" for="employee-create-checkbox">Check me out</label>
+                                        <label class="form-check-label" for="employee-create-checkbox">Confirm changes</label>
                                         <p><span class="form-error-message" id="employee-create-error-checkbox"></span></p>
                                     </div>
                                 </form>
@@ -369,9 +361,9 @@
                                 <p class="labels">Department ID</p>
                                 <p class="labels-values"><span id="modal-department-id"></span></p>
                                 <p class="labels">Department</p>
-                                <p class="labels-values"><span id="modal-department-name"></span></p>
+                                <p class="labels-values"><span class="department-highlight" id="modal-department-name"></span></p>
                                 <p class="labels">Location</p>
-                                <p class="labels-values"><span data-dismiss="modal" data-toggle="modal" data-target="#locationModal" id="modal-department-location"></span></p>
+                                <p class="labels-values"><span class="location-highlight" data-dismiss="modal" data-toggle="modal" data-target="#locationModal" id="modal-department-location"></span></p>
                                 <p class="labels">Number of Employees</p>
                                 <p class="labels-values"><span id="modal-department-number-employees"></span></p>
                                 <p class="labels">Employees</p>
@@ -411,7 +403,7 @@
                                     </div>
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" id="department-edit-checkbox">
-                                        <label class="form-check-label" for="department-edit-checkbox">Check me out</label>
+                                        <label class="form-check-label" for="department-edit-checkbox">Confirm changes</label>
                                         <p><span class="form-error-message" id="department-error-checkbox"></span></p>
                                     </div>
                                 </form>
@@ -449,7 +441,7 @@
                                     </div>
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" id="department-create-checkbox">
-                                        <label class="form-check-label" for="department-create-checkbox">Check me out</label>
+                                        <label class="form-check-label" for="department-create-checkbox">Confirm changes</label>
                                         <p><span class="form-error-message" id="department-create-error-checkbox"></span></p>
                                     </div>
                                 </form>
@@ -498,7 +490,7 @@
                                 <p class="labels">Location ID</p>
                                 <p class="labels-values"><span id="modal-location-id"></span></p>
                                 <p class="labels">Location</p>
-                                <p class="labels-values"><span id="modal-location-name"></span></p>
+                                <p class="labels-values"><span class="location-highlight" id="modal-location-name"></span></p>
                                 <p class="labels">Departments</p>
                                 <p class="labels-values"><span id="modal-location-departments"></span></p>
                                 <p class="labels">Number of Employees</p>
@@ -534,7 +526,7 @@
                                     </div>
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" id="location-edit-checkbox">
-                                        <label class="form-check-label" for="location-edit-checkbox">Check me out</label>
+                                        <label class="form-check-label" for="location-edit-checkbox">Confirm changes</label>
                                         <p><span class="form-error-message" id="location-error-checkbox"></span></p>
                                     </div>
                                 </form>
@@ -566,7 +558,7 @@
                                     </div>
                                     <div class="form-group form-check">
                                         <input type="checkbox" class="form-check-input" id="location-create-checkbox">
-                                        <label class="form-check-label" for="location-create-checkbox">Check me out</label>
+                                        <label class="form-check-label" for="location-create-checkbox">Confirm changes</label>
                                         <p><span class="form-error-message" id="location-create-error-checkbox"></span></p>
                                     </div>
                                 </form>
