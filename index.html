@@ -162,8 +162,8 @@
                     <li onclick="addDropdown()" id="sidebar-item-add" class="sidebar-item sidebar-main-item dropbtn">
                         <span class="side-main-item-margin">Add New</span>
                         <div id="addDropdown" class="dropdown-content">
-                            <span class="sidebar-item" data-toggle="modal" data-target="#createEmployeeModal">Employee</span>
-                            <span class="sidebar-item" data-toggle="modal" data-target="#createDepartmentModal">Department</span>
+                            <span class="sidebar-item" id="create-employee-btn" data-toggle="modal" data-target="#createEmployeeModal">Employee</span>
+                            <span class="sidebar-item" id="create-department-btn" data-toggle="modal" data-target="#createDepartmentModal">Department</span>
                             <span class="sidebar-item" data-toggle="modal" data-target="#createLocationModal">Location</span>
                         </div>
                     </li>
@@ -309,18 +309,7 @@
                                     <div class="form-group">
                                         <label for="department">Department</label>
                                         <select class="form-control" id="employee-create-department">
-                                            <option value="1">Human Resources</option>
-                                            <option value="2">Sales</option>
-                                            <option value="3">Marketing</option>
-                                            <option value="4">Legal</option>
-                                            <option value="5">Services</option>
-                                            <option value="6">Research and Development</option>
-                                            <option value="7">Product Management</option>
-                                            <option value="8">Training</option>
-                                            <option value="9">Support</option>
-                                            <option value="10">Engineering</option>
-                                            <option value="11">Accounting</option>
-                                            <option value="12">Business Development</option>
+
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
@@ -382,7 +371,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="departmentCloseBtn">Close</button>
-                                <button type="button" class="btn btn btn-outline-success" data-dismiss="modal" data-toggle="modal" data-target="#editDepartmentModal">Edit</button>
+                                <button type="button" class="btn btn btn-outline-success" data-dismiss="modal" data-toggle="modal" data-target="#editDepartmentModal"  id="department-edit-btn">Edit</button>
                                 <button type="button" class="btn btn btn-outline-danger" data-dismiss="modal" data-toggle="modal" data-target="#deleteDepartmentModal" id="department-delete-form">Delete</button>
                             </div>
                         </div>
@@ -408,11 +397,7 @@
                                     <div class="form-group">
                                         <label for="department">Location</label>
                                         <select class="form-control" id="department-edit-location">
-                                            <option value="1">London</option>
-                                            <option value="2">New York</option>
-                                            <option value="3">Paris</option>
-                                            <option value="4">Munich</option>
-                                            <option value="5">Rome</option>
+
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
@@ -448,11 +433,7 @@
                                     <div class="form-group">
                                         <label for="department">Location</label>
                                         <select class="form-control" id="department-create-location">
-                                            <option value="1">London</option>
-                                            <option value="2">New York</option>
-                                            <option value="3">Paris</option>
-                                            <option value="4">Munich</option>
-                                            <option value="5">Rome</option>
+
                                         </select>
                                     </div>
                                     <div class="form-group form-check">

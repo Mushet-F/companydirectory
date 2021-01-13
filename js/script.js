@@ -743,7 +743,6 @@ const getAllDepartments = async () => {
             success: function(result) {
 
                 const departments = result['data'];
-                console.log('department ',  departments);
                 resolve(departments);
 
             },
@@ -755,7 +754,7 @@ const getAllDepartments = async () => {
 }
 
 // Displaying all departments in a dropdown list for the edit modal
-function createDepartmentsDropdownList(departments) {
+const createDepartmentsDropdownList = departments => {
 
     let departmentDropdownHtml = '';
 
@@ -767,8 +766,7 @@ function createDepartmentsDropdownList(departments) {
         departmentDropdownHtml += html;
     }
 
-    console.log(departmentDropdownHtml);
-    $('#employee-edit-department').append(departmentDropdownHtml);
+    return departmentDropdownHtml
 
 }
 
@@ -864,7 +862,7 @@ function deleteDepartmentByID() {
 
 let locationDetailsResult;
 // Create
-// Create employee
+// Create location
 function createLocation() {
 
     const name = $('#location-create-name').val();
@@ -961,6 +959,44 @@ function displayLocationDetailsModal(location) {
         };
         trackingModals.push(currentModal);
     }
+
+}
+
+// Get all locations
+const getAllLocations = async () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getAllLocations.php",
+            type: 'POST',
+            dataType: 'json',
+            success: function(result) {
+                    
+                console.log('resutl ', result);
+                const locations = result['data'];
+                resolve(locations);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Displaying all locations in a dropdown list for the edit modal
+const createLocationsDropdownList = locations => {
+
+    let locationDropdownHtml = '';
+
+    for(let i = 0; i < locations.length; i++) {
+        let location = locations[i]['name'];
+        let locationID = locations[i]['id'];
+        let html = `<option value="${locationID}">${location}</option>`;
+    
+        locationDropdownHtml += html;
+    }
+
+    return locationDropdownHtml
 
 }
 
@@ -1141,9 +1177,10 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
 
 // Clicking employee edit button 
 $(document).on("click", "#employee-edit-btn", async function(e) {
-    console.log('edit btn hti');
     const departments = await getAllDepartments();
-    createDepartmentsDropdownList(departments);
+    const departmentDropdownHtml = createDepartmentsDropdownList(departments);
+    $('#employee-edit-department').html('');
+    $('#employee-edit-department').append(departmentDropdownHtml);
     populateEditEmployeeDetailsModal(employeeDetailsResult);
 });
 
@@ -1151,6 +1188,15 @@ $(document).on("click", "#employee-edit-btn", async function(e) {
 $(document).on("click", "#employee-delete-btn", function(e) {
     const name = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
     $('#employee-delete-name').html(name);
+});
+
+// Clicking create button for dropdown list for departments in create modal
+// This button is found in side menu
+$(document).on("click", "#create-employee-btn", async function(e) {
+    const departments = await getAllDepartments();
+    const departmentDropdownHtml = createDepartmentsDropdownList(departments);
+    $('#employee-create-department').html('');
+    $('#employee-create-department').append(departmentDropdownHtml);
 });
 
 
@@ -1240,6 +1286,18 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
 
 });
 
+// Clicking department edit button 
+$(document).on("click", "#department-edit-btn", async function(e) {
+    console.log('clicked');
+    const locations = await getAllLocations();
+    console.log(locations);
+    const locationDropdownHtml = createLocationsDropdownList(locations);
+    console.log(locationDropdownHtml);
+    $('#department-edit-location').html('');
+    $('#department-edit-location').append(locationDropdownHtml);
+    populateEditDepartmentDetailsModal(departmentDetailsResult);
+});
+
 // Clicking department delete button
 $(document).on("click", "#department-delete-form", async function(e) {
 
@@ -1255,6 +1313,15 @@ $(document).on("click", "#department-delete-form", async function(e) {
         $('#department-delete-name').html(empytDepartmentDetailsResult[0]['department']);
     }
     
+});
+
+// Clicking create button for dropdown list for locations in department create modal
+// This button is found in side menu
+$(document).on("click", "#create-department-btn", async function(e) {
+    const locations = await getAllLocations();
+    const locationDropdownHtml = createLocationsDropdownList(locations);
+    $('#department-create-location').html('');
+    $('#department-create-location').append(locationDropdownHtml);
 });
 
 // **************************************************************************************** //
