@@ -698,6 +698,43 @@ function displayDepartmentDetailsModal(department) {
 
 }
 
+let empytDepartmentDetailsResult;
+
+// Empty department details
+const getEmptyDepartmentDetails = async id => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getEmptyDepartmentDetailsByID.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id
+            },
+            success: function(result) {
+
+                const department = result['data'];
+                console.log('department ',  department);
+                resolve(department);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Displaying the data for an empty department
+function displayEmptyDepartment(department) {
+
+    $('#modal-department-id').html(department[0]['id']);
+    $('#modal-department-name').html(department[0]['department']);
+    $('#modal-department-location').html(department[0]['location']);
+
+    $('#modal-department-location').attr('value', department['locationID']);
+
+}
+
 // Update
 // Edit department details modal form to be updated to match department details
 function populateEditDepartmentDetailsModal(department) {
@@ -753,7 +790,7 @@ function updateDepartmentDetails() {
 // Delete selected department 
 function deleteDepartmentByID() {
 
-    const id = departmentDetailsResult[0]['id'];
+    const id = empytDepartmentDetailsResult[0]['id'];
 
     $.ajax({
         url: "libs/php/deleteDepartmentByID.php",
@@ -846,7 +883,7 @@ function displayLocationDetailsModal(location) {
 
     for(let i = 0; i < location['data2'].length; i++) {
         let department = location['data2'][i]['department'];
-        let departmentID = location['data2'][i]['departmentID'];
+        let departmentID = location['data2'][i]['id'];
         let html = `<span class="department-highlight location-departments" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" value="${departmentID}">${department}</span> `;
         let comma = ' , ';
 
@@ -904,9 +941,6 @@ function updateLocationDetails() {
     const id = locationDetailsResult['data2'][0]['locationID'];
 
     const name = $('#location-edit-name').val();
-
-    console.log(id);
-    console.log(name);
 
     $.ajax({
         url: "libs/php/updateLocationDetails.php",
@@ -1164,7 +1198,19 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
 
 // Clicking department delete button
 $(document).on("click", "#department-delete-form", async function(e) {
-    $('#department-delete-name').html(departmentDetailsResult[0]['department']);
+
+    if (departmentDetailsResult.length > 0) {
+        $('#delete-department-btn').hide();
+        $('#delete-deparment-able').hide();
+        $('#delete-deparment-unable').show();
+        $('#department-delete-name').hide();
+    } else {
+        $('#delete-department-btn').show();
+        $('#delete-deparment-able').show();
+        $('#delete-deparment-unable').hide();
+        $('#department-delete-name').html(empytDepartmentDetailsResult[0]['department']);
+    }
+    
 });
 
 // **************************************************************************************** //
@@ -1199,20 +1245,29 @@ $(document).on("click", ".location-departments", async function(e) {
 
     let departmentID = $(this).attr('value');
     departmentDetailsResult = await getDepartmentDetails(departmentID);
-    displayDepartmentDetailsModal(departmentDetailsResult);
-    populateEditDepartmentDetailsModal(departmentDetailsResult);
+    if(departmentDetailsResult.length === 0) {
+        empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+        console.log(empytDepartmentDetailsResult);
+        console.log(departmentID);
+        displayEmptyDepartment(empytDepartmentDetailsResult);
+    } else {
 
-    let modalType = '#departmentModal';
-    let currentModal = {
-        details: departmentDetailsResult, 
-        type: modalType
-    };
-    trackingModals.push(currentModal);
+        displayDepartmentDetailsModal(departmentDetailsResult);
+        populateEditDepartmentDetailsModal(departmentDetailsResult);
 
-    if (trackingModals.length > 1) {
-        let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
-        $('#departmentCloseBtn').attr('data-toggle', 'modal');
-        $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
+        let modalType = '#departmentModal';
+        let currentModal = {
+            details: departmentDetailsResult, 
+            type: modalType
+        };
+        trackingModals.push(currentModal);
+
+        if (trackingModals.length > 1) {
+            let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+            $('#departmentCloseBtn').attr('data-toggle', 'modal');
+            $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
+        }
+
     }
 
 });

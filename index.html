@@ -491,11 +491,12 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p class="delete-info">You sure you want to delete department, <span id="department-delete-name"></span>?</p>
+                                <p class="delete-info" id="delete-deparment-able">You sure you want to delete department, <span id="department-delete-name"></span>?</p>
+                                <p class="delete-info" id="delete-deparment-unable">You are not allowed to delete departments that still has employees.</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" data-target="#departmentModal">Close</button>
-                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteDepartmentByID()">Delete</button>
+                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteDepartmentByID()" id="delete-department-btn">Delete</button>
                             </div>
                         </div>
                     </div>
