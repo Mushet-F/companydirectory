@@ -550,7 +550,6 @@ function updateEmployeeDetails() {
                 
                 employeeDetailsResult = await getEmployeeDetails(id);
                 displayEmployeeDetailsModal(employeeDetailsResult);
-                populateEditEmployeeDetailsModal(employeeDetailsResult);
                 clearCurrentResults();
 
                 if(currentView === 'table') {
@@ -635,7 +634,7 @@ function createDepartment() {
 }
 
 // Read
-// Department details
+// Department details by id
 const getDepartmentDetails = async id => {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -713,7 +712,6 @@ const getEmptyDepartmentDetails = async id => {
             success: function(result) {
 
                 const department = result['data'];
-                console.log('department ',  department);
                 resolve(department);
 
             },
@@ -732,6 +730,45 @@ function displayEmptyDepartment(department) {
     $('#modal-department-location').html(department[0]['location']);
 
     $('#modal-department-location').attr('value', department['locationID']);
+
+}
+
+// Get all departments
+const getAllDepartments = async () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getAllDepartments.php",
+            type: 'POST',
+            dataType: 'json',
+            success: function(result) {
+
+                const departments = result['data'];
+                console.log('department ',  departments);
+                resolve(departments);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Displaying all departments in a dropdown list for the edit modal
+function createDepartmentsDropdownList(departments) {
+
+    let departmentDropdownHtml = '';
+
+    for(let i = 0; i < departments.length; i++) {
+        let department = departments[i]['name'];
+        let departmentID = departments[i]['id'];
+        let html = `<option value="${departmentID}">${department}</option>`;
+    
+        departmentDropdownHtml += html;
+    }
+
+    console.log(departmentDropdownHtml);
+    $('#employee-edit-department').append(departmentDropdownHtml);
 
 }
 
@@ -1077,6 +1114,7 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
             if (nextModal['type'] === '#departmentModal'){
                 departmentDetailsResult = nextModal['details'];
                 displayDepartmentDetailsModal(departmentDetailsResult);
+                
                 populateEditDepartmentDetailsModal(departmentDetailsResult);
 
                 if (trackingModals.length > 1) {
@@ -1101,8 +1139,16 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
 
 });
 
+// Clicking employee edit button 
+$(document).on("click", "#employee-edit-btn", async function(e) {
+    console.log('edit btn hti');
+    const departments = await getAllDepartments();
+    createDepartmentsDropdownList(departments);
+    populateEditEmployeeDetailsModal(employeeDetailsResult);
+});
+
 // Clicking employee delete button
-$(document).on("click", "#employee-delete-form", async function(e) {
+$(document).on("click", "#employee-delete-btn", function(e) {
     const name = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
     $('#employee-delete-name').html(name);
 });
@@ -1118,7 +1164,6 @@ $(document).on("click", ".department-employee", async function(e) {
     let employeeId = $(this).attr('value');
     employeeDetailsResult = await getEmployeeDetails(employeeId);
     displayEmployeeDetailsModal(employeeDetailsResult);
-    populateEditEmployeeDetailsModal(employeeDetailsResult);
 
     let modalType = '#employeeModal';
     let currentModal = {
@@ -1172,7 +1217,6 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
             if (nextModal['type'] === '#employeeModal'){
                 employeeDetailsResult = nextModal['details'];
                 displayEmployeeDetailsModal(employeeDetailsResult);
-                populateEditEmployeeDetailsModal(employeeDetailsResult);
 
                 if (trackingModals.length > 1) {
                     let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
@@ -1223,7 +1267,6 @@ $(document).on("click", ".location-employee", async function(e) {
     let employeeId = $(this).attr('value');
     employeeDetailsResult = await getEmployeeDetails(employeeId);
     displayEmployeeDetailsModal(employeeDetailsResult);
-    populateEditEmployeeDetailsModal(employeeDetailsResult);
 
     let modalType = '#employeeModal';
     let currentModal = {
@@ -1247,8 +1290,6 @@ $(document).on("click", ".location-departments", async function(e) {
     departmentDetailsResult = await getDepartmentDetails(departmentID);
     if(departmentDetailsResult.length === 0) {
         empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
-        console.log(empytDepartmentDetailsResult);
-        console.log(departmentID);
         displayEmptyDepartment(empytDepartmentDetailsResult);
     } else {
 
@@ -1286,7 +1327,6 @@ $(document).on("click", "#locationCloseBtn", async function(e) {
             if (nextModal['type'] === '#employeeModal'){
                 employeeDetailsResult = nextModal['details'];
                 displayEmployeeDetailsModal(employeeDetailsResult);
-                populateEditEmployeeDetailsModal(employeeDetailsResult);
 
                 if (trackingModals.length > 1) {
                     let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
@@ -1516,7 +1556,6 @@ $(document).on("click", ".employee-card", async function(e) {
     let employeeId = $(this).attr('value');
     employeeDetailsResult = await getEmployeeDetails(employeeId);
     displayEmployeeDetailsModal(employeeDetailsResult);
-    populateEditEmployeeDetailsModal(employeeDetailsResult);
 
 });
 
@@ -1530,7 +1569,6 @@ $("#all-employees").on("click", "td", async function() {
             let employeeId = $(this).attr('value');
             employeeDetailsResult = await getEmployeeDetails(employeeId);
             displayEmployeeDetailsModal(employeeDetailsResult);
-            populateEditEmployeeDetailsModal(employeeDetailsResult);
             break;
         case 'td-department':
             let departmentID = $(this).attr('value');
