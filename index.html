@@ -245,10 +245,12 @@
                                     <div class="form-group">
                                         <label for="firstName">First Name</label>
                                         <input type="text" class="form-control" id="employee-edit-firstName">
+                                        <span class="form-error-message" id="employee-error-firstName"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="lastName">Last Name</label>
                                         <input type="text" class="form-control" id="employee-edit-lastName">
+                                        <span class="form-error-message" id="employee-error-lastName"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="jobTitle">Job Title</label>
@@ -257,6 +259,7 @@
                                     <div class="form-group">
                                         <label for="email">Email address</label>
                                         <input type="email" class="form-control" id="employee-edit-email" aria-describedby="emailHelp">
+                                        <span class="form-error-message" id="employee-error-email"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="department">Department</label>
@@ -265,14 +268,15 @@
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                        <input type="checkbox" class="form-check-input" id="employee-edit-checkbox">
+                                        <label class="form-check-label" for="employee-edit-checkbox">Check me out</label>
+                                        <p><span class="form-error-message" id="employee-error-checkbox"></span></p>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#employeeModal">Close</button>
-                                <button type="submit" class="btn btn btn-outline-primary" data-dismiss="modal" data-toggle="modal" data-target="#employeeModal" onclick="updateEmployeeDetails()">Save</button>
+                                <button type="submit" class="btn btn btn-outline-primary" onclick="updateEmployeeDetails()">Save</button>
                             </div>
                         </div>
                     </div>
@@ -293,10 +297,12 @@
                                     <div class="form-group">
                                         <label for="firstName">First Name</label>
                                         <input type="text" class="form-control" id="employee-create-firstName">
+                                        <span class="form-error-message" id="employee-create-error-firstName"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="lastName">Last Name</label>
                                         <input type="text" class="form-control" id="employee-create-lastName">
+                                        <span class="form-error-message" id="employee-create-error-lastName"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="jobTitle">Job Title</label>
@@ -305,6 +311,7 @@
                                     <div class="form-group">
                                         <label for="email">Email address</label>
                                         <input type="email" class="form-control" id="employee-create-email" aria-describedby="emailHelp">
+                                        <span class="form-error-message" id="employee-create-error-email"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="department">Department</label>
@@ -313,14 +320,15 @@
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck3">
-                                        <label class="form-check-label" for="exampleCheck3">Check me out</label>
+                                        <input type="checkbox" class="form-check-input" id="employee-create-checkbox">
+                                        <label class="form-check-label" for="employee-create-checkbox">Check me out</label>
+                                        <p><span class="form-error-message" id="employee-create-error-checkbox"></span></p>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
-                                <button type="submit" class="btn btn btn-outline-success" data-dismiss="modal" onclick="createEmployee()">Create</button>
+                                <button type="submit" class="btn btn btn-outline-success" onclick="createEmployee()">Create</button>
                             </div>
                         </div>
                     </div>
@@ -393,6 +401,7 @@
                                     <div class="form-group">
                                         <label for="firstName">Department Name</label>
                                         <input type="text" class="form-control" id="department-edit-name">
+                                        <span class="form-error-message" id="department-error-name"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="department">Location</label>
@@ -401,14 +410,15 @@
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck8">
-                                        <label class="form-check-label" for="exampleCheck8">Check me out</label>
+                                        <input type="checkbox" class="form-check-input" id="department-edit-checkbox">
+                                        <label class="form-check-label" for="department-edit-checkbox">Check me out</label>
+                                        <p><span class="form-error-message" id="department-error-checkbox"></span></p>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal">Close</button>
-                                <button type="submit" class="btn btn btn-outline-primary" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal" onclick="updateDepartmentDetails()">Save</button>
+                                <button type="submit" class="btn btn btn-outline-primary" onclick="updateDepartmentDetails()">Save</button>
                             </div>
                         </div>
                     </div>
@@ -429,6 +439,7 @@
                                     <div class="form-group">
                                         <label for="firstName">Department Name</label>
                                         <input type="text" class="form-control" id="department-create-name">
+                                        <span class="form-error-message" id="department-create-error-name"></span>
                                     </div>
                                     <div class="form-group">
                                         <label for="department">Location</label>
@@ -437,14 +448,15 @@
                                         </select>
                                     </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck2">
-                                        <label class="form-check-label" for="exampleCheck2">Check me out</label>
+                                        <input type="checkbox" class="form-check-input" id="department-create-checkbox">
+                                        <label class="form-check-label" for="department-create-checkbox">Check me out</label>
+                                        <p><span class="form-error-message" id="department-create-error-checkbox"></span></p>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
-                                <button type="submit" class="btn btn btn-outline-success" data-dismiss="modal" onclick="createDepartment()">Create</button>
+                                <button type="submit" class="btn btn btn-outline-success" onclick="createDepartment()">Create</button>
                             </div>
                         </div>
                     </div>
@@ -518,16 +530,18 @@
                                     <div class="form-group">
                                         <label for="firstName">Location Name</label>
                                         <input type="text" class="form-control" id="location-edit-name">
+                                        <span class="form-error-message" id="location-error-name"></span>
                                     </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck18">
-                                        <label class="form-check-label" for="exampleCheck18">Check me out</label>
+                                        <input type="checkbox" class="form-check-input" id="location-edit-checkbox">
+                                        <label class="form-check-label" for="location-edit-checkbox">Check me out</label>
+                                        <p><span class="form-error-message" id="location-error-checkbox"></span></p>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#locationModal">Close</button>
-                                <button type="submit" class="btn btn btn-outline-primary" data-dismiss="modal" data-toggle="modal" data-target="#locationModal" onclick="updateLocationDetails()">Save</button>
+                                <button type="submit" class="btn btn btn-outline-primary" onclick="updateLocationDetails()">Save</button>
                             </div>
                         </div>
                     </div>
@@ -548,16 +562,18 @@
                                     <div class="form-group">
                                         <label for="locationName">Location</label>
                                         <input type="text" class="form-control" id="location-create-name">
+                                        <span class="form-error-message" id="location-create-error-name"></span>
                                     </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck12">
-                                        <label class="form-check-label" for="exampleCheck12">Check me out</label>
+                                        <input type="checkbox" class="form-check-input" id="location-create-checkbox">
+                                        <label class="form-check-label" for="location-create-checkbox">Check me out</label>
+                                        <p><span class="form-error-message" id="location-create-error-checkbox"></span></p>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
-                                <button type="submit" class="btn btn btn-outline-success" data-dismiss="modal" onclick="createLocation()">Create</button>
+                                <button type="submit" class="btn btn btn-outline-success" onclick="createLocation()">Create</button>
                             </div>
                         </div>
                     </div>

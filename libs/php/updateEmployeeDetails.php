@@ -14,6 +14,58 @@
 
 	header('Content-Type: application/json; charset=UTF-8');
 
+	// Validate form
+	$formValidation = [];
+
+	if (empty($_REQUEST['firstName']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['firstName'])) {
+
+		$input = 'firstName';
+		$message = 'Please type a valid first name';
+		$error = (object) [$input => $message];
+		$formValidation[] = $error;
+
+	}
+
+	if (empty($_REQUEST['lastName']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['lastName'])) {
+
+		$input = 'lastName';
+		$message = 'Please type a valid last name';
+		$error = (object) [$input => $message];
+		$formValidation[] = $error;
+
+	}
+
+	if (empty($_REQUEST['email']) || !filter_var($_REQUEST['email'], FILTER_VALIDATE_EMAIL)) {
+
+		$input = 'email';
+		$message = 'Please type a valid email';
+		$error = (object) [$input => $message];
+		$formValidation[] = $error;
+
+	} 
+
+	if ($_REQUEST['checkbox'] === 'false') {
+
+		$input = 'checkbox';
+		$message = 'Please select checkbox';
+		$error = (object) [$input => $message];
+		$formValidation[] = $error;
+
+	}
+
+	if (!empty($formValidation)) {
+
+		$output['status']['code'] = "400";
+		$output['status']['name'] = "executed";
+		$output['status']['description'] = "form validation failed";	
+		$output['data'] = $formValidation;
+
+		echo json_encode($output); 
+
+		exit;
+	}
+	// End form validation
+
 	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
 
 	if (mysqli_connect_errno()) {

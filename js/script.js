@@ -423,6 +423,7 @@ function createEmployee() {
     const jobTitle = $('#employee-create-jobTitle').val();
     const email = $('#employee-create-email').val();
     const departmentID = $('#employee-create-department option:selected').val();
+    const checkbox = $('#employee-create-checkbox').is(':checked');
 
     $.ajax({
         url: "libs/php/createEmployee.php",
@@ -433,7 +434,8 @@ function createEmployee() {
             lastName: lastName,
             jobTitle: jobTitle,
             email: email,
-            departmentID: departmentID
+            departmentID: departmentID,
+            checkbox: checkbox
         },
         success: async function(result) {
 
@@ -447,6 +449,39 @@ function createEmployee() {
 
                 displayAllEmployeesByLastName();
 
+                $('#createEmployeeModal').modal('hide');
+
+            }
+
+            if(result['status']['description'] === 'form validation failed') {
+
+                $('#employee-create-error-firstName').html('');
+                $('#employee-create-error-lastName').html('');
+                $('#employee-create-error-email').html('');
+                $('#employee-create-error-checkbox').html('');
+
+                let errorArray = result['data'];
+
+                for(let i = 0; i < errorArray.length; i++) {
+
+                    for(key in errorArray[i]) {
+                        switch(key) {
+                            case 'firstName':
+                                $('#employee-create-error-firstName').html(errorArray[i][key]);
+                                break;
+                            case 'lastName':
+                                $('#employee-create-error-lastName').html(errorArray[i][key]);
+                                break;
+                            case 'email':
+                                $('#employee-create-error-email').html(errorArray[i][key]);
+                                break;
+                            case 'checkbox':
+                                $('#employee-create-error-checkbox').html(errorArray[i][key]);
+                                break;
+                            default:
+                        }
+                    }
+                }
             }
             
 
@@ -519,6 +554,13 @@ function populateEditEmployeeDetailsModal(employee) {
     $('#employee-edit-department').val(employee['departmentID']);
     $('#employee-edit-location').val(employee['location']);
 
+    $('#employee-error-firstName').html('');
+    $('#employee-error-lastName').html('');
+    $('#employee-error-email').html('');
+    $('#employee-error-checkbox').html('');
+    
+    $('#employee-edit-checkbox').prop('checked', false);
+
 }
 
 // Update employee details modal
@@ -531,6 +573,7 @@ function updateEmployeeDetails() {
     const jobTitle = $('#employee-edit-jobTitle').val();
     const email = $('#employee-edit-email').val();
     const departmentID = $('#employee-edit-department option:selected').val();
+    const checkbox = $('#employee-edit-checkbox').is(':checked');
 
     $.ajax({
         url: "libs/php/updateEmployeeDetails.php",
@@ -542,7 +585,8 @@ function updateEmployeeDetails() {
             lastName: lastName,
             jobTitle: jobTitle,
             email: email,
-            departmentID: departmentID
+            departmentID: departmentID,
+            checkbox: checkbox
         },
         success: async function(result) {
 
@@ -558,8 +602,41 @@ function updateEmployeeDetails() {
 
                 displayAllEmployeesByLastName();
 
+                $('#employeeModal').modal('show');
+                $('#editEmployeeModal').modal('hide');
+
             }
-            
+
+            if(result['status']['description'] === 'form validation failed') {
+
+                $('#employee-error-firstName').html('');
+                $('#employee-error-lastName').html('');
+                $('#employee-error-email').html('');
+                $('#employee-error-checkbox').html('');
+
+                let errorArray = result['data'];
+
+                for(let i = 0; i < errorArray.length; i++) {
+
+                    for(key in errorArray[i]) {
+                        switch(key) {
+                            case 'firstName':
+                                $('#employee-error-firstName').html(errorArray[i][key]);
+                                break;
+                            case 'lastName':
+                                $('#employee-error-lastName').html(errorArray[i][key]);
+                                break;
+                            case 'email':
+                                $('#employee-error-email').html(errorArray[i][key]);
+                                break;
+                            case 'checkbox':
+                                $('#employee-error-checkbox').html(errorArray[i][key]);
+                                break;
+                            default:
+                        }
+                    }
+                }
+            }
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -615,6 +692,7 @@ function createDepartment() {
 
     const name = $('#department-create-name').val();
     const locationID = $('#department-create-location').val();
+    const checkbox = $('#department-create-checkbox').is(':checked');
 
     $.ajax({
         url: "libs/php/createDepartment.php",
@@ -622,10 +700,46 @@ function createDepartment() {
         dataType: 'json',
         data: {
             name: name,
-            locationID: locationID
+            locationID: locationID,
+            checkbox: checkbox
         },
         success: async function(result) {
+ 
+            if(result['status']['code'] === '200') {
+                
+                clearCurrentResults();
 
+                if(currentView === 'table') {
+                    $( "#table-div" ).addClass( "tableFixHead" );
+                }
+
+                displayAllEmployeesByLastName();
+
+                $('#createDepartmentModal').modal('hide');
+
+            }
+
+            if(result['status']['description'] === 'form validation failed') {
+
+                $('#department-create-error-name').html('');
+                $('#department-create-error-checkbox').html('');
+
+                let errorArray = result['data'];
+
+                for(let i = 0; i < errorArray.length; i++) {
+                    for(key in errorArray[i]) {
+                        switch(key) {
+                            case 'name':
+                                $('#department-create-error-name').html(errorArray[i][key]);
+                                break;
+                            case 'checkbox':
+                                $('#department-create-error-checkbox').html(errorArray[i][key]);
+                                break;
+                            default:
+                        }
+                    }
+                }
+            }
         },
         error: function(jqXHR, textStatus, errorThrown) {
             reject(errorThrown);
@@ -777,6 +891,10 @@ function populateEditDepartmentDetailsModal(department) {
     $('#department-edit-name').val(department[0]['department']);
     $('#department-edit-location').val(department[0]['locationID']);
 
+    $('#department-error-name').html('');
+    $('#department-error-checkbox').html('');
+    $('#department-edit-checkbox').prop('checked', false);
+
 }
 
 // Update department details modal
@@ -786,6 +904,7 @@ function updateDepartmentDetails() {
 
     const name = $('#department-edit-name').val();
     const locationID = $('#department-edit-location').val();
+    const checkbox = $('#department-edit-checkbox').is(':checked');
 
     $.ajax({
         url: "libs/php/updateDepartmentDetails.php",
@@ -794,7 +913,8 @@ function updateDepartmentDetails() {
         data: {
             id: id,
             name: name,
-            locationID: locationID
+            locationID: locationID,
+            checkbox: checkbox
         },
         success: async function(result) {
 
@@ -810,7 +930,32 @@ function updateDepartmentDetails() {
                 }
 
                 displayAllEmployeesByLastName();
+                
+                $('#departmentModal').modal('show');
+                $('#editDepartmentModal').modal('hide');
 
+            }
+
+            if(result['status']['description'] === 'form validation failed') {
+
+                $('#department-error-name').html('');
+                $('#department-error-checkbox').html('');
+
+                let errorArray = result['data'];
+
+                for(let i = 0; i < errorArray.length; i++) {
+                    for(key in errorArray[i]) {
+                        switch(key) {
+                            case 'name':
+                                $('#department-error-name').html(errorArray[i][key]);
+                                break;
+                            case 'checkbox':
+                                $('#department-error-checkbox').html(errorArray[i][key]);
+                                break;
+                            default:
+                        }
+                    }
+                }
             }
             
 
@@ -866,6 +1011,7 @@ let locationDetailsResult;
 function createLocation() {
 
     const name = $('#location-create-name').val();
+    const checkbox = $('#location-create-checkbox').is(':checked');
 
     $.ajax({
         url: "libs/php/createLocation.php",
@@ -873,8 +1019,46 @@ function createLocation() {
         dataType: 'json',
         data: {
             name: name,
+            checkbox: checkbox
         },
         success: async function(result) {
+
+            if(result['status']['code'] === '200') {
+                
+                clearCurrentResults();
+
+                if(currentView === 'table') {
+                    $( "#table-div" ).addClass( "tableFixHead" );
+                }
+
+                displayAllEmployeesByLastName();
+
+                $('#createLocationModal').modal('hide');
+
+            }
+
+            if(result['status']['description'] === 'form validation failed') {
+
+                $('#location-create-error-name').html('');
+                $('#location-create-error-checkbox').html('');
+
+                let errorArray = result['data'];
+                console.log(errorArray);
+
+                for(let i = 0; i < errorArray.length; i++) {
+                    for(key in errorArray[i]) {
+                        switch(key) {
+                            case 'name':
+                                $('#location-create-error-name').html(errorArray[i][key]);
+                                break;
+                            case 'checkbox':
+                                $('#location-create-error-checkbox').html(errorArray[i][key]);
+                                break;
+                            default:
+                        }
+                    }
+                }
+            }
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -1006,6 +1190,11 @@ function populateEditLocationDetailsModal(location) {
 
     $('#location-edit-name').val(location['data2'][0]['location']);
 
+    $('#location-error-name').html('');
+    $('#location-error-checkbox').html('');
+    
+    $('#location-edit-checkbox').prop('checked', false);
+
 }
 
 // Update location details modal
@@ -1015,6 +1204,8 @@ function updateLocationDetails() {
 
     const name = $('#location-edit-name').val();
 
+    const checkbox = $('#location-edit-checkbox').is(':checked');
+
     $.ajax({
         url: "libs/php/updateLocationDetails.php",
         type: 'POST',
@@ -1022,6 +1213,7 @@ function updateLocationDetails() {
         data: {
             id: id,
             name: name,
+            checkbox: checkbox
         },
         success: async function(result) {
 
@@ -1038,6 +1230,30 @@ function updateLocationDetails() {
 
                 displayAllEmployeesByLastName();
 
+                $('#locationModal').modal('show');
+                $('#editLocationModal').modal('hide');
+            }
+
+            if(result['status']['description'] === 'form validation failed') {
+
+                $('#location-error-name').html('');
+                $('#location-error-checkbox').html('');
+
+                let errorArray = result['data'];
+
+                for(let i = 0; i < errorArray.length; i++) {
+                    for(key in errorArray[i]) {
+                        switch(key) {
+                            case 'name':
+                                $('#location-error-name').html(errorArray[i][key]);
+                                break;
+                            case 'checkbox':
+                                $('#location-error-checkbox').html(errorArray[i][key]);
+                                break;
+                            default:
+                        }
+                    }
+                }
             }
             
 

@@ -262,3 +262,7 @@ th {
 .delete-info {
   font-size: large;
 }
+
+.form-error-message {
+  color: red;
+}
