@@ -251,66 +251,18 @@ const createFilterRequest = filterRequest => {
         request += "WHERE ";
 
         filterRequest.forEach(function (filter) {
+
             if(count > 0) {
                 request += " OR ";
             }
-            switch(filter) {
-                case 'jobTitle':
-                    request += "p.jobTitle =  \'\'";
-                    break;
-                case 'hr':
-                    request += "d.name =  \'Human Resources\'";
-                    break;
-                case 'sales':
-                    request += "d.name =  \'Sales\'";
-                    break;
-                case 'marketing':
-                    request += "d.name =  \'Marketing\'";
-                    break;
-                case 'legal':
-                    request += "d.name = \'Legal\'";
-                    break;
-                case 'services':
-                    request += "d.name = \'Services\'";
-                    break;
-                case 'research':
-                    request += "d.name = \'Research and Development\'";
-                    break;
-                case 'product':
-                    request += "d.name = \'Product Management\'";
-                    break;
-                case 'training':
-                    request += "d.name = \'Training\'";
-                    break;
-                case 'support':
-                    request += "d.name = \'Support\'";
-                    break;
-                case 'engineering':
-                    request += "d.name = \'Engineering\'";
-                    break;
-                case 'accounting':
-                    request += "d.name = \'Accounting\'";
-                    break;
-                case 'business':
-                    request += "d.name = \'Business Development\'";
-                    break;
-                case 'london':
-                    request += "l.name = \'London\'";
-                    break;
-                case 'munich':
-                    request += "l.name = \'Munich\'";
-                    break;
-                case 'newyork':
-                    request += "l.name = \'New York\'";
-                    break;
-                case 'paris':
-                    request += "l.name = \'Paris\'";
-                    break;
-                case 'rome':
-                    request += "l.name = \'Rome\'";
-                    break;
-                default:
 
+            let requestName = filter.slice(4);
+            let requestType = filter.slice(0, 4);
+
+            if(requestType === 'Dep-') {
+                request += `d.name =  \'${requestName}\'`;
+            } else if (requestType === 'Loc-') {
+                request += `l.name =  \'${requestName}\'`;
             }
 
             count++;
@@ -664,6 +616,7 @@ function createDepartment() {
                 }
 
                 displayAllEmployeesByLastName();
+                createFilterDropdown();
 
                 $('#createDepartmentModal').modal('hide');
 
@@ -725,6 +678,7 @@ const getDepartmentDetails = async id => {
 // Displaying the data for department details modal
 function displayDepartmentDetailsModal(department) {
 
+    console.log(department);
     $('#modal-department-id').html(department[0]['id']);
     $('#modal-department-name').html(department[0]['department']);
     $('#modal-department-location').html(department[0]['location']);
@@ -748,7 +702,7 @@ function displayDepartmentDetailsModal(department) {
 
     $('#modal-department-employees').html(employeeListHtml);
 
-    $('#modal-department-location').attr('value', department['locationID']);
+    $('#modal-department-location').attr('value', department[0]['locationID']);
 
     if(trackingModals.length === 0) {
         let modalType = '#departmentModal';
@@ -817,17 +771,33 @@ const getAllDepartments = async () => {
     });
 }
 
-// Displaying all departments in a dropdown list for the edit modal
-const createDepartmentsDropdownList = departments => {
+// Creating dropdown list all departments employee edit modal or filter department
+const createDepartmentsDropdownList = (departments, listFor) => {
 
     let departmentDropdownHtml = '';
 
-    for(let i = 0; i < departments.length; i++) {
-        let department = departments[i]['name'];
-        let departmentID = departments[i]['id'];
-        let html = `<option value="${departmentID}">${department}</option>`;
+    if(listFor === 'modal') {
+
+        for(let i = 0; i < departments.length; i++) {
+            let department = departments[i]['name'];
+            let departmentID = departments[i]['id'];
+            let html = `<option value="${departmentID}">${department}</option>`;
+        
+            departmentDropdownHtml += html;
+        }
     
-        departmentDropdownHtml += html;
+    } else if (listFor === 'filter') {
+
+        for(let i = 0; i < departments.length; i++) {
+            let department = departments[i]['name'];
+            let html = `        
+            <div class="dropbtn input-drop">
+                <input class="check-filter" type="checkbox" id="check-${department}" name="check-${department}" value="Dep-${department}">
+                <label for="check-${department}">${department}</label>
+            </div>`;
+        
+            departmentDropdownHtml += html;
+        }
     }
 
     return departmentDropdownHtml
@@ -982,6 +952,7 @@ function createLocation() {
                 }
 
                 displayAllEmployeesByLastName();
+                createFilterDropdown();
 
                 $('#createLocationModal').modal('hide');
 
@@ -1116,16 +1087,33 @@ const getAllLocations = async () => {
 }
 
 // Displaying all locations in a dropdown list for the edit modal
-const createLocationsDropdownList = locations => {
+const createLocationsDropdownList = (locations, listFor) => {
 
     let locationDropdownHtml = '';
 
-    for(let i = 0; i < locations.length; i++) {
-        let location = locations[i]['name'];
-        let locationID = locations[i]['id'];
-        let html = `<option value="${locationID}">${location}</option>`;
-    
-        locationDropdownHtml += html;
+    if(listFor === 'modal') {
+
+        for(let i = 0; i < locations.length; i++) {
+            let location = locations[i]['name'];
+            let locationID = locations[i]['id'];
+            let html = `<option value="${locationID}">${location}</option>`;
+        
+            locationDropdownHtml += html;
+        }
+
+    } else if (listFor === 'filter') {
+
+        for(let i = 0; i < locations.length; i++) {
+            let location = locations[i]['name'];
+            let html = `        
+            <div class="dropbtn input-drop">
+                <input class="check-filter" type="checkbox" id="check-${location}" name="check-${location}" value="Loc-${location}">
+                <label for="check-${location}">${location}</label>
+            </div>`;
+        
+            locationDropdownHtml += html;
+        }
+
     }
 
     return locationDropdownHtml
@@ -1342,7 +1330,8 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
 // Clicking employee edit button 
 $(document).on("click", "#employee-edit-btn", async function(e) {
     const departments = await getAllDepartments();
-    const departmentDropdownHtml = createDepartmentsDropdownList(departments);
+    const listFor = 'modal';
+    const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
     $('#employee-edit-department').html('');
     $('#employee-edit-department').append(departmentDropdownHtml);
     populateEditEmployeeDetailsModal(employeeDetailsResult);
@@ -1358,7 +1347,8 @@ $(document).on("click", "#employee-delete-btn", function(e) {
 // This button is found in side menu
 $(document).on("click", "#create-employee-btn", async function(e) {
     const departments = await getAllDepartments();
-    const departmentDropdownHtml = createDepartmentsDropdownList(departments);
+    const listFor = 'modal';
+    const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
     $('#employee-create-department').html('');
     $('#employee-create-department').append(departmentDropdownHtml);
 });
@@ -1394,7 +1384,9 @@ $(document).on("click", ".department-employee", async function(e) {
 $(document).on("click", "#modal-department-location", async function(e) {
 
     let locationID = $(this).attr('value');
+    console.log(locationID);
     locationDetailsResult = await getLocationDetails(locationID);
+    console.log(locationDetailsResult);
     displayLocationDetailsModal(locationDetailsResult);
     populateEditLocationDetailsModal(locationDetailsResult);
 
@@ -1454,7 +1446,8 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
 $(document).on("click", "#department-edit-btn", async function(e) {
 
     const locations = await getAllLocations();
-    const locationDropdownHtml = createLocationsDropdownList(locations);
+    const listFor = 'modal';
+    const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
     $('#department-edit-location').html('');
     $('#department-edit-location').append(locationDropdownHtml);
     populateEditDepartmentDetailsModal(departmentDetailsResult);
@@ -1482,7 +1475,8 @@ $(document).on("click", "#department-delete-form", async function(e) {
 // This button is found in side menu
 $(document).on("click", "#create-department-btn", async function(e) {
     const locations = await getAllLocations();
-    const locationDropdownHtml = createLocationsDropdownList(locations);
+    const listFor = 'modal';
+    const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
     $('#department-create-location').html('');
     $('#department-create-location').append(locationDropdownHtml);
 });
@@ -1864,19 +1858,6 @@ function filterDropdown() {
     insideFilterDropdown = false;
 }
 
-function filterJobDropdown() {
-
-    $("#filter-job").toggleClass("active-dropdown");
-
-    document.getElementById("filterJobDropdown").classList.toggle("show");
-    insideFilterDropdown =  true;
-
-    $("#filter-department").removeClass("active-dropdown");
-    $("#filterDepartmentDropdown").removeClass("show");
-    $("#filter-location").removeClass("active-dropdown");
-    $("#filterLocationDropdown").removeClass("show");
-}
-
 function filterDepartmentDropdown() {
 
     $("#filter-department").toggleClass("active-dropdown");
@@ -1884,8 +1865,6 @@ function filterDepartmentDropdown() {
     document.getElementById("filterDepartmentDropdown").classList.toggle("show");
     insideFilterDropdown =  true;
 
-    $("#filter-job").removeClass("active-dropdown");
-    $("#filterJobDropdown").removeClass("show");
     $("#filter-location").removeClass("active-dropdown");
     $("#filterLocationDropdown").removeClass("show");
 }
@@ -1897,8 +1876,6 @@ function filterLocationDropdown() {
     document.getElementById("filterLocationDropdown").classList.toggle("show");
     insideFilterDropdown =  true;
 
-    $("#filter-job").removeClass("active-dropdown");
-    $("#filterJobDropdown").removeClass("show");
     $("#filter-department").removeClass("active-dropdown");
     $("#filterDepartmentDropdown").removeClass("show");
 }
@@ -1910,7 +1887,33 @@ $(document).on("click", ".input-drop", function(e) {
     
 });
 
-// Close the dropdown OR removes active highlight if the user clicks outside of it
+// **************************************************************************************** //
+
+// ********************** Dropdown menu for sort and filter to load *********************** //
+
+async function createFilterDropdown () {
+    
+    const listFor = 'filter';
+    // Departments
+    const departments = await getAllDepartments();
+    const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
+    $('#filterDepartmentDropdown').html('');
+    $('#filterDepartmentDropdown').append(departmentDropdownHtml);
+
+    // Locations
+    const locations = await getAllLocations();
+    const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
+    $('#filterLocationDropdown').html('');
+    $('#filterLocationDropdown').append(locationDropdownHtml);
+
+}
+
+createFilterDropdown();
+
+// **************************************************************************************** //
+
+// *** Close the dropdown OR removes active highlight if the user clicks outside ********** //
+
 window.onclick = function(event) {
 if (!event.target.matches('.sidebar-item') && !event.target.matches('.input-drop')  && !event.target.matches('.check-filter')  && !event.target.matches('label')) {
 
