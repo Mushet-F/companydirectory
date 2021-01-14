@@ -48,7 +48,7 @@ function createTable(result) {
 
 // **************************************************************************************** //
 
-// ********************** Displaying main employees grid ********************************** //
+// ********************** Creating main employees grid ************************************ //
 
 function createCards(result) {
 
@@ -56,9 +56,7 @@ function createCards(result) {
 
         const id = result.data[i]['id'];
         const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
-        // NO JOB TITLE IN TABLE
         const job = result.data[i]['jobTitle']; 
-        // const job = "JobTitle";
         const email = result.data[i]['email'];
         const department = result.data[i]['department'];
         const location = result.data[i]['location'];
@@ -358,54 +356,6 @@ function applyFilterRequest(request) {
         }
     }); 
 
-}
-
-// **************************************************************************************** //
-
-// ********************** Function to convert department name to department id ************* //
-
-const departmentNameToID = name => {
-
-    switch(name) {
-        case 'Human Resources':
-            return 1;
-            break;
-        case 'Sales':
-            return 2;
-            break;
-        case 'Marketing':
-            return 3;
-            break;
-        case 'Legal':
-            return 4;
-            break;
-        case 'Services':
-            return 5;
-            break;
-        case 'Research and Development':
-            return 6;
-            break;
-        case 'Product Management':
-            return 7;
-            break;
-        case 'Training':
-            return 8;
-            break;
-        case 'Support':
-            return 9;
-            break;
-        case 'Engineering':
-            return 10;
-            break;
-        case 'Accounting':
-            return 11;
-            break;
-        case 'Business Development':
-            return 12;
-            break;
-        default:
-
-    }
 }
 
 // **************************************************************************************** //
@@ -1043,7 +993,6 @@ function createLocation() {
                 $('#location-create-error-checkbox').html('');
 
                 let errorArray = result['data'];
-                console.log(errorArray);
 
                 for(let i = 0; i < errorArray.length; i++) {
                     for(key in errorArray[i]) {
@@ -1155,7 +1104,6 @@ const getAllLocations = async () => {
             dataType: 'json',
             success: function(result) {
                     
-                console.log('resutl ', result);
                 const locations = result['data'];
                 resolve(locations);
 
@@ -1504,14 +1452,13 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
 
 // Clicking department edit button 
 $(document).on("click", "#department-edit-btn", async function(e) {
-    console.log('clicked');
+
     const locations = await getAllLocations();
-    console.log(locations);
     const locationDropdownHtml = createLocationsDropdownList(locations);
-    console.log(locationDropdownHtml);
     $('#department-edit-location').html('');
     $('#department-edit-location').append(locationDropdownHtml);
     populateEditDepartmentDetailsModal(departmentDetailsResult);
+
 });
 
 // Clicking department delete button
@@ -1878,22 +1825,26 @@ $("#all-employees").on("click", "td", async function() {
 let insideFilterDropdown = false;
 
 function addDropdown() {
+
     $("#sidebar-item-add").toggleClass("active-dropdown");
 
-    document.getElementById("addDropdown").classList.toggle("show");
-    document.getElementById("sortDropdown").classList.remove("show");
-    document.getElementById("filterDropdown").classList.remove("show");
+    $("#addDropdown").toggleClass("show");
+    $("#sortDropdown").removeClass("show");
+    $("#filterDropdown").removeClass("show");
+
     $("#sidebar-item-sort").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
+
 }
 
 function sortDropdown() {
 
     $("#sidebar-item-sort").toggleClass("active-dropdown");
 
-    document.getElementById("sortDropdown").classList.toggle("show");
-    document.getElementById("addDropdown").classList.remove("show");
-    document.getElementById("filterDropdown").classList.remove("show");
+    $("#sortDropdown").toggleClass("show");
+    $("#addDropdown").removeClass("show");
+    $("#filterDropdown").removeClass("show");
+
     $("#sidebar-item-add").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
 }
@@ -1901,9 +1852,10 @@ function sortDropdown() {
 function filterDropdown() {
 
     if(!insideFilterDropdown) {
-        document.getElementById("filterDropdown").classList.toggle("show");
-        document.getElementById("sortDropdown").classList.remove("show");
-        document.getElementById("addDropdown").classList.remove("show");
+        $("#filterDropdown").toggleClass("show");
+        $("#sortDropdown").removeClass("show");
+        $("#addDropdown").removeClass("show");
+
         $("#sidebar-item-filter").toggleClass("active-dropdown");
         $("#sidebar-item-sort").removeClass("active-dropdown");
         $("#sidebar-item-add").removeClass("active-dropdown");
@@ -1962,18 +1914,18 @@ $(document).on("click", ".input-drop", function(e) {
 window.onclick = function(event) {
 if (!event.target.matches('.sidebar-item') && !event.target.matches('.input-drop')  && !event.target.matches('.check-filter')  && !event.target.matches('label')) {
 
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
+    let dropdowns = document.getElementsByClassName("dropdown-content");
+    let i;
     for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
+        let openDropdown = dropdowns[i];
         if (openDropdown.classList.contains('show')) {
             openDropdown.classList.remove('show');
         }
     }
 
     if (!event.target.matches('.sidebar-item')) {
-        var actives = document.getElementsByClassName("active-dropdown");
-        var i;
+        let actives = document.getElementsByClassName("active-dropdown");
+        let i;
         for (i = 0; i < actives.length; i++) {
             actives[i].classList.remove('active-dropdown');
         }
