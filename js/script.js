@@ -65,7 +65,7 @@ function createCards(result) {
 
 
         let html = `<div class='col-sm-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
-        <h3 class='name'>${name}</h3>                            
+        <h3 class="name">${name}</h3>                            
         <p class="title">${job}</p>
         <p class="description">${email}</p>
         <p class="description">${department}</p>

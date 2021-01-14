@@ -4,12 +4,15 @@ body {
 }  
 
 /* Navbar */
+.navbar {
+  background-color: #116466;
+}
 
 .navbar-brand {
   padding-top: .75rem;
   padding-bottom: .75rem;
   font-size: 1rem;
-  background-color: rgba(0, 0, 0, .25);
+  /* background-color: rgba(0, 0, 0, .25); */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 }
 
@@ -27,6 +30,7 @@ body {
   z-index: 100; /* Behind the navbar */
   padding: 48px 0 0; /* Height of navbar */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  background-color: #D1E8E2;
 }
 
 .sidebar-sticky {
@@ -53,7 +57,7 @@ body {
 .sidebar-item {
   display: block;
   /* padding: .5rem 1rem; */
-  background-color: #f8f9fa;
+  background-color: #D1E8E2;
   cursor: pointer;
 }
 
@@ -69,28 +73,22 @@ body {
 
 .dropbtn {
   border: none;
-  background-color: #f8f9fa;
+  background-color: #D1E8E2;
 }
 
 .sidebar-item:hover, .sidebar-item:focus {
-  background-color: #2980B9;
+  background-color: #FFCB9A;
 }
 
-/* .dropbtn:hover, .dropbtn:focus {
-  background-color: #2980B9;
-} */
-
 .dropbtn:hover {
-  background-color: #2980B9;
+  background-color: #FFCB9A;
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f1f1f1;
-  /* min-width: 160px; */
+  background-color: #D1E8E2;
   width: 100%;
-  /* overflow: auto; */
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   margin-top: 7.5px;
@@ -104,7 +102,7 @@ body {
 }
 
 .dropdown-content a:hover {
-  background-color: #2980B9;
+  background-color: #FFCB9A;
 }
 
 .dropdown a:hover {
@@ -136,11 +134,11 @@ body {
   padding: 12px 16px;
   padding-right: 100%;
   border: none;
-  background-color: #f8f9fa;
+  background-color: #D1E8E2;
 }
 
 .sidebar-button:hover{
-  background-color: #2980B9;
+  background-color: #FFCB9A;
 }
 
 #filter-reset {
@@ -151,7 +149,8 @@ body {
 /* Table */
 th {
   cursor: pointer;
-  background-color: #7d8285;
+  background-color: #2C3531;
+  color: #fff;
 }
 
 .table>tbody>tr>td{
@@ -297,11 +296,11 @@ th {
 
 .team-boxed {
   color:#313437;
-  background-color:#eef4f7;
+  /* background-color:#eef4f7; */
 }
 
 .team-boxed p {
-  color:#7d8285;
+  color:#116466;
 }
 
 .team-boxed .employee-card {
@@ -311,8 +310,9 @@ th {
 .team-boxed .employee-card .box {
   text-align:center;
   padding:30px;
-  background-color:#fff;
+  background-color:#ffc691;
   margin-bottom:30px;
+  color: #116466;
 }
 
 .team-boxed .employee-card .name {
@@ -325,7 +325,7 @@ th {
 .team-boxed .employee-card .title {
   text-transform:uppercase;
   font-weight:bold;
-  color:#d0d0d0;
+  color:#D1E8E2;
   letter-spacing:2px;
   font-size:13px;
 }
