@@ -329,6 +329,7 @@ th {
   background-color:#ffc691;
   margin-bottom:30px;
   color: #116466;
+  cursor: pointer;
 }
 
 .team-boxed .employee-card .name {
