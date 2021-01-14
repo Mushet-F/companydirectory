@@ -686,7 +686,6 @@ const getDepartmentDetails = async id => {
 // Displaying the data for department details modal
 function displayDepartmentDetailsModal(department) {
 
-    console.log(department);
     $('#modal-department-id').html(department[0]['id']);
     $('#modal-department-name').html(department[0]['department']);
     $('#modal-department-location').html(department[0]['location']);
@@ -1392,9 +1391,7 @@ $(document).on("click", ".department-employee", async function(e) {
 $(document).on("click", "#modal-department-location", async function(e) {
 
     let locationID = $(this).attr('value');
-    console.log(locationID);
     locationDetailsResult = await getLocationDetails(locationID);
-    console.log(locationDetailsResult);
     displayLocationDetailsModal(locationDetailsResult);
     populateEditLocationDetailsModal(locationDetailsResult);
 
