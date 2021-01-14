@@ -1,13 +1,5 @@
 <?php
 
-	// example use from browser
-	// http://localhost/companydirectory/libs/php/getAll.php
-
-	// remove next two lines for production
-	
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
-
 	$executionStartTime = microtime(true);
 
 	include("config.php");
@@ -17,7 +9,7 @@
 	// Validate form
 	$formValidation = [];
 
-	if (empty($_REQUEST['firstName']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['firstName'])) {
+	if (empty($_POST['firstName']) || !preg_match('/^[a-zA-Z\s]+$/', $_POST['firstName'])) {
 
 		$input = 'firstName';
 		$message = 'Please type a valid first name';
@@ -26,7 +18,7 @@
 
 	}
 
-	if (empty($_REQUEST['lastName']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['lastName'])) {
+	if (empty($_POST['lastName']) || !preg_match('/^[a-zA-Z\s]+$/', $_POST['lastName'])) {
 
 		$input = 'lastName';
 		$message = 'Please type a valid last name';
@@ -35,7 +27,7 @@
 
 	}
 
-	if (empty($_REQUEST['email']) || !filter_var($_REQUEST['email'], FILTER_VALIDATE_EMAIL)) {
+	if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 
 		$input = 'email';
 		$message = 'Please type a valid email';
@@ -44,7 +36,7 @@
 
 	} 
 
-	if ($_REQUEST['checkbox'] === 'false') {
+	if ($_POST['checkbox'] === 'false') {
 
 		$input = 'checkbox';
 		$message = 'Please select checkbox';
@@ -84,7 +76,7 @@
 
 	}	
 
-	$query = 'UPDATE personnel SET firstName = \'' . $_REQUEST['firstName'] . '\', lastName = \'' . $_REQUEST['lastName'] . '\', jobTitle = \'' . $_REQUEST['jobTitle'] . '\', email = \'' . $_REQUEST['email'] . '\', departmentID = \'' . $_REQUEST['departmentID'] . '\' WHERE personnel.id = \'' . $_REQUEST['id'] . '\'';
+	$query = 'UPDATE personnel SET firstName = \'' . $_POST['firstName'] . '\', lastName = \'' . $_POST['lastName'] . '\', jobTitle = \'' . $_POST['jobTitle'] . '\', email = \'' . $_POST['email'] . '\', departmentID = \'' . $_POST['departmentID'] . '\' WHERE personnel.id = \'' . $_POST['id'] . '\'';
 
 	$result = $conn->query($query);
 	

@@ -1,13 +1,5 @@
 <?php
 
-	// example use from browser
-	// http://localhost/companydirectory/libs/php/getAll.php
-
-	// remove next two lines for production
-	
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
-
 	$executionStartTime = microtime(true);
 
 	include("config.php");
@@ -32,7 +24,7 @@
 
 	}	
 
-	$query = 'SELECT d.id, d.name as department, l.id as locationID, l.name as location FROM department d LEFT JOIN location l ON (l.id = d.locationID) WHERE d.id = ' . $_REQUEST['id'];
+	$query = 'SELECT d.id, d.name as department, l.id as locationID, l.name as location FROM department d LEFT JOIN location l ON (l.id = d.locationID) WHERE d.id = ' . $_POST['id'];
 
 	$result = $conn->query($query);
 	

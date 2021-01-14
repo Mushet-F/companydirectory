@@ -1,13 +1,5 @@
 <?php
 
-	// example use from browser
-	// http://localhost/companydirectory/libs/php/insertDepartment.php?name=New%20Department&locationID=1
-
-	// remove next two lines for production
-	
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
-
 	$executionStartTime = microtime(true);
 
 	include("config.php");
@@ -17,7 +9,7 @@
 	// Validate form
 	$formValidation = [];
 
-	if (empty($_REQUEST['firstName']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['firstName'])) {
+	if (empty($_POST['firstName']) || !preg_match('/^[a-zA-Z\s]+$/', $_POST['firstName'])) {
 
 		$input = 'firstName';
 		$message = 'Please type a valid first name';
@@ -26,7 +18,7 @@
 
 	}
 
-	if (empty($_REQUEST['lastName']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['lastName'])) {
+	if (empty($_POST['lastName']) || !preg_match('/^[a-zA-Z\s]+$/', $_POST['lastName'])) {
 
 		$input = 'lastName';
 		$message = 'Please type a valid last name';
@@ -35,7 +27,7 @@
 
 	}
 
-	if (empty($_REQUEST['email']) || !filter_var($_REQUEST['email'], FILTER_VALIDATE_EMAIL)) {
+	if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 
 		$input = 'email';
 		$message = 'Please type a valid email';
@@ -44,7 +36,7 @@
 
 	} 
 
-	if ($_REQUEST['checkbox'] === 'false') {
+	if ($_POST['checkbox'] === 'false') {
 
 		$input = 'checkbox';
 		$message = 'Please select checkbox';
@@ -84,9 +76,7 @@
 
 	}	
 
-	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
-
-	$query = 'INSERT INTO personnel (firstName, lastName, jobTitle, email, departmentID) VALUES( \'' . $_REQUEST['firstName'] .'\', \'' . $_REQUEST['lastName'] .'\', \'' . $_REQUEST['jobTitle'] .'\', \'' . $_REQUEST['email'] . '\', \''. $_REQUEST['departmentID'] . '\')';
+	$query = 'INSERT INTO personnel (firstName, lastName, jobTitle, email, departmentID) VALUES( \'' . $_POST['firstName'] .'\', \'' . $_POST['lastName'] .'\', \'' . $_POST['jobTitle'] .'\', \'' . $_POST['email'] . '\', \''. $_POST['departmentID'] . '\')';
 
 	$result = $conn->query($query);
 	

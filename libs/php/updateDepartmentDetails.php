@@ -1,13 +1,5 @@
 <?php
 
-	// example use from browser
-	// http://localhost/companydirectory/libs/php/getAll.php
-
-	// remove next two lines for production
-	
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
-
 	$executionStartTime = microtime(true);
 
 	include("config.php");
@@ -17,7 +9,7 @@
 	// Validate form
 	$formValidation = [];
 
-	if (empty($_REQUEST['name']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['name'])) {
+	if (empty($_POST['name']) || !preg_match('/^[a-zA-Z\s]+$/', $_POST['name'])) {
 
 		$input = 'name';
 		$message = 'Please type a valid department name';
@@ -26,7 +18,7 @@
 
 	}
 
-	if ($_REQUEST['checkbox'] === 'false') {
+	if ($_POST['checkbox'] === 'false') {
 
 		$input = 'checkbox';
 		$message = 'Please select checkbox';
@@ -66,8 +58,7 @@
 
 	}	
 
-	// $query = 'UPDATE personnel SET firstName = \'' . $_REQUEST['firstName'] . '\', lastName = \'' . $_REQUEST['lastName'] . '\', jobTitle = \'' . $_REQUEST['jobTitle'] . '\', email = \'' . $_REQUEST['email'] . '\', departmentID = \'' . $_REQUEST['departmentID'] . '\' WHERE personnel.id = \'' . $_REQUEST['id'] . '\'';
-	$query = 'UPDATE department SET name = \'' . $_REQUEST['name'] . '\', locationID = ' . $_REQUEST['locationID'] . ' WHERE department.id = ' . $_REQUEST['id'];
+	$query = 'UPDATE department SET name = \'' . $_POST['name'] . '\', locationID = ' . $_POST['locationID'] . ' WHERE department.id = ' . $_POST['id'];
 
 	$result = $conn->query($query);
 	

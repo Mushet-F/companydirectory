@@ -1,13 +1,5 @@
 <?php
 
-	// example use from browser
-	// http://localhost/companydirectory/libs/php/insertDepartment.php?name=New%20Department&locationID=1
-
-	// remove next two lines for production
-	
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
-
 	$executionStartTime = microtime(true);
 
 	include("config.php");
@@ -17,7 +9,7 @@
 	// Validate form
 	$formValidation = [];
 
-	if (empty($_REQUEST['name']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['name'])) {
+	if (empty($_POST['name']) || !preg_match('/^[a-zA-Z\s]+$/', $_POST['name'])) {
 
 		$input = 'name';
 		$message = 'Please type a valid location name';
@@ -26,7 +18,7 @@
 
 	}
 
-	if ($_REQUEST['checkbox'] === 'false') {
+	if ($_POST['checkbox'] === 'false') {
 
 		$input = 'checkbox';
 		$message = 'Please select checkbox';
@@ -66,10 +58,7 @@
 
 	}	
 
-	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
-
-	// $query = 'INSERT INTO department (name, locationID) VALUES(\'' . $_REQUEST['name'] . '\', \''. $_REQUEST['locationID'] . '\')';
-	$query = 'INSERT INTO location (name) VALUES(\'' . $_REQUEST['name'] .'\')';
+	$query = 'INSERT INTO location (name) VALUES(\'' . $_POST['name'] .'\')';
 
 	$result = $conn->query($query);
 	

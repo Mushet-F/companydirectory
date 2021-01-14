@@ -1,13 +1,5 @@
 <?php
 
-	// example use from browser
-	// http://localhost/companydirectory/libs/php/getAll.php
-
-	// remove next two lines for production
-	
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
-
 	$executionStartTime = microtime(true);
 
 	include("config.php");
@@ -17,7 +9,7 @@
 	// Validate form
 	$formValidation = [];
 
-	if (empty($_REQUEST['name']) || !preg_match('/^[a-zA-Z\s]+$/', $_REQUEST['name'])) {
+	if (empty($_POST['name']) || !preg_match('/^[a-zA-Z\s]+$/', $_POST['name'])) {
 
 		$input = 'name';
 		$message = 'Please type a valid location name';
@@ -26,7 +18,7 @@
 
 	}
 
-	if ($_REQUEST['checkbox'] === 'false') {
+	if ($_POST['checkbox'] === 'false') {
 
 		$input = 'checkbox';
 		$message = 'Please select checkbox';
@@ -66,7 +58,7 @@
 
 	}	
 
-	$query = 'UPDATE location SET name = \'' . $_REQUEST['name'] . '\' WHERE location.id = ' . $_REQUEST['id'];
+	$query = 'UPDATE location SET name = \'' . $_POST['name'] . '\' WHERE location.id = ' . $_POST['id'];
 
 	$result = $conn->query($query);
 	
