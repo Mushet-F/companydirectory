@@ -1,3 +1,11 @@
+$(window).on('load', function () {
+    if ($('#preloader').length) {
+        $('#preloader').delay(100).fadeOut('slow', function () {
+            $(this).remove();
+        });
+    }
+});
+
 // ********************** Creating main employees table *********************************** //
 
 function createTable(result) {
@@ -1928,24 +1936,38 @@ createFilterDropdown();
 // *** Close the dropdown OR removes active highlight if the user clicks outside ********** //
 
 window.onclick = function(event) {
-if (!event.target.matches('.sidebar-item') && !event.target.matches('.input-drop')  && !event.target.matches('.check-filter')  && !event.target.matches('label')) {
 
-    let dropdowns = document.getElementsByClassName("dropdown-content");
-    let i;
-    for (i = 0; i < dropdowns.length; i++) {
-        let openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-        }
-    }
+    if (!event.target.matches('.sidebar-item') && !event.target.matches('.input-drop')  && !event.target.matches('.check-filter')  && !event.target.matches('label')) {
 
-    if (!event.target.matches('.sidebar-item')) {
-        let actives = document.getElementsByClassName("active-dropdown");
+        let dropdowns = document.getElementsByClassName("dropdown-content");
         let i;
-        for (i = 0; i < actives.length; i++) {
-            actives[i].classList.remove('active-dropdown');
+        for (i = 0; i < dropdowns.length; i++) {
+            let openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
         }
+
+        if (!event.target.matches('.sidebar-item')) {
+            let actives = document.getElementsByClassName("active-dropdown");
+            let i;
+            for (i = 0; i < actives.length; i++) {
+                actives[i].classList.remove('active-dropdown');
+            }
+        }
+
     }
 
 }
+
+// *********************** Register serviceWorker ***************************************** //
+
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register("sw.js").then(registration => {
+
+    }).catch(error => {
+
+    });
 }
+
+// **************************************************************************************** //
