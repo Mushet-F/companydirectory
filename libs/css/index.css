@@ -1,3 +1,24 @@
+@font-face { 
+  font-family: 'Ubuntu'; font-style: normal; font-weight: 400; src: url('../../vendors/fonts/ubuntu-v15-latin-regular.eot'); 
+  src: url('../../vendors/fonts/ubuntu-v15-latin-regular.eot?#iefix') format('embedded-opentype'), url('../../vendors/fonts/ubuntu-v15-latin-regular.woff2') 
+  format('woff2'), url('../../vendors/fonts/ubuntu-v15-latin-regular.woff') format('woff'), url('../../vendors/fonts/ubuntu-v15-latin-regular.ttf') 
+  format('truetype'), url('../../vendors/fonts/ubuntu-v15-latin-regular.svg#Ubuntu') format('svg'); 
+}
+
+@font-face { 
+  font-family: 'Ubuntu'; font-style: normal; font-weight: 500; src: url('../../vendors/fonts/ubuntu-v15-latin-500.eot'); 
+  src: url('../../vendors/fonts/ubuntu-v15-latin-500.eot?#iefix') format('embedded-opentype'), url('../../vendors/fonts/ubuntu-v15-latin-500.woff2') 
+  format('woff2'), url('../../vendors/fonts/ubuntu-v15-latin-500.woff') format('woff'), url('../../vendors/fonts/ubuntu-v15-latin-500.ttf') 
+  format('truetype'), url('../../vendors/fonts/ubuntu-v15-latin-500.svg#Ubuntu') format('svg'); 
+}
+
+@font-face { 
+  font-family: 'Ubuntu'; font-style: normal; font-weight: 700; src: url('../../vendors/fonts/ubuntu-v15-latin-700.eot'); 
+  src: url('../../vendors/fonts/ubuntu-v15-latin-700.eot?#iefix') format('embedded-opentype'), url('../../vendors/fonts/ubuntu-v15-latin-700.woff2') 
+  format('woff2'), url('../../vendors/fonts/ubuntu-v15-latin-700.woff') format('woff'), url('../../vendors/fonts/ubuntu-v15-latin-700.ttf') 
+  format('truetype'), url('../../vendors/fonts/ubuntu-v15-latin-700.svg#Ubuntu') format('svg'); 
+}
+
 body {
   font-size: .875rem;
   font-family: 'Ubuntu', sans-serif;
