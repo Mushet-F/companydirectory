@@ -83,10 +83,11 @@ body {
 .sidebar-main-item {
   padding-top: .5rem;
   padding-bottom: .5rem;
+  padding-left: 1rem;
 }
 
 .side-main-item-margin {
-  margin-left: 1rem;
+  padding-left: 1rem;
 }
 
 .dropbtn {
@@ -94,13 +95,13 @@ body {
   background-color: #D1E8E2;
 }
 
-.sidebar-item:hover, .sidebar-item:focus {
+/* .sidebar-item:hover {
   background-color: #FFCB9A;
 }
 
 .dropbtn:hover {
   background-color: #FFCB9A;
-}
+} */
 
 .dropdown-content {
   display: none;
@@ -112,11 +113,12 @@ body {
   margin-top: 7.5px;
 }
 
-.dropdown-content span, .dropdown-content a {
+.dropdown-content span, .dropdown-content a, .sidebar-button {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  margin-left: -1rem;
 }
 
 .dropdown-content a:hover {
@@ -127,13 +129,31 @@ body {
   background-color: #ddd;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .sidebar-item:hover {
+    background-color: #FFCB9A;
+  }
+  
+  .dropbtn:hover {
+    background-color: #FFCB9A;
+  }
+  
+}
+
 .dropdown-content-filter {
   max-height:250px;
   overflow:auto;
+  margin-top: 0px;
+  margin-left: -1rem;
 }
 
 .input-drop {
   padding: 12px 16px;
+  cursor: default;
+}
+
+.check-filter {
+  cursor: pointer;
 }
 
 .show {
@@ -305,6 +325,29 @@ th {
   }
 }
 
+/* Modal Table */
+.modal-body-table {
+  overflow-y: visible;
+}
+
+#employee-edit-table tbody, #department-edit-table tbody  { 
+  max-height:40vh; 
+  overflow-y:scroll; 
+  display:block; 
+}
+
+#employee-edit-table thead, #department-edit-table thead { 
+  display:block; 
+}
+
+
+.id-column-modal {
+  width: 20vh;
+}
+
+.name-column-modal {
+  width: 70vh;
+}
 
 /* Cards */
 .container {
@@ -424,4 +467,12 @@ th {
   -webkit-transform: rotate(360deg);
   transform: rotate(360deg);
   }
+}
+
+#myInput {
+  width: 100%; 
+  font-size: 16px; 
+  padding: 12px 20px 12px 40px; 
+  border: 1px solid #ddd; 
+  margin-bottom: 12px; 
 }

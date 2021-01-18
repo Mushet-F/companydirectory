@@ -7,8 +7,9 @@ $(window).on('load', function () {
     }
 });
 
-// ********************** Creating main employees table *********************************** //
+// ********************** Creating tables *********************************** //
 
+// Creating main table
 function createTable(result) {
  
     let table = `  
@@ -22,9 +23,7 @@ function createTable(result) {
                 <th id="location-column">Location</th>
             </tr>
         </thead>
-        <tbody id="tbody-employees">
-
-        </tbody>`;
+        <tbody id="tbody-employees">`;
 
     $("#all-employees").append(table);
 
@@ -52,7 +51,107 @@ function createTable(result) {
         
     }
 
+    $("#all-employees").append('</tbody>');
+
     currentView = 'table';
+}
+
+// Create table to select and then edit an employee
+function createSelectEmployeeTable(result) {
+ 
+    let table = `  
+        <thead>
+            <tr>
+                <th class="id-column-modal">ID</th>
+                <th class="name-column-modal">Name</th>
+            </tr>
+        </thead>
+        <tbody id="employee-edit-tbody">`;
+
+    $("#employee-edit-table").append(table);
+
+    for (i = 0; i < result.data.length ; i++) {
+
+        const id = result.data[i]['id'];
+        const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
+
+        let tbody = `<tr>
+        <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
+        <td class="td-name name-column-modal td-edit-employee" data-dismiss="modal" data-toggle="modal" data-target="#editEmployeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        </tr>`;
+
+        $("#employee-edit-table").append(tbody);
+        
+    }
+
+    $("#employee-edit-table").append('</tbody>');
+
+}
+
+// Create table to select and then edit an deparment
+function createSelectDepartmentTable(result) {
+
+    let table = `  
+        <thead>
+            <tr>
+                <th class="id-column-modal">ID</th>
+                <th class="name-column-modal">Department</th>
+            </tr>
+        </thead>
+        <tbody id="department-edit-tbody">`;
+
+    $("#department-edit-table").append(table);
+
+    for (i = 0; i < result.length ; i++) {
+
+        const id = result[i]['id'];
+        const name = result[i]['name'];
+
+        let tbody = `<tr>
+        <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
+        <td class="td-name name-column-modal td-edit-department" data-dismiss="modal" data-toggle="modal" data-target="#editDepartmentModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        </tr>`;
+
+        $("#department-edit-table").append(tbody);
+        
+    }
+
+    $("#department-edit-table").append('</tbody>');
+
+}
+
+// Create table to select and then edit an deparment
+function createSelectLocationTable(result) {
+
+    console.log(result);
+
+    let table = `  
+        <thead>
+            <tr>
+                <th class="id-column-modal">ID</th>
+                <th class="name-column-modal">Location</th>
+            </tr>
+        </thead>
+        <tbody id="location-edit-tbody">`;
+
+    $("#location-edit-table").append(table);
+
+    for (i = 0; i < result.length ; i++) {
+
+        const id = result[i]['id'];
+        const name = result[i]['name'];
+
+        let tbody = `<tr>
+        <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
+        <td class="td-name name-column-modal td-edit-location" data-dismiss="modal" data-toggle="modal" data-target="#editLocationModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        </tr>`;
+
+        $("#location-edit-table").append(tbody);
+        
+    }
+
+    $("#location-edit-table").append('</tbody>');
+
 }
 
 // **************************************************************************************** //
@@ -105,6 +204,8 @@ function clearCurrentResults() {
 
 // ********************** Functions for sorting employees ********************************* //
 
+let editTableEmployees;
+
 // Sort employees by last name
 function displayAllEmployeesByLastName() {
 
@@ -120,7 +221,9 @@ function displayAllEmployeesByLastName() {
                 } else if (currentView === 'grid') {
                     createCards(result);
                 }
-                
+
+                editTableEmployees = result;
+
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -321,6 +424,20 @@ function applyFilterRequest(request) {
 
 // **************************************************************************************** //
 
+// ********************** Tracker array *************************************************** //
+
+// Array tracker for navigating through modals
+let trackingModals = [];
+
+// Click event for closing modal top corner "X" button for quick escape
+$(document).on("click", ".close", function() {
+
+    trackingModals = [];
+    
+});
+
+// **************************************************************************************** //
+
 // ************ Retrieving and displaying data for Employee Modals ************************ //
 
 let employeeDetailsResult;
@@ -442,6 +559,9 @@ function displayEmployeeDetailsModal(employee) {
 
     $('#modal-employee-department').attr('value', employee['departmentID']);
     $('#modal-employee-location').attr('value', employee['locationID']);
+
+    $('#edit-employee-close-btn').attr('data-toggle', 'modal');
+    $('#edit-employee-close-btn').attr('data-target', '#employeeModal');
 
     if(trackingModals.length === 0) {
         let modalType = '#employeeModal';
@@ -598,7 +718,7 @@ function deleteEmployeeByID() {
 let departmentDetailsResult;
 
 // Create
-// Create employee
+// Create department
 function createDepartment() {
 
     const name = $('#department-create-name').val();
@@ -692,6 +812,9 @@ function displayDepartmentDetailsModal(department) {
     $('#modal-department-location').html(department[0]['location']);
     $('#modal-department-number-employees').html(department.length);
 
+    $('#edit-department-close-btn').attr('data-toggle', 'modal');
+    $('#edit-department-close-btn').attr('data-target', '#departmentModal');
+
     let employeeListHtml = '';
 
     for(let i = 0; i < department.length; i++) {
@@ -725,7 +848,7 @@ function displayDepartmentDetailsModal(department) {
 
 let empytDepartmentDetailsResult;
 
-// Empty department details
+// If deparment is empty (no employees), get details
 const getEmptyDepartmentDetails = async id => {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -1026,6 +1149,9 @@ function displayLocationDetailsModal(location) {
     $('#modal-location-id').html(location['data2'][0]['locationID']);
     $('#modal-location-name').html(location['data2'][0]['location']);
 
+    $('#edit-location-close-btn').attr('data-toggle', 'modal');
+    $('#edit-location-close-btn').attr('data-target', '#locationModal');
+
     let departmentListHtml = '';
 
     for(let i = 0; i < location['data2'].length; i++) {
@@ -1246,9 +1372,6 @@ function deleteLocationByID() {
 
 // ********************** Click events for employee modal ********************************* //
 
-// Selecting to open a modal from another modal tracker
-let trackingModals = [];
-
 // Selecting an department in employee modal
 $(document).on("click", "#modal-employee-department", async function(e) {
 
@@ -1336,7 +1459,7 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
 });
 
 // Clicking employee edit button 
-$(document).on("click", "#employee-edit-btn", async function(e) {
+$(document).on("click", "#employee-edit-btn", async function() {
     const departments = await getAllDepartments();
     const listFor = 'modal';
     const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
@@ -1346,19 +1469,9 @@ $(document).on("click", "#employee-edit-btn", async function(e) {
 });
 
 // Clicking employee delete button
-$(document).on("click", "#employee-delete-btn", function(e) {
+$(document).on("click", "#employee-delete-btn", function() {
     const name = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
     $('#employee-delete-name').html(name);
-});
-
-// Clicking create button for dropdown list for departments in create modal
-// This button is found in side menu
-$(document).on("click", "#create-employee-btn", async function(e) {
-    const departments = await getAllDepartments();
-    const listFor = 'modal';
-    const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
-    $('#employee-create-department').html('');
-    $('#employee-create-department').append(departmentDropdownHtml);
 });
 
 
@@ -1477,16 +1590,6 @@ $(document).on("click", "#department-delete-form", async function(e) {
     
 });
 
-// Clicking create button for dropdown list for locations in department create modal
-// This button is found in side menu
-$(document).on("click", "#create-department-btn", async function(e) {
-    const locations = await getAllLocations();
-    const listFor = 'modal';
-    const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
-    $('#department-create-location').html('');
-    $('#department-create-location').append(locationDropdownHtml);
-});
-
 // **************************************************************************************** //
 
 // ********************** Click events for location modal ********************************* //
@@ -1584,19 +1687,6 @@ $(document).on("click", "#locationCloseBtn", async function(e) {
 $(document).on("click", "#location-delete-form", async function(e) {
     $('#location-delete-name').html(locationDetailsResult['data2'][0]['location']);
 });
-
-// **************************************************************************************** //
-
-// **************** Click event for closing modal top corner "X" button ******************* //
-
-$(document).on("click", ".close", function() {
-    
-    // quick escape 
-    trackingModals = [];
-    
-});
-
-// **************************************************************************************** //
 
 // **************************************************************************************** //
 
@@ -1791,6 +1881,79 @@ $('#filter-reset').click(function() {
 
 // **************************************************************************************** //
 
+// ******* Click events for adding, editing and deleting employees from side menu ********* //
+
+// Clicking create button for employees (department dropdown list needs created)
+$(document).on("click", "#create-employee-btn", async function(e) {
+    const departments = await getAllDepartments();
+    const listFor = 'modal';
+    const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
+    $('#employee-create-department').html('');
+    $('#employee-create-department').append(departmentDropdownHtml);
+});
+
+// Clicking edit button for employees
+$(document).on("click", "#edit-employee-btn", function() {
+
+    $("#employee-edit-table thead").remove();
+    $("#employee-edit-table tbody").remove();
+
+    createSelectEmployeeTable(editTableEmployees);
+
+});
+
+// **************************************************************************************** //
+
+// ******* Click events for adding, editing and deleting department from side menu ******** //
+
+// Clicking create button for department (location dropdown list needs created)
+$(document).on("click", "#create-department-btn", async function(e) {
+    const locations = await getAllLocations();
+    const listFor = 'modal';
+    const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
+    $('#department-create-location').html('');
+    $('#department-create-location').append(locationDropdownHtml);
+});
+
+// Clicking edit button for department
+$(document).on("click", "#edit-department-btn", async function() {
+
+    $("#department-edit-table thead").remove();
+    $("#department-edit-table tbody").remove();
+
+    let departments = await getAllDepartments();
+
+    createSelectDepartmentTable(departments);
+
+});
+
+// **************************************************************************************** //
+
+// ******* Click events for adding, editing and deleting location from side menu ********** //
+
+// Clicking create button for location (location dropdown list needs created)
+$(document).on("click", "#create-location-btn", async function(e) {
+    // const locations = await getAllLocations();
+    // const listFor = 'modal';
+    // const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
+    // $('#department-create-location').html('');
+    // $('#department-create-location').append(locationDropdownHtml);
+});
+
+// Clicking edit button for location
+$(document).on("click", "#edit-location-btn", async function() {
+
+    $("#location-edit-table thead").remove();
+    $("#location-edit-table tbody").remove();
+
+    let locations = await getAllLocations();
+
+    createSelectLocationTable(locations);
+
+});
+
+// **************************************************************************************** //
+
 // ********************** Click events on table and cards ********************************* //
 
 // Click cards and display employee details
@@ -1803,26 +1966,61 @@ $(document).on("click", ".employee-card", async function(e) {
 });
 
 // Click table data cell
-$("#all-employees").on("click", "td", async function() {
+$(".table").on("click", "td", async function() {
 
     let typeOfCellSelect = $(this).attr('class');
+    let employeeID;
+    let departmentID;
+    let locationID;
+    const listFor = 'modal';
 
     switch (typeOfCellSelect) {
         case 'td-name':
-            let employeeId = $(this).attr('value');
-            employeeDetailsResult = await getEmployeeDetails(employeeId);
+            employeeID = $(this).attr('value');
+            employeeDetailsResult = await getEmployeeDetails(employeeID);
             displayEmployeeDetailsModal(employeeDetailsResult);
             break;
         case 'td-department':
-            let departmentID = $(this).attr('value');
+            departmentID = $(this).attr('value');
             departmentDetailsResult = await getDepartmentDetails(departmentID);
             displayDepartmentDetailsModal(departmentDetailsResult);
             populateEditDepartmentDetailsModal(departmentDetailsResult);
             break;
         case 'td-location':
-            let locationID = $(this).attr('value');
+            locationID = $(this).attr('value');
             locationDetailsResult = await getLocationDetails(locationID);
             displayLocationDetailsModal(locationDetailsResult);
+            populateEditLocationDetailsModal(locationDetailsResult);
+            break;
+        case 'td-name name-column-modal td-edit-employee':
+            employeeID = $(this).attr('value');
+            employeeDetailsResult = await getEmployeeDetails(employeeID);
+            $('#edit-employee-close-btn').attr('data-toggle', 'modal');
+            $('#edit-employee-close-btn').attr('data-target', '#selectionEditEmployeeModal');
+
+            const departments = await getAllDepartments();
+            const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
+            $('#employee-edit-department').html('');
+            $('#employee-edit-department').append(departmentDropdownHtml);
+            populateEditEmployeeDetailsModal(employeeDetailsResult);
+            break;
+        case 'td-name name-column-modal td-edit-department':
+            departmentID = $(this).attr('value');
+            departmentDetailsResult = await getDepartmentDetails(departmentID);
+            $('#edit-department-close-btn').attr('data-toggle', 'modal');
+            $('#edit-department-close-btn').attr('data-target', '#selectionEditDepartmentModal');
+
+            const locations = await getAllLocations();
+            const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
+            $('#department-edit-location').html('');
+            $('#department-edit-location').append(locationDropdownHtml);
+            populateEditDepartmentDetailsModal(departmentDetailsResult);
+            break;
+        case 'td-name name-column-modal td-edit-location':
+            locationID = $(this).attr('value');
+            locationDetailsResult = await getLocationDetails(locationID);
+            $('#edit-location-close-btn').attr('data-toggle', 'modal');
+            $('#edit-location-close-btn').attr('data-target', '#selectionEditLocationModal');
             populateEditLocationDetailsModal(locationDetailsResult);
             break;
         default:
@@ -1842,9 +2040,26 @@ function addDropdown() {
     $("#sidebar-item-add").toggleClass("active-dropdown");
 
     $("#addDropdown").toggleClass("show");
+    $("#editDropdown").removeClass("show");
     $("#sortDropdown").removeClass("show");
     $("#filterDropdown").removeClass("show");
 
+    $("#sidebar-item-sort").removeClass("active-dropdown");
+    $("#sidebar-item-filter").removeClass("active-dropdown");
+    $("#sidebar-item-edit").removeClass("active-dropdown");
+
+}
+
+function editDropdown() {
+
+    $("#sidebar-item-edit").toggleClass("active-dropdown");
+
+    $("#editDropdown").toggleClass("show");
+    $("#addDropdown").removeClass("show");
+    $("#sortDropdown").removeClass("show");
+    $("#filterDropdown").removeClass("show");
+
+    $("#sidebar-item-add").removeClass("active-dropdown");
     $("#sidebar-item-sort").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
 
@@ -1856,10 +2071,12 @@ function sortDropdown() {
 
     $("#sortDropdown").toggleClass("show");
     $("#addDropdown").removeClass("show");
+    $("#editDropdown").removeClass("show");
     $("#filterDropdown").removeClass("show");
-
+    
     $("#sidebar-item-add").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
+    $("#sidebar-item-edit").removeClass("active-dropdown");
 }
 
 function filterDropdown() {
@@ -1868,10 +2085,12 @@ function filterDropdown() {
         $("#filterDropdown").toggleClass("show");
         $("#sortDropdown").removeClass("show");
         $("#addDropdown").removeClass("show");
+        $("#editDropdown").removeClass("show");
 
         $("#sidebar-item-filter").toggleClass("active-dropdown");
         $("#sidebar-item-sort").removeClass("active-dropdown");
         $("#sidebar-item-add").removeClass("active-dropdown");
+        $("#sidebar-item-edit").removeClass("active-dropdown");
     } 
 
     insideFilterDropdown = false;
@@ -1956,6 +2175,50 @@ window.onclick = function(event) {
 
     }
 
+}
+
+// **************************************************************************************** //
+
+// ********************** Close sidebar in mobile applications **************************** //
+
+$(window).resize(function() {
+
+    const width = window.innerWidth;
+
+    if (width < 768) {
+        $(".closeMenu").attr( "data-toggle", "collapse" );
+        $(".closeMenu").attr( "data-target", "#sidebarMenu" );
+        
+    }
+    else if (width > 768) {
+        $(".closeMenu").removeAttr( "data-toggle", "collapse" );
+        $(".closeMenu").removeAttr( "data-target", "#sidebarMenu" );
+    }
+
+});
+
+// **************************************************************************************** //
+
+function searchTable() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("employee-edit-table");
+    tr = table.getElementsByTagName("tr");
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
 }
 
 // *********************** Register serviceWorker ***************************************** //

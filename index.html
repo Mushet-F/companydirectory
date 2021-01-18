@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Company Directory JS/PHP/AJAX/JSON/SQL">
+    <meta name="description" content="Company Directory JS/PHP/AJAX/SQL">
     <meta name="author" content="Fraser Mushet">
 
     <title>Company Directory</title>
@@ -42,18 +42,18 @@
                 </h6>
                 <ul class="nav flex-column mb-2">
                     <li onclick="sortDropdown()" id="sidebar-item-sort" class="sidebar-item sidebar-main-item dropbtn">
-                        <span class="side-main-item-margin">Sort</span>
+                        Sort
                         <div id="sortDropdown" class="dropdown-content">
-                            <span class="sidebar-item" id="sort-fname">First Name</span>
-                            <span class="sidebar-item" id="sort-lname">Last Name</span>
-                            <span class="sidebar-item" id="sort-id">Employee ID</span>
-                            <span class="sidebar-item" id="sort-job">Job Title</span>
-                            <span class="sidebar-item" id="sort-department">Department</span>
-                            <span class="sidebar-item" id="sort-location">Location</span>
+                            <span class="sidebar-item closeMenu" id="sort-fname">First Name</span>
+                            <span class="sidebar-item closeMenu" id="sort-lname">Last Name</span>
+                            <span class="sidebar-item closeMenu" id="sort-id">Employee ID</span>
+                            <span class="sidebar-item closeMenu" id="sort-job">Job Title</span>
+                            <span class="sidebar-item closeMenu" id="sort-department">Department</span>
+                            <span class="sidebar-item closeMenu" id="sort-location">Location</span>
                         </div>
                     </li>
                     <li onclick="filterDropdown()" id="sidebar-item-filter" class="sidebar-item sidebar-main-item dropbtn">
-                        <span class="side-main-item-margin">Filter</span>
+                        Filter
                         <div id="filterDropdown" class="dropdown-content">
                             <span href="#" onclick="filterDepartmentDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-department">Department</span>
                             <div id="filterDepartmentDropdown" class="dropdown-content dropdown-content-filter">
@@ -63,16 +63,24 @@
                             <div id="filterLocationDropdown" class="dropdown-content dropdown-content-filter">
 
                             </div>
-                            <button id="filter-apply" class="sidebar-button">APPLY</button>
-                            <button id="filter-reset" class="sidebar-button">RESET</button>
+                            <button id="filter-apply" class="sidebar-button closeMenu">APPLY</button>
+                            <button id="filter-reset" class="sidebar-button closeMenu">RESET</button>
                         </div>
                     </li>
                     <li onclick="addDropdown()" id="sidebar-item-add" class="sidebar-item sidebar-main-item dropbtn">
-                        <span class="side-main-item-margin">Add New</span>
+                        Add New
                         <div id="addDropdown" class="dropdown-content">
                             <span class="sidebar-item" id="create-employee-btn" data-toggle="modal" data-target="#createEmployeeModal">Employee</span>
                             <span class="sidebar-item" id="create-department-btn" data-toggle="modal" data-target="#createDepartmentModal">Department</span>
                             <span class="sidebar-item" data-toggle="modal" data-target="#createLocationModal">Location</span>
+                        </div>
+                    </li>
+                    <li onclick="editDropdown()" id="sidebar-item-edit" class="sidebar-item sidebar-main-item dropbtn">
+                        Edit Selection
+                        <div id="editDropdown" class="dropdown-content">
+                            <span class="sidebar-item" id="edit-employee-btn" data-toggle="modal" data-target="#selectionEditEmployeeModal">Employee</span>
+                            <span class="sidebar-item" id="edit-department-btn" data-toggle="modal" data-target="#selectionEditDepartmentModal">Department</span>
+                            <span class="sidebar-item" id="edit-location-btn" data-toggle="modal" data-target="#selectionEditLocationModal">Location</span>
                         </div>
                     </li>
                 </ul>
@@ -80,11 +88,11 @@
                     <span>View</span>
                 </h6>
                 <ul class="nav flex-column">
-                    <li class="sidebar-item sidebar-main-item" id="table-view">
-                        <span class="side-main-item-margin">Table</span>
+                    <li class="sidebar-item sidebar-main-item closeMenu" id="table-view">
+                        Table
                     </li>
-                    <li class="sidebar-item sidebar-main-item" id="grid-view">
-                        <span class="side-main-item-margin">Grid</span>
+                    <li class="sidebar-item sidebar-main-item closeMenu" id="grid-view">
+                        Grid
                     </li>
                 </ul>   
             </div>
@@ -131,7 +139,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="employeeCloseBtn">Close</button>
-                                <button type="button" class="btn btn btn-outline-success" data-dismiss="modal" data-toggle="modal" data-target="#editEmployeeModal" id="employee-edit-btn">Edit</button>
+                                <button type="button" class="btn btn btn-outline-success" id="employee-edit-btn" data-dismiss="modal" data-toggle="modal" data-target="#editEmployeeModal">Edit</button>
                                 <button type="button" class="btn btn btn-outline-danger" data-dismiss="modal" data-toggle="modal" data-target="#deleteEmployeeModal" id="employee-delete-btn">Delete</button>
                             </div>
                         </div>
@@ -183,8 +191,34 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#employeeModal">Close</button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="edit-employee-close-btn">Close</button>
                                 <button type="submit" class="btn btn btn-outline-primary" onclick="updateEmployeeDetails()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal - Selection For Employee Edit -->
+                <div class="modal fade" id="selectionEditEmployeeModal" tabindex="-1" aria-labelledby="selectionEditEmployeeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="selectionEditEmployeeModalLabel">Select Employee To Edit</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body modal-body-table">
+                                <div>
+                                    <div id="div-search">
+                                        <input type="text" id="myInput" onkeyup="searchTable()" placeholder="Search for names.."> 
+                                    </div>
+                                    <table id="employee-edit-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -236,7 +270,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
-                                <button type="submit" class="btn btn btn-outline-success" onclick="createEmployee()">Create</button>
+                                <button type="submit" class="btn btn btn-outline-success closeMenu" onclick="createEmployee()">Create</button>
                             </div>
                         </div>
                     </div>
@@ -325,8 +359,31 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#departmentModal">Close</button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="edit-department-close-btn">Close</button>
                                 <button type="submit" class="btn btn btn-outline-primary" onclick="updateDepartmentDetails()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal - Selection For Department Edit -->
+                <div class="modal fade" id="selectionEditDepartmentModal" tabindex="-1" aria-labelledby="selectionEditDepartmentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="selectionEditDepartmentModalLabel">Select Department To Edit</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body modal-body-table">
+                                <div>
+                                    <table id="department-edit-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -364,7 +421,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
-                                <button type="submit" class="btn btn btn-outline-success" onclick="createDepartment()">Create</button>
+                                <button type="submit" class="btn btn btn-outline-success closeMenu" onclick="createDepartment()">Create</button>
                             </div>
                         </div>
                     </div>
@@ -448,8 +505,31 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-toggle="modal" data-target="#locationModal">Close</button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="edit-location-close-btn">Close</button>
                                 <button type="submit" class="btn btn btn-outline-primary" onclick="updateLocationDetails()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal - Selection For Location Edit -->
+                <div class="modal fade" id="selectionEditLocationModal" tabindex="-1" aria-labelledby="selectionEditLocationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="selectionEditLocationModalLabel">Select Location To Edit</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body modal-body-table">
+                                <div>
+                                    <table id="location-edit-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -481,7 +561,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
-                                <button type="submit" class="btn btn btn-outline-success" onclick="createLocation()">Create</button>
+                                <button type="submit" class="btn btn btn-outline-success closeMenu" onclick="createLocation()">Create</button>
                             </div>
                         </div>
                     </div>
