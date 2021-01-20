@@ -57,7 +57,42 @@ function createTable(result) {
 }
 
 // Create table to select and then edit an employee
-function createSelectEmployeeTable(result) {
+// function createSelectEmployeeTable(result) {
+ 
+//     let table = `  
+//         <thead>
+//             <tr>
+//                 <th class="id-column-modal">ID</th>
+//                 <th class="name-column-modal">Name</th>
+//             </tr>
+//         </thead>
+//         <tbody id="employee-edit-tbody">`;
+
+//     $("#employee-edit-table").append(table);
+
+//     for (i = 0; i < result.data.length ; i++) {
+
+//         const id = result.data[i]['id'];
+//         const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
+
+//         let tbody = `<tr>
+//         <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
+//         <td class="td-name name-column-modal td-edit-employee" data-dismiss="modal" data-toggle="modal" data-target="#editEmployeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+//         </tr>`;
+
+//         $("#employee-edit-table").append(tbody);
+        
+//     }
+
+//     $("#employee-edit-table").append('</tbody>');
+
+// }
+
+// Create table to select and then edit an employee
+function createSelectEmployeeTable(result, action) {
+
+    const execution = action['execution'];
+    const target = action['target'];
  
     let table = `  
         <thead>
@@ -66,9 +101,9 @@ function createSelectEmployeeTable(result) {
                 <th class="name-column-modal">Name</th>
             </tr>
         </thead>
-        <tbody id="employee-edit-tbody">`;
+        <tbody>`;
 
-    $("#employee-edit-table").append(table);
+    $("#employee-select-table").append(table);
 
     for (i = 0; i < result.data.length ; i++) {
 
@@ -77,19 +112,23 @@ function createSelectEmployeeTable(result) {
 
         let tbody = `<tr>
         <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td class="td-name name-column-modal td-edit-employee" data-dismiss="modal" data-toggle="modal" data-target="#editEmployeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-name name-column-modal td-${execution}-employee" data-dismiss="modal" data-toggle="modal" data-target="${target}" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
-        $("#employee-edit-table").append(tbody);
+        $("#employee-select-table").append(tbody);
         
     }
 
-    $("#employee-edit-table").append('</tbody>');
+    $("#employee-select-table").append('</tbody>');
+    
 
 }
 
 // Create table to select and then edit an deparment
-function createSelectDepartmentTable(result) {
+function createSelectDepartmentTable(result, action) {
+
+    const execution = action['execution'];
+    const target = action['target'];
 
     let table = `  
         <thead>
@@ -98,9 +137,9 @@ function createSelectDepartmentTable(result) {
                 <th class="name-column-modal">Department</th>
             </tr>
         </thead>
-        <tbody id="department-edit-tbody">`;
+        <tbody>`;
 
-    $("#department-edit-table").append(table);
+    $("#department-select-table").append(table);
 
     for (i = 0; i < result.length ; i++) {
 
@@ -109,21 +148,22 @@ function createSelectDepartmentTable(result) {
 
         let tbody = `<tr>
         <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td class="td-name name-column-modal td-edit-department" data-dismiss="modal" data-toggle="modal" data-target="#editDepartmentModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-name name-column-modal td-${execution}-department" data-dismiss="modal" data-toggle="modal" data-target="${target}" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
-        $("#department-edit-table").append(tbody);
+        $("#department-select-table").append(tbody);
         
     }
 
-    $("#department-edit-table").append('</tbody>');
+    $("#department-select-table").append('</tbody>');
 
 }
 
 // Create table to select and then edit an deparment
-function createSelectLocationTable(result) {
+function createSelectLocationTable(result, action) {
 
-    console.log(result);
+    const execution = action['execution'];
+    const target = action['target'];
 
     let table = `  
         <thead>
@@ -132,9 +172,9 @@ function createSelectLocationTable(result) {
                 <th class="name-column-modal">Location</th>
             </tr>
         </thead>
-        <tbody id="location-edit-tbody">`;
+        <tbody>`;
 
-    $("#location-edit-table").append(table);
+    $("#location-select-table").append(table);
 
     for (i = 0; i < result.length ; i++) {
 
@@ -143,14 +183,14 @@ function createSelectLocationTable(result) {
 
         let tbody = `<tr>
         <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td class="td-name name-column-modal td-edit-location" data-dismiss="modal" data-toggle="modal" data-target="#editLocationModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-name name-column-modal td-${execution}-location" data-dismiss="modal" data-toggle="modal" data-target="${target}" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
-        $("#location-edit-table").append(tbody);
+        $("#location-select-table").append(tbody);
         
     }
 
-    $("#location-edit-table").append('</tbody>');
+    $("#location-select-table").append('</tbody>');
 
 }
 
@@ -204,7 +244,7 @@ function clearCurrentResults() {
 
 // ********************** Functions for sorting employees ********************************* //
 
-let editTableEmployees;
+let selectionEmployeeTable;
 
 // Sort employees by last name
 function displayAllEmployeesByLastName() {
@@ -222,7 +262,7 @@ function displayAllEmployeesByLastName() {
                     createCards(result);
                 }
 
-                editTableEmployees = result;
+                selectionEmployeeTable = result;
 
             }
         },
@@ -877,6 +917,8 @@ function displayEmptyDepartment(department) {
     $('#modal-department-id').html(department[0]['id']);
     $('#modal-department-name').html(department[0]['department']);
     $('#modal-department-location').html(department[0]['location']);
+    $('#modal-department-number-employees').html('0');
+    $('#modal-department-employees').html('');
 
     $('#modal-department-location').attr('value', department['locationID']);
 
@@ -1200,6 +1242,19 @@ function displayLocationDetailsModal(location) {
 
 }
 
+// Displaying the data for an empty location
+function displayEmptyLocation(id, name) {
+
+    emptyLocationId = id;
+    $('#modal-location-id').html(id);
+    $('#modal-location-name').html(name);
+
+    $('#modal-location-departments').html('');
+    $('#modal-location-number-employees').html('0');
+    $('#modal-location-employees').html('');
+
+}
+
 // Get all locations
 const getAllLocations = async () => {
     return new Promise((resolve, reject) => {
@@ -1256,24 +1311,26 @@ const createLocationsDropdownList = (locations, listFor) => {
 
 // Update
 // Edit location details modal form to be updated to match location details
-function populateEditLocationDetailsModal(location) {
+function populateEditLocationDetailsModal(name) {
 
-    $('#location-edit-name').val(location['data2'][0]['location']);
-
+    $('#location-edit-name').val(name);
     $('#location-error-name').html('');
     $('#location-error-checkbox').html('');
-    
     $('#location-edit-checkbox').prop('checked', false);
 
 }
 
 // Update location details modal
-function updateLocationDetails() {
-
-    const id = locationDetailsResult['data2'][0]['locationID'];
+async function updateLocationDetails() {
 
     const name = $('#location-edit-name').val();
 
+    let id;
+    if(locationDetailsResult['data2'].length > 0) {
+        id = locationDetailsResult['data2'][0]['locationID'];
+    } else {
+        id = emptyLocationId;
+    }
     const checkbox = $('#location-edit-checkbox').is(':checked');
 
     $.ajax({
@@ -1290,8 +1347,19 @@ function updateLocationDetails() {
             if(result['status']['code'] === '200') {
                 
                 locationDetailsResult = await getLocationDetails(id);
-                displayLocationDetailsModal(locationDetailsResult);
-                populateEditLocationDetailsModal(locationDetailsResult);
+
+                if (locationDetailsResult['data'].length === 0) {
+
+                    displayEmptyLocation(id, name);
+
+                } else {
+
+                    displayLocationDetailsModal(locationDetailsResult);
+                    const name = locationDetailsResult['data2'][0]['location'];
+                    populateEditLocationDetailsModal(name);
+                  
+                }
+
                 clearCurrentResults();
 
                 if(currentView === 'table') {
@@ -1302,6 +1370,7 @@ function updateLocationDetails() {
 
                 $('#locationModal').modal('show');
                 $('#editLocationModal').modal('hide');
+                
             }
 
             if(result['status']['description'] === 'form validation failed') {
@@ -1334,11 +1403,59 @@ function updateLocationDetails() {
     }); 
 }
 
+// Get location name from id
+const getLocationName = async id => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getLocationName.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id,
+            },
+            success: function(result) {
+
+                resolve(result['data'][0]['location']);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Get location id from name
+const getLocationId = async name => {
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getLocationId.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                name: name
+            },
+            success: function(result) {
+
+                resolve(result['data'][0]['id']);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
 // Delete
+
+let emptyLocationId;
+
 // Delete selected location 
 function deleteLocationByID() {
 
-    const id = locationDetailsResult['data2'][0]['locationID'];
+    const id = emptyLocationId;
 
     $.ajax({
         url: "libs/php/deleteLocationByID.php",
@@ -1401,7 +1518,8 @@ $(document).on("click", "#modal-employee-location", async function(e) {
     let locationID = $(this).attr('value');
     locationDetailsResult = await getLocationDetails(locationID);
     displayLocationDetailsModal(locationDetailsResult);
-    populateEditLocationDetailsModal(locationDetailsResult);
+    const name = locationDetailsResult['data2'][0]['location'];
+    populateEditLocationDetailsModal(name);
 
     let modalType = '#locationModal';
     let currentModal = {
@@ -1445,7 +1563,8 @@ $(document).on("click", "#employeeCloseBtn", async function(e) {
             } else if (nextModal['type'] === '#locationModal') {
                 locationDetailsResult = nextModal['details'];
                 displayLocationDetailsModal(locationDetailsResult);
-                populateEditLocationDetailsModal(locationDetailsResult);
+                const name = locationDetailsResult['data2'][0]['location'];
+                populateEditLocationDetailsModal(name);
 
                 if (trackingModals.length > 1) {
                     let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
@@ -1470,8 +1589,13 @@ $(document).on("click", "#employee-edit-btn", async function() {
 
 // Clicking employee delete button
 $(document).on("click", "#employee-delete-btn", function() {
+
     const name = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
     $('#employee-delete-name').html(name);
+
+    $('#delete-close-btn').attr('data-toggle', 'modal');
+    $('#delete-close-btn').attr('data-target', '#employeeModal');
+
 });
 
 
@@ -1507,7 +1631,8 @@ $(document).on("click", "#modal-department-location", async function(e) {
     let locationID = $(this).attr('value');
     locationDetailsResult = await getLocationDetails(locationID);
     displayLocationDetailsModal(locationDetailsResult);
-    populateEditLocationDetailsModal(locationDetailsResult);
+    const name = locationDetailsResult['data2'][0]['location'];
+    populateEditLocationDetailsModal(name);
 
     let modalType = '#locationModal';
     let currentModal = {
@@ -1548,7 +1673,8 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
             } else if (nextModal['type'] === '#locationModal') {
                 locationDetailsResult = nextModal['details'];
                 displayLocationDetailsModal(locationDetailsResult);
-                populateEditLocationDetailsModal(locationDetailsResult);
+                const name = locationDetailsResult['data2'][0]['location'];
+                populateEditLocationDetailsModal(name);
 
                 if (trackingModals.length > 1) {
                     let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
@@ -1574,17 +1700,20 @@ $(document).on("click", "#department-edit-btn", async function(e) {
 });
 
 // Clicking department delete button
-$(document).on("click", "#department-delete-form", async function(e) {
+$(document).on("click", "#department-delete-form", function() {
+    
+    $('#delete-department-close-btn').attr('data-target', '#departmentModal');
 
     if (departmentDetailsResult.length > 0) {
-        $('#delete-department-btn').hide();
-        $('#delete-deparment-able').hide();
-        $('#delete-deparment-unable').show();
+        $('#delete-department-final').hide();
+        $('#delete-department-able').hide();
+        $('#delete-department-unable').show();
         $('#department-delete-name').hide();
     } else {
-        $('#delete-department-btn').show();
-        $('#delete-deparment-able').show();
-        $('#delete-deparment-unable').hide();
+        $('#delete-department-final').show();
+        $('#delete-department-able').show();
+        $('#delete-department-unable').hide();
+        $('#department-delete-name').show();
         $('#department-delete-name').html(empytDepartmentDetailsResult[0]['department']);
     }
     
@@ -1617,11 +1746,12 @@ $(document).on("click", ".location-employee", async function(e) {
 });
 
 // Selecting an department in location modal
-$(document).on("click", ".location-departments", async function(e) {
+$(document).on("click", ".location-departments", async function() {
 
     let departmentID = $(this).attr('value');
     departmentDetailsResult = await getDepartmentDetails(departmentID);
-    if(departmentDetailsResult.length === 0) {
+
+    if (departmentDetailsResult.length === 0) {
         empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
         displayEmptyDepartment(empytDepartmentDetailsResult);
     } else {
@@ -1629,19 +1759,19 @@ $(document).on("click", ".location-departments", async function(e) {
         displayDepartmentDetailsModal(departmentDetailsResult);
         populateEditDepartmentDetailsModal(departmentDetailsResult);
 
-        let modalType = '#departmentModal';
-        let currentModal = {
-            details: departmentDetailsResult, 
-            type: modalType
-        };
-        trackingModals.push(currentModal);
+    }
 
-        if (trackingModals.length > 1) {
-            let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
-            $('#departmentCloseBtn').attr('data-toggle', 'modal');
-            $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
-        }
+    let modalType = '#departmentModal';
+    let currentModal = {
+        details: departmentDetailsResult, 
+        type: modalType
+    };
+    trackingModals.push(currentModal);
 
+    if (trackingModals.length > 1) {
+        let closeBtnTarget = trackingModals[trackingModals.length - 2]['type'];
+        $('#departmentCloseBtn').attr('data-toggle', 'modal');
+        $('#departmentCloseBtn').attr('data-target', `${closeBtnTarget}`);
     }
 
 });
@@ -1683,9 +1813,25 @@ $(document).on("click", "#locationCloseBtn", async function(e) {
 
 });
 
-// Clicking department delete button
-$(document).on("click", "#location-delete-form", async function(e) {
+// Clicking locaiton delete button
+$(document).on("click", "#location-delete-form", function() {
+
     $('#location-delete-name').html(locationDetailsResult['data2'][0]['location']);
+    $('#delete-location-close-btn').attr('data-target', '#locationModal');
+
+    // if (locationDetailsResult['data'].length > 0) {
+        $('#delete-location-final').hide();
+        $('#delete-location-able').hide();
+        $('#delete-location-unable').show();
+        $('#location-delete-name').hide();
+    // } else {
+    //     $('#delete-location-final').show();
+    //     $('#delete-location-able').show();
+    //     $('#delete-location-unable').hide();
+    //     $('#location-delete-name').show();
+    //     $('#location-delete-name').html(empytLocationDetailsResult[0]['location']);
+    // }
+    
 });
 
 // **************************************************************************************** //
@@ -1883,7 +2029,7 @@ $('#filter-reset').click(function() {
 
 // ******* Click events for adding, editing and deleting employees from side menu ********* //
 
-// Clicking create button for employees (department dropdown list needs created)
+// Clicking create button for employees (department dropdown list needs created) in side menu
 $(document).on("click", "#create-employee-btn", async function(e) {
     const departments = await getAllDepartments();
     const listFor = 'modal';
@@ -1892,13 +2038,34 @@ $(document).on("click", "#create-employee-btn", async function(e) {
     $('#employee-create-department').append(departmentDropdownHtml);
 });
 
-// Clicking edit button for employees
+// Clicking edit button for employees in side menu
 $(document).on("click", "#edit-employee-btn", function() {
 
-    $("#employee-edit-table thead").remove();
-    $("#employee-edit-table tbody").remove();
+    $("#employee-select-table thead").remove();
+    $("#employee-select-table tbody").remove();
+    $("#selectionSearch").val('');
 
-    createSelectEmployeeTable(editTableEmployees);
+    const action = {
+        execution: 'edit',
+        target: '#editEmployeeModal'
+    };
+
+    createSelectEmployeeTable(selectionEmployeeTable, action);
+
+});
+
+// Clicking delete button for employees in side menu
+$(document).on("click", "#delete-employee-btn", function() {
+
+    $("#employee-select-table thead").remove();
+    $("#employee-select-table tbody").remove();
+
+    const action = {
+        execution: 'delete',
+        target: '#deleteEmployeeModal',
+    };
+
+    createSelectEmployeeTable(selectionEmployeeTable, action);
 
 });
 
@@ -1918,37 +2085,72 @@ $(document).on("click", "#create-department-btn", async function(e) {
 // Clicking edit button for department
 $(document).on("click", "#edit-department-btn", async function() {
 
-    $("#department-edit-table thead").remove();
-    $("#department-edit-table tbody").remove();
+    $("#department-select-table thead").remove();
+    $("#department-select-table tbody").remove();
+
+    const action = {
+        execution: 'edit',
+        target: '#editDepartmentModal'
+    };
 
     let departments = await getAllDepartments();
 
-    createSelectDepartmentTable(departments);
+    createSelectDepartmentTable(departments, action);
+
+});
+
+// Clicking delete button for department in side menu
+$(document).on("click", "#delete-department-btn", async function() {
+
+    $("#department-select-table thead").remove();
+    $("#department-select-table tbody").remove();
+
+    const action = {
+        execution: 'delete',
+        target: '#deleteDepartmentModal',
+    };
+
+    let departments = await getAllDepartments();
+
+    createSelectDepartmentTable(departments, action);
 
 });
 
 // **************************************************************************************** //
 
-// ******* Click events for adding, editing and deleting location from side menu ********** //
+// ******* Click events for editing and deleting location from side menu ********** //
 
-// Clicking create button for location (location dropdown list needs created)
-$(document).on("click", "#create-location-btn", async function(e) {
-    // const locations = await getAllLocations();
-    // const listFor = 'modal';
-    // const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
-    // $('#department-create-location').html('');
-    // $('#department-create-location').append(locationDropdownHtml);
-});
-
-// Clicking edit button for location
+// Clicking edit button for location in side menu
 $(document).on("click", "#edit-location-btn", async function() {
 
-    $("#location-edit-table thead").remove();
-    $("#location-edit-table tbody").remove();
+    $("#location-select-table thead").remove();
+    $("#location-select-table tbody").remove();
+
+    const action = {
+        execution: 'edit',
+        target: '#editLocationModal'
+    };
 
     let locations = await getAllLocations();
 
-    createSelectLocationTable(locations);
+    createSelectLocationTable(locations, action);
+
+});
+
+// Clicking delete button for location in side menu
+$(document).on("click", "#delete-location-btn", async function() {
+
+    $("#location-select-table thead").remove();
+    $("#location-select-table tbody").remove();
+
+    const action = {
+        execution: 'delete',
+        target: '#deleteLocationModal'
+    };
+
+    let locations = await getAllLocations();
+
+    createSelectLocationTable(locations, action);
 
 });
 
@@ -1972,6 +2174,7 @@ $(".table").on("click", "td", async function() {
     let employeeID;
     let departmentID;
     let locationID;
+    let name;
     const listFor = 'modal';
 
     switch (typeOfCellSelect) {
@@ -1990,13 +2193,14 @@ $(".table").on("click", "td", async function() {
             locationID = $(this).attr('value');
             locationDetailsResult = await getLocationDetails(locationID);
             displayLocationDetailsModal(locationDetailsResult);
-            populateEditLocationDetailsModal(locationDetailsResult);
+            name = locationDetailsResult['data2'][0]['location'];
+            populateEditLocationDetailsModal(name);
             break;
         case 'td-name name-column-modal td-edit-employee':
             employeeID = $(this).attr('value');
             employeeDetailsResult = await getEmployeeDetails(employeeID);
             $('#edit-employee-close-btn').attr('data-toggle', 'modal');
-            $('#edit-employee-close-btn').attr('data-target', '#selectionEditEmployeeModal');
+            $('#edit-employee-close-btn').attr('data-target', '#selectionEmployeeModal');
 
             const departments = await getAllDepartments();
             const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
@@ -2008,7 +2212,7 @@ $(".table").on("click", "td", async function() {
             departmentID = $(this).attr('value');
             departmentDetailsResult = await getDepartmentDetails(departmentID);
             $('#edit-department-close-btn').attr('data-toggle', 'modal');
-            $('#edit-department-close-btn').attr('data-target', '#selectionEditDepartmentModal');
+            $('#edit-department-close-btn').attr('data-target', '#selectionDepartmentModal');
 
             const locations = await getAllLocations();
             const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
@@ -2017,11 +2221,61 @@ $(".table").on("click", "td", async function() {
             populateEditDepartmentDetailsModal(departmentDetailsResult);
             break;
         case 'td-name name-column-modal td-edit-location':
-            locationID = $(this).attr('value');
-            locationDetailsResult = await getLocationDetails(locationID);
+            const selectLocationId = $(this).attr('value');
+            emptyLocationId = selectLocationId;
+            locationDetailsResult = await getLocationDetails(selectLocationId);
+            locationName = await getLocationName(selectLocationId);
+            populateEditLocationDetailsModal(locationName);
             $('#edit-location-close-btn').attr('data-toggle', 'modal');
-            $('#edit-location-close-btn').attr('data-target', '#selectionEditLocationModal');
-            populateEditLocationDetailsModal(locationDetailsResult);
+            $('#edit-location-close-btn').attr('data-target', '#selectionLocationModal');
+            break;
+        case 'td-name name-column-modal td-delete-employee':
+            employeeID = $(this).attr('value');
+            employeeDetailsResult = await getEmployeeDetails(employeeID);
+            name = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
+            $('#employee-delete-name').html(name);
+            $('#delete-close-btn').attr('data-toggle', 'modal');
+            $('#delete-close-btn').attr('data-target', '#selectionEmployeeModal');
+            break;
+        case 'td-name name-column-modal td-delete-department':
+            departmentID = $(this).attr('value');
+            departmentDetailsResult = await getDepartmentDetails(departmentID);  
+            empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+
+            $('#delete-department-close-btn').attr('data-target', '#selectionDepartmentModal');
+
+            if (departmentDetailsResult.length > 0) {
+                $('#delete-department-final').hide();
+                $('#delete-department-able').hide();
+                $('#delete-department-unable').show();
+                $('#department-delete-name').hide();
+            } else {
+                $('#delete-department-final').show();
+                $('#delete-department-able').show();
+                $('#delete-department-unable').hide();
+                $('#department-delete-name').show();
+                $('#department-delete-name').html(empytDepartmentDetailsResult[0]['department']);
+            }
+            break;
+        case 'td-name name-column-modal td-delete-location':
+            emptyLocationId = $(this).attr('value');
+            locationDetailsResult = await getLocationDetails(emptyLocationId);
+            locationName = await getLocationName(emptyLocationId);
+
+            if (locationDetailsResult['data'].length > 0) {
+                $('#delete-location-final').hide();
+                $('#delete-location-able').hide();
+                $('#delete-location-unable').show();
+                $('#location-delete-name').hide();
+            } else {
+                $('#delete-location-final').show();
+                $('#delete-location-able').show();
+                $('#delete-location-unable').hide();
+                $('#location-delete-name').show();
+                $('#location-delete-name').html(locationName);
+            }
+
+            $('#delete-location-close-btn').attr('data-target', '#selectionLocationModal');
             break;
         default:
             break;
@@ -2041,12 +2295,14 @@ function addDropdown() {
 
     $("#addDropdown").toggleClass("show");
     $("#editDropdown").removeClass("show");
+    $("#deleteDropdown").removeClass("show");
     $("#sortDropdown").removeClass("show");
     $("#filterDropdown").removeClass("show");
 
     $("#sidebar-item-sort").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
     $("#sidebar-item-edit").removeClass("active-dropdown");
+    $("#sidebar-item-delete").removeClass("active-dropdown");
 
 }
 
@@ -2056,10 +2312,29 @@ function editDropdown() {
 
     $("#editDropdown").toggleClass("show");
     $("#addDropdown").removeClass("show");
+    $("#deleteDropdown").removeClass("show");
     $("#sortDropdown").removeClass("show");
     $("#filterDropdown").removeClass("show");
 
     $("#sidebar-item-add").removeClass("active-dropdown");
+    $("#sidebar-item-delete").removeClass("active-dropdown");
+    $("#sidebar-item-sort").removeClass("active-dropdown");
+    $("#sidebar-item-filter").removeClass("active-dropdown");
+
+}
+
+function deleteDropdown() {
+
+    $("#sidebar-item-delete").toggleClass("active-dropdown");
+
+    $("#deleteDropdown").toggleClass("show");
+    $("#addDropdown").removeClass("show");
+    $("#editDropdown").removeClass("show");
+    $("#sortDropdown").removeClass("show");
+    $("#filterDropdown").removeClass("show");
+
+    $("#sidebar-item-add").removeClass("active-dropdown");
+    $("#sidebar-item-edit").removeClass("active-dropdown");
     $("#sidebar-item-sort").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
 
@@ -2072,9 +2347,11 @@ function sortDropdown() {
     $("#sortDropdown").toggleClass("show");
     $("#addDropdown").removeClass("show");
     $("#editDropdown").removeClass("show");
+    $("#deleteDropdown").removeClass("show");
     $("#filterDropdown").removeClass("show");
     
     $("#sidebar-item-add").removeClass("active-dropdown");
+    $("#sidebar-item-delete").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
     $("#sidebar-item-edit").removeClass("active-dropdown");
 }
@@ -2086,11 +2363,13 @@ function filterDropdown() {
         $("#sortDropdown").removeClass("show");
         $("#addDropdown").removeClass("show");
         $("#editDropdown").removeClass("show");
+        $("#deleteDropdown").removeClass("show");
 
         $("#sidebar-item-filter").toggleClass("active-dropdown");
         $("#sidebar-item-sort").removeClass("active-dropdown");
         $("#sidebar-item-add").removeClass("active-dropdown");
         $("#sidebar-item-edit").removeClass("active-dropdown");
+        $("#sidebar-item-delete").removeClass("active-dropdown");
     } 
 
     insideFilterDropdown = false;
@@ -2202,9 +2481,9 @@ $(window).resize(function() {
 function searchTable() {
     // Declare variables
     var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput");
+    input = document.getElementById("selectionSearch");
     filter = input.value.toUpperCase();
-    table = document.getElementById("employee-edit-table");
+    table = document.getElementById("employee-select-table");
     tr = table.getElementsByTagName("tr");
 
     // Loop through all table rows, and hide those who don't match the search query

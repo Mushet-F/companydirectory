@@ -330,13 +330,13 @@ th {
   overflow-y: visible;
 }
 
-#employee-edit-table tbody, #department-edit-table tbody  { 
+#employee-select-table tbody, #department-select-table tbody  { 
   max-height:40vh; 
   overflow-y:scroll; 
   display:block; 
 }
 
-#employee-edit-table thead, #department-edit-table thead { 
+#employee-select-table thead, #department-select-table thead { 
   display:block; 
 }
 
@@ -469,7 +469,7 @@ th {
   }
 }
 
-#myInput {
+#selectionSearch {
   width: 100%; 
   font-size: 16px; 
   padding: 12px 20px 12px 40px; 

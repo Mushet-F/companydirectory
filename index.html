@@ -68,7 +68,7 @@
                         </div>
                     </li>
                     <li onclick="addDropdown()" id="sidebar-item-add" class="sidebar-item sidebar-main-item dropbtn">
-                        Add New
+                        Create
                         <div id="addDropdown" class="dropdown-content">
                             <span class="sidebar-item" id="create-employee-btn" data-toggle="modal" data-target="#createEmployeeModal">Employee</span>
                             <span class="sidebar-item" id="create-department-btn" data-toggle="modal" data-target="#createDepartmentModal">Department</span>
@@ -76,11 +76,19 @@
                         </div>
                     </li>
                     <li onclick="editDropdown()" id="sidebar-item-edit" class="sidebar-item sidebar-main-item dropbtn">
-                        Edit Selection
+                        Edit
                         <div id="editDropdown" class="dropdown-content">
-                            <span class="sidebar-item" id="edit-employee-btn" data-toggle="modal" data-target="#selectionEditEmployeeModal">Employee</span>
-                            <span class="sidebar-item" id="edit-department-btn" data-toggle="modal" data-target="#selectionEditDepartmentModal">Department</span>
-                            <span class="sidebar-item" id="edit-location-btn" data-toggle="modal" data-target="#selectionEditLocationModal">Location</span>
+                            <span class="sidebar-item" id="edit-employee-btn" data-toggle="modal" data-target="#selectionEmployeeModal">Employee</span>
+                            <span class="sidebar-item" id="edit-department-btn" data-toggle="modal" data-target="#selectionDepartmentModal">Department</span>
+                            <span class="sidebar-item" id="edit-location-btn" data-toggle="modal" data-target="#selectionLocationModal">Location</span>
+                        </div>
+                    </li>
+                    <li onclick="deleteDropdown()" id="sidebar-item-delete" class="sidebar-item sidebar-main-item dropbtn">
+                        Delete
+                        <div id="deleteDropdown" class="dropdown-content">
+                            <span class="sidebar-item" id="delete-employee-btn" data-toggle="modal" data-target="#selectionEmployeeModal">Employee</span>
+                            <span class="sidebar-item" id="delete-department-btn" data-toggle="modal" data-target="#selectionDepartmentModal">Department</span>
+                            <span class="sidebar-item" id="delete-location-btn" data-toggle="modal" data-target="#selectionLocationModal">Location</span>
                         </div>
                     </li>
                 </ul>
@@ -198,12 +206,12 @@
                     </div>
                 </div>
 
-                <!-- Modal - Selection For Employee Edit -->
-                <div class="modal fade" id="selectionEditEmployeeModal" tabindex="-1" aria-labelledby="selectionEditEmployeeModalLabel" aria-hidden="true">
+                <!-- Modal - Selection For Employee -->
+                <div class="modal fade" id="selectionEmployeeModal" tabindex="-1" aria-labelledby="selectionEmployeeModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="selectionEditEmployeeModalLabel">Select Employee To Edit</h5>
+                                <h5 class="modal-title" id="selectionEmployeeModalLabel">Select Employee</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -211,9 +219,9 @@
                             <div class="modal-body modal-body-table">
                                 <div>
                                     <div id="div-search">
-                                        <input type="text" id="myInput" onkeyup="searchTable()" placeholder="Search for names.."> 
+                                        <input type="text" id="selectionSearch" onkeyup="searchTable()" placeholder="Search for names.."> 
                                     </div>
-                                    <table id="employee-edit-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
+                                    <table id="employee-select-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
                                     </table>
                                 </div>
                             </div>
@@ -290,7 +298,7 @@
                                 <p class="delete-info">You sure you want to delete employee, <span id="employee-delete-name"></span>?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" data-target="#editEmployeeModal">Close</button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="delete-close-btn" >Close</button>
                                 <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteEmployeeByID()">Delete</button>
                             </div>
                         </div>
@@ -366,19 +374,19 @@
                     </div>
                 </div>
 
-                <!-- Modal - Selection For Department Edit -->
-                <div class="modal fade" id="selectionEditDepartmentModal" tabindex="-1" aria-labelledby="selectionEditDepartmentModalLabel" aria-hidden="true">
+                <!-- Modal - Selection For Department -->
+                <div class="modal fade" id="selectionDepartmentModal" tabindex="-1" aria-labelledby="selectionDepartmentModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="selectionEditDepartmentModalLabel">Select Department To Edit</h5>
+                                <h5 class="modal-title" id="selectionDepartmentModalLabel">Select Department</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body modal-body-table">
                                 <div>
-                                    <table id="department-edit-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
+                                    <table id="department-select-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
                                     </table>
                                 </div>
                             </div>
@@ -420,7 +428,7 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >Close</button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn btn-outline-success closeMenu" onclick="createDepartment()">Create</button>
                             </div>
                         </div>
@@ -438,12 +446,12 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p class="delete-info" id="delete-deparment-able">You sure you want to delete department, <span id="department-delete-name"></span>?</p>
-                                <p class="delete-info" id="delete-deparment-unable">You are not allowed to delete departments that still has employees.</p>
+                                <p class="delete-info" id="delete-department-able">You sure you want to delete department, <span id="department-delete-name"></span>?</p>
+                                <p class="delete-info" id="delete-department-unable">You are not allowed to delete departments that still has employees.</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" data-target="#departmentModal">Close</button>
-                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteDepartmentByID()" id="delete-department-btn">Delete</button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" id="delete-department-close-btn">Close</button>
+                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteDepartmentByID()" id="delete-department-final">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -512,19 +520,19 @@
                     </div>
                 </div>
 
-                <!-- Modal - Selection For Location Edit -->
-                <div class="modal fade" id="selectionEditLocationModal" tabindex="-1" aria-labelledby="selectionEditLocationModalLabel" aria-hidden="true">
+                <!-- Modal - Selection For Location -->
+                <div class="modal fade" id="selectionLocationModal" tabindex="-1" aria-labelledby="selectionLocationModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="selectionEditLocationModalLabel">Select Location To Edit</h5>
+                                <h5 class="modal-title" id="selectionLocationModalLabel">Select Location</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body modal-body-table">
                                 <div>
-                                    <table id="location-edit-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
+                                    <table id="location-select-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
                                     </table>
                                 </div>
                             </div>
@@ -578,11 +586,12 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p class="delete-info">You sure you want to delete location, <span id="location-delete-name"></span>?</p>
+                                <p class="delete-info" id="delete-location-able">You sure you want to delete location, <span id="location-delete-name"></span>?</p>
+                                <p class="delete-info" id="delete-location-unable">You are not allowed to delete locations that still has employees.</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" data-target="#locationModal">Close</button>
-                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteLocationByID()">Delete</button>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" id="delete-location-close-btn">Close</button>
+                                <button type="submit" class="btn btn btn-outline-danger" data-dismiss="modal" onclick="deleteLocationByID()" id="delete-location-final">Delete</button>
                             </div>
                         </div>
                     </div>
