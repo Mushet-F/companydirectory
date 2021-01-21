@@ -164,7 +164,7 @@ function createSelectLocationTable(result, action) {
 
 // **************************************************************************************** //
 
-// ********************** Creating main employees grid ************************************ //
+// ********************** Creating main employees cards *********************************** //
 
 function createCards(result) {
 
@@ -193,7 +193,7 @@ function createCards(result) {
 
 // **************************************************************************************** //
 
-// ********************** Clear table or grid to produce new set of results *************** //
+// ********************** Clear table or cards to produce new set of results ************** //
 
 function clearCurrentResults() {
 
@@ -203,228 +203,6 @@ function clearCurrentResults() {
     } else if(currentView === 'grid') {
         $(".employee-card").remove();
     }
-
-}
-
-// **************************************************************************************** //
-
-// ********************** Functions for sorting employees ********************************* //
-
-let selectionEmployeeTable;
-
-// Sort employees by last name
-function displayAllEmployeesByLastName() {
-
-    $.ajax({
-        url: "libs/php/sortAllEmployeesByLastName.php",
-        type: 'POST',
-        dataType: 'json',
-        success: function(result) {
-            if (result.status.name == "ok") { 
-
-                if(currentView === 'table') {
-                    createTable(result);     
-                } else if (currentView === 'grid') {
-                    createCards(result);
-                }
-
-                selectionEmployeeTable = result;
-                searchMain();
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
-
-}
-
-// Set loading view to table and sort by employees last names
-let currentView = 'table';
-
-displayAllEmployeesByLastName();
-
-// create the sort request to be sent to php
-const createSortRequest = sortRequest => {
-
-    let request = '';
-    let count = 0;
-
-    if(count > 0) {
-        request += " OR ";
-    }
-    switch(sortRequest) {
-        case 'sort-fname':
-            request += "p.firstName, p.lastName, d.name, l.name";
-            break;
-        case 'sort-lname':
-            request += "p.lastName, p.firstName, d.name, l.name";
-            break;
-        case 'sort-id':
-            request += "p.id";
-            break;
-        case 'sort-job':
-            request += "p.jobTitle, p.lastName, p.firstName, d.name, l.name";
-            break;
-        case 'sort-department':
-            request += "d.name, p.lastName, p.firstName";
-            break;
-        case 'sort-location':
-            request += "l.name, d.name, p.lastName, p.firstName";
-            break;
-        default:
-    }
-
-    count++;
-
-    return request;
-
-}
-
-// ajax call to php to retrieve and display sorted data
-function applySortRequest(request) {
-
-    $.ajax({
-        url: "libs/php/sortAllEmployees.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            request: request
-        },
-        success: function(result) {
-
-            clearCurrentResults();
-
-            if (result.status.name == "ok") { 
-
-                for (i = 0; i < result.data.length ; i++) {
-
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'grid') {
-                        createCards(result);
-                    }
-
-                }
-                
-            }
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
-
-}
-
-// ajax call to php to retrieve and display filtered and sorted data
-function applySortAndFilterRequest(filterRequest, sortRequest) {
-
-    $.ajax({
-        url: "libs/php/sortEmployeesWithFilter.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            filterRequest: filterRequest,
-            sortRequest: sortRequest
-        },
-        success: function(result) {
-
-            clearCurrentResults();
-
-            if (result.status.name == "ok") { 
-
-                for (i = 0; i < result.data.length ; i++) {
-
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'grid') {
-                        createCards(result);
-                    }
-
-                }
-                
-            }
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
-
-}
-
-// **************************************************************************************** //
-
-// ********************** Functions for filtering employees ******************************* //
-
-// create the filter request to be sent to php
-const createFilterRequest = filterRequest => {
-
-    let request = '';
-    let count = 0;
-
-    if(filterRequest.length > 0) {
-
-        request += "WHERE ";
-
-        filterRequest.forEach(function (filter) {
-
-            if(count > 0) {
-                request += " OR ";
-            }
-
-            let requestName = filter.slice(4);
-            let requestType = filter.slice(0, 4);
-
-            if(requestType === 'Dep-') {
-                request += `d.name =  \'${requestName}\'`;
-            } else if (requestType === 'Loc-') {
-                request += `l.name =  \'${requestName}\'`;
-            }
-
-            count++;
-
-        });
-
-        return request;
-
-    } 
-}
-
-// ajax call to php to retrieve and display filtered data
-function applyFilterRequest(request) {
-
-    $.ajax({
-        url: "libs/php/filterAllEmployees.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            request: request
-        },
-        success: function(result) {
-
-            clearCurrentResults();
-
-            if (result.status.name == "ok") { 
-
-                for (i = 0; i < result.data.length ; i++) {
-
-                    if(currentView === 'table') {
-                        createTable(result);
-                    } else if (currentView === 'grid') {
-                        createCards(result);
-                    }
-
-                }
-                
-            }
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            reject(errorThrown);
-        }
-    }); 
 
 }
 
@@ -441,6 +219,88 @@ $(document).on("click", ".close", function() {
     trackingModals = [];
     
 });
+
+// **************************************************************************************** //
+
+// ********************** Click events on main table and cards **************************** //
+
+// Click cards and display employee details
+$(document).on("click", ".employee-card", async function() {
+ 
+    let employeeId = $(this).attr('value');
+    employeeDetailsResult = await getEmployeeDetails(employeeId);
+    displayEmployeeDetailsModal(employeeDetailsResult);
+
+});
+
+// Click table data cell
+$(".table").on("click", "td", async function() {
+
+    let typeOfCellSelect = $(this).attr('class');
+    let employeeID;
+    let departmentID;
+    let locationID;
+    let locationName;
+
+    switch (typeOfCellSelect) {
+        case 'td-name':
+            employeeID = $(this).attr('value');
+            employeeDetailsResult = await getEmployeeDetails(employeeID);
+            displayEmployeeDetailsModal(employeeDetailsResult);
+            break;
+        case 'td-department':
+            departmentID = $(this).attr('value');
+            departmentDetailsResult = await getDepartmentDetails(departmentID);
+            displayDepartmentDetailsModal(departmentDetailsResult);
+            populateEditDepartmentDetailsModal(departmentDetailsResult);
+            break;
+        case 'td-location':
+            locationID = $(this).attr('value');
+            locationDetailsResult = await getLocationDetails(locationID);
+            displayLocationDetailsModal(locationDetailsResult);
+            locationName = locationDetailsResult['data2'][0]['location'];
+            populateEditLocationDetailsModal(locationName);
+            break;
+        default:
+            break;
+    }
+
+});
+
+// **************************************************************************************** //
+
+// ********************** Search employees in tables or cards ***************************** //
+
+function searchMain() {
+    // Declare variables
+    let input = document.getElementById("mainSearch");
+    let filter = input.value.toUpperCase();
+    let table = document.getElementById("all-employees");
+    let tr = table.getElementsByTagName("tr");
+
+    // Search main table
+    for (let i = 0; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            let txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+    // Search cards
+    $(".employee-card").each(function() {
+        if ($(this).data("string").toUpperCase().indexOf(filter) < 0) {
+            $(this).hide();
+        } else {
+            $(this).show();
+        }
+    });
+
+}
 
 // **************************************************************************************** //
 
@@ -866,7 +726,8 @@ const getEmptyDepartmentDetails = async id => {
             },
             success: function(result) {
 
-                const department = result['data'];
+                let department = result['data'];
+                department[0]['empty'] = 'yes';
                 resolve(department);
 
             },
@@ -980,7 +841,14 @@ function updateDepartmentDetails() {
             if(result['status']['code'] === '200') {
                 
                 departmentDetailsResult = await getDepartmentDetails(id);
-                displayDepartmentDetailsModal(departmentDetailsResult);
+                if (departmentDetailsResult.length === 0) {
+                    empytDepartmentDetailsResult = await getEmptyDepartmentDetails(id);
+                    departmentDetailsResult = empytDepartmentDetailsResult;
+                    displayEmptyDepartment(departmentDetailsResult);
+                } else {
+                    displayDepartmentDetailsModal(departmentDetailsResult);
+                }
+
                 populateEditDepartmentDetailsModal(departmentDetailsResult);
                 clearCurrentResults();
 
@@ -1719,12 +1587,10 @@ $(document).on("click", ".location-departments", async function() {
 
     if (departmentDetailsResult.length === 0) {
         empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
-        displayEmptyDepartment(empytDepartmentDetailsResult);
+        departmentDetailsResult = empytDepartmentDetailsResult;
+        displayEmptyDepartment(departmentDetailsResult);
     } else {
-
         displayDepartmentDetailsModal(departmentDetailsResult);
-        populateEditDepartmentDetailsModal(departmentDetailsResult);
-
     }
 
     let modalType = '#departmentModal';
@@ -1765,7 +1631,15 @@ $(document).on("click", "#locationCloseBtn", async function(e) {
 
             } else if (nextModal['type'] === '#departmentModal') {
                 departmentDetailsResult = nextModal['details'];
-                displayDepartmentDetailsModal(departmentDetailsResult);
+                if(departmentDetailsResult[0]['empty'] === 'yes') {
+                    let departmentID = departmentDetailsResult[0]['id'];
+                    empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+                    departmentDetailsResult = empytDepartmentDetailsResult;
+                    displayEmptyDepartment(departmentDetailsResult);
+                } else {
+                    displayDepartmentDetailsModal(departmentDetailsResult);
+                }
+
                 populateEditDepartmentDetailsModal(departmentDetailsResult);
 
                 if (trackingModals.length > 1) {
@@ -1794,45 +1668,225 @@ $(document).on("click", "#location-delete-form", function() {
 
 // **************************************************************************************** //
 
-// ********************** Click events for selecting view ********************************* //
+// ********************** Functions for sorting employees ********************************* //
 
-// Table view option is selected
-$(document).on("click", "#table-view", function(e) { 
- 
-    clearCurrentResults(); 
+let selectionEmployeeTable;
 
-    if(currentView === 'grid') {
-        $( "#table-div" ).addClass( "tableFixHead" );
+// Sort employees by last name
+function displayAllEmployeesByLastName() {
+
+    $.ajax({
+        url: "libs/php/sortAllEmployeesByLastName.php",
+        type: 'POST',
+        dataType: 'json',
+        success: function(result) {
+            if (result.status.name == "ok") { 
+
+                if(currentView === 'table') {
+                    createTable(result);     
+                } else if (currentView === 'grid') {
+                    createCards(result);
+                }
+
+                selectionEmployeeTable = result;
+                searchMain();
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
+// Set loading view to table and sort by employees last names
+let currentView = 'table';
+
+displayAllEmployeesByLastName();
+
+// create the sort request to be sent to php
+const createSortRequest = sortRequest => {
+
+    let request = '';
+    let count = 0;
+
+    if(count > 0) {
+        request += " OR ";
+    }
+    switch(sortRequest) {
+        case 'sort-fname':
+            request += "p.firstName, p.lastName, d.name, l.name";
+            break;
+        case 'sort-lname':
+            request += "p.lastName, p.firstName, d.name, l.name";
+            break;
+        case 'sort-id':
+            request += "p.id";
+            break;
+        case 'sort-job':
+            request += "p.jobTitle, p.lastName, p.firstName, d.name, l.name";
+            break;
+        case 'sort-department':
+            request += "d.name, p.lastName, p.firstName";
+            break;
+        case 'sort-location':
+            request += "l.name, d.name, p.lastName, p.firstName";
+            break;
+        default:
     }
 
-    currentView = 'table';
+    count++;
 
-    if(filterActive) {
-        applyFilterRequest(filterRequest);
-    } else {
-        displayAllEmployeesByLastName();
-    }
+    return request;
 
-});
+}
 
-// Grid view option is selected
-$(document).on("click", "#grid-view", function(e) { 
+// ajax call to php to retrieve and display sorted data
+function applySortRequest(request) {
 
-    clearCurrentResults();
+    $.ajax({
+        url: "libs/php/sortAllEmployees.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            request: request
+        },
+        success: function(result) {
 
-    if(currentView === 'table') {
-        $("#table-div").removeClass( "tableFixHead" );
+            clearCurrentResults();
+
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
+// ajax call to php to retrieve and display filtered and sorted data
+function applySortAndFilterRequest(filterRequest, sortRequest) {
+
+    $.ajax({
+        url: "libs/php/sortEmployeesWithFilter.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            filterRequest: filterRequest,
+            sortRequest: sortRequest
+        },
+        success: function(result) {
+
+            clearCurrentResults();
+
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
+
+// **************************************************************************************** //
+
+// ********************** Functions for filtering employees ******************************* //
+
+// create the filter request to be sent to php
+const createFilterRequest = filterRequest => {
+
+    let request = '';
+    let count = 0;
+
+    if(filterRequest.length > 0) {
+
+        request += "WHERE ";
+
+        filterRequest.forEach(function (filter) {
+
+            if(count > 0) {
+                request += " OR ";
+            }
+
+            let requestName = filter.slice(4);
+            let requestType = filter.slice(0, 4);
+
+            if(requestType === 'Dep-') {
+                request += `d.name =  \'${requestName}\'`;
+            } else if (requestType === 'Loc-') {
+                request += `l.name =  \'${requestName}\'`;
+            }
+
+            count++;
+
+        });
+
+        return request;
+
     } 
+}
 
-    currentView = 'grid';
+// ajax call to php to retrieve and display filtered data
+function applyFilterRequest(request) {
 
-    if(filterActive) {
-        applyFilterRequest(filterRequest);
-    } else {
-        displayAllEmployeesByLastName();
-    }
+    $.ajax({
+        url: "libs/php/filterAllEmployees.php",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            request: request
+        },
+        success: function(result) {
 
-});
+            clearCurrentResults();
+
+            if (result.status.name == "ok") { 
+
+                for (i = 0; i < result.data.length ; i++) {
+
+                    if(currentView === 'table') {
+                        createTable(result);
+                    } else if (currentView === 'grid') {
+                        createCards(result);
+                    }
+
+                }
+                
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            reject(errorThrown);
+        }
+    }); 
+
+}
 
 // **************************************************************************************** //
 
@@ -1984,7 +2038,7 @@ $('#filter-reset').click(function() {
 
 // **************************************************************************************** //
 
-// ******* Click events for adding, editing and deleting employees from side menu ********* //
+// ****** Click events for creating, editing and deleting employees from side menu ******** //
 
 // Clicking create button for employees (department dropdown list needs created) in side menu
 $(document).on("click", "#create-employee-btn", async function(e) {
@@ -2016,6 +2070,7 @@ $(document).on("click", "#delete-employee-btn", function() {
 
     $("#employee-select-table thead").remove();
     $("#employee-select-table tbody").remove();
+    $("#selectionSearch").val('');
 
     const action = {
         execution: 'delete',
@@ -2028,10 +2083,10 @@ $(document).on("click", "#delete-employee-btn", function() {
 
 // **************************************************************************************** //
 
-// ******* Click events for adding, editing and deleting department from side menu ******** //
+// ****** Click events for creating, editing and deleting department from side menu ******* //
 
 // Clicking create button for department (location dropdown list needs created)
-$(document).on("click", "#create-department-btn", async function(e) {
+$(document).on("click", "#create-department-btn", async function() {
     const locations = await getAllLocations();
     const listFor = 'modal';
     const locationDropdownHtml = createLocationsDropdownList(locations, listFor);
@@ -2075,7 +2130,7 @@ $(document).on("click", "#delete-department-btn", async function() {
 
 // **************************************************************************************** //
 
-// ******* Click events for editing and deleting location from side menu ********** //
+// *********** Click events for editing and deleting location from side menu ************** //
 
 // Clicking edit button for location in side menu
 $(document).on("click", "#edit-location-btn", async function() {
@@ -2113,16 +2168,7 @@ $(document).on("click", "#delete-location-btn", async function() {
 
 // **************************************************************************************** //
 
-// ********************** Click events on table and cards ********************************* //
-
-// Click cards and display employee details
-$(document).on("click", ".employee-card", async function(e) {
- 
-    let employeeId = $(this).attr('value');
-    employeeDetailsResult = await getEmployeeDetails(employeeId);
-    displayEmployeeDetailsModal(employeeDetailsResult);
-
-});
+// ********************** Click events on modal tables ************************************ //
 
 // Click table data cell
 $(".table").on("click", "td", async function() {
@@ -2130,29 +2176,10 @@ $(".table").on("click", "td", async function() {
     let typeOfCellSelect = $(this).attr('class');
     let employeeID;
     let departmentID;
-    let locationID;
     let name;
     const listFor = 'modal';
 
     switch (typeOfCellSelect) {
-        case 'td-name':
-            employeeID = $(this).attr('value');
-            employeeDetailsResult = await getEmployeeDetails(employeeID);
-            displayEmployeeDetailsModal(employeeDetailsResult);
-            break;
-        case 'td-department':
-            departmentID = $(this).attr('value');
-            departmentDetailsResult = await getDepartmentDetails(departmentID);
-            displayDepartmentDetailsModal(departmentDetailsResult);
-            populateEditDepartmentDetailsModal(departmentDetailsResult);
-            break;
-        case 'td-location':
-            locationID = $(this).attr('value');
-            locationDetailsResult = await getLocationDetails(locationID);
-            displayLocationDetailsModal(locationDetailsResult);
-            name = locationDetailsResult['data2'][0]['location'];
-            populateEditLocationDetailsModal(name);
-            break;
         case 'td-name name-column-modal td-edit-employee':
             employeeID = $(this).attr('value');
             employeeDetailsResult = await getEmployeeDetails(employeeID);
@@ -2168,6 +2195,10 @@ $(".table").on("click", "td", async function() {
         case 'td-name name-column-modal td-edit-department':
             departmentID = $(this).attr('value');
             departmentDetailsResult = await getDepartmentDetails(departmentID);
+            if (departmentDetailsResult.length === 0) {
+                empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+                departmentDetailsResult = empytDepartmentDetailsResult;
+            }
             $('#edit-department-close-btn').attr('data-toggle', 'modal');
             $('#edit-department-close-btn').attr('data-target', '#selectionDepartmentModal');
 
@@ -2242,15 +2273,57 @@ $(".table").on("click", "td", async function() {
 
 // **************************************************************************************** //
 
-// ********************** Dropdown menu for sort and filter ******************************* //
+// ********************** Click events for selecting view ********************************* //
+
+// Table view option is selected
+$(document).on("click", "#table-view", function(e) { 
+ 
+    clearCurrentResults(); 
+
+    if(currentView === 'grid') {
+        $( "#table-div" ).addClass( "tableFixHead" );
+    }
+
+    currentView = 'table';
+
+    if(filterActive) {
+        applyFilterRequest(filterRequest);
+    } else {
+        displayAllEmployeesByLastName();
+    }
+
+});
+
+// Grid view option is selected
+$(document).on("click", "#grid-view", function(e) { 
+
+    clearCurrentResults();
+
+    if(currentView === 'table') {
+        $("#table-div").removeClass( "tableFixHead" );
+    } 
+
+    currentView = 'grid';
+
+    if(filterActive) {
+        applyFilterRequest(filterRequest);
+    } else {
+        displayAllEmployeesByLastName();
+    }
+
+});
+
+// **************************************************************************************** //
+
+// *************** Dropdown menu display functionality for Create, Update and Delete ****** //
 
 let insideFilterDropdown = false;
 
-function addDropdown() {
+function createDropdown() {
 
-    $("#sidebar-item-add").toggleClass("active-dropdown");
+    $("#sidebar-item-create").toggleClass("active-dropdown");
 
-    $("#addDropdown").toggleClass("show");
+    $("#createDropdown").toggleClass("show");
     $("#editDropdown").removeClass("show");
     $("#deleteDropdown").removeClass("show");
     $("#sortDropdown").removeClass("show");
@@ -2268,12 +2341,12 @@ function editDropdown() {
     $("#sidebar-item-edit").toggleClass("active-dropdown");
 
     $("#editDropdown").toggleClass("show");
-    $("#addDropdown").removeClass("show");
+    $("#createDropdown").removeClass("show");
     $("#deleteDropdown").removeClass("show");
     $("#sortDropdown").removeClass("show");
     $("#filterDropdown").removeClass("show");
 
-    $("#sidebar-item-add").removeClass("active-dropdown");
+    $("#sidebar-item-create").removeClass("active-dropdown");
     $("#sidebar-item-delete").removeClass("active-dropdown");
     $("#sidebar-item-sort").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
@@ -2285,12 +2358,12 @@ function deleteDropdown() {
     $("#sidebar-item-delete").toggleClass("active-dropdown");
 
     $("#deleteDropdown").toggleClass("show");
-    $("#addDropdown").removeClass("show");
+    $("#createDropdown").removeClass("show");
     $("#editDropdown").removeClass("show");
     $("#sortDropdown").removeClass("show");
     $("#filterDropdown").removeClass("show");
 
-    $("#sidebar-item-add").removeClass("active-dropdown");
+    $("#sidebar-item-create").removeClass("active-dropdown");
     $("#sidebar-item-edit").removeClass("active-dropdown");
     $("#sidebar-item-sort").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
@@ -2302,12 +2375,12 @@ function sortDropdown() {
     $("#sidebar-item-sort").toggleClass("active-dropdown");
 
     $("#sortDropdown").toggleClass("show");
-    $("#addDropdown").removeClass("show");
+    $("#createDropdown").removeClass("show");
     $("#editDropdown").removeClass("show");
     $("#deleteDropdown").removeClass("show");
     $("#filterDropdown").removeClass("show");
     
-    $("#sidebar-item-add").removeClass("active-dropdown");
+    $("#sidebar-item-create").removeClass("active-dropdown");
     $("#sidebar-item-delete").removeClass("active-dropdown");
     $("#sidebar-item-filter").removeClass("active-dropdown");
     $("#sidebar-item-edit").removeClass("active-dropdown");
@@ -2318,13 +2391,13 @@ function filterDropdown() {
     if(!insideFilterDropdown) {
         $("#filterDropdown").toggleClass("show");
         $("#sortDropdown").removeClass("show");
-        $("#addDropdown").removeClass("show");
+        $("#createDropdown").removeClass("show");
         $("#editDropdown").removeClass("show");
         $("#deleteDropdown").removeClass("show");
 
         $("#sidebar-item-filter").toggleClass("active-dropdown");
         $("#sidebar-item-sort").removeClass("active-dropdown");
-        $("#sidebar-item-add").removeClass("active-dropdown");
+        $("#sidebar-item-create").removeClass("active-dropdown");
         $("#sidebar-item-edit").removeClass("active-dropdown");
         $("#sidebar-item-delete").removeClass("active-dropdown");
     } 
@@ -2435,6 +2508,8 @@ $(window).resize(function() {
 
 // **************************************************************************************** //
 
+// ********************** Search employees in tables or cards ***************************** //
+
 function searchTable() {
     // Declare variables
     var input, filter, table, tr, td, i, txtValue;
@@ -2455,38 +2530,6 @@ function searchTable() {
         }
       }
     }
-}
-
-
-function searchMain() {
-    // Declare variables
-    let input = document.getElementById("mainSearch");
-    let filter = input.value.toUpperCase();
-    let table = document.getElementById("all-employees");
-    let tr = table.getElementsByTagName("tr");
-
-    // Search main table
-    for (let i = 0; i < tr.length; i++) {
-        let td = tr[i].getElementsByTagName("td")[1];
-        if (td) {
-            let txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-
-    // Search cards
-    $(".employee-card").each(function() {
-        if ($(this).data("string").toUpperCase().indexOf(filter) < 0) {
-            $(this).hide();
-        } else {
-            $(this).show();
-        }
-    });
-
 }
 
 // *********************** Register serviceWorker ***************************************** //
