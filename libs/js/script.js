@@ -56,39 +56,7 @@ function createTable(result) {
     currentView = 'table';
 }
 
-// Create table to select and then edit an employee
-// function createSelectEmployeeTable(result) {
- 
-//     let table = `  
-//         <thead>
-//             <tr>
-//                 <th class="id-column-modal">ID</th>
-//                 <th class="name-column-modal">Name</th>
-//             </tr>
-//         </thead>
-//         <tbody id="employee-edit-tbody">`;
-
-//     $("#employee-edit-table").append(table);
-
-//     for (i = 0; i < result.data.length ; i++) {
-
-//         const id = result.data[i]['id'];
-//         const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
-
-//         let tbody = `<tr>
-//         <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-//         <td class="td-name name-column-modal td-edit-employee" data-dismiss="modal" data-toggle="modal" data-target="#editEmployeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
-//         </tr>`;
-
-//         $("#employee-edit-table").append(tbody);
-        
-//     }
-
-//     $("#employee-edit-table").append('</tbody>');
-
-// }
-
-// Create table to select and then edit an employee
+// Create table to select and then edit or delete an employee
 function createSelectEmployeeTable(result, action) {
 
     const execution = action['execution'];
@@ -124,7 +92,7 @@ function createSelectEmployeeTable(result, action) {
 
 }
 
-// Create table to select and then edit an deparment
+// Create table to select and then edit or delete a deparment
 function createSelectDepartmentTable(result, action) {
 
     const execution = action['execution'];
@@ -159,7 +127,7 @@ function createSelectDepartmentTable(result, action) {
 
 }
 
-// Create table to select and then edit an deparment
+// Create table to select and then edit or delete a location
 function createSelectLocationTable(result, action) {
 
     const execution = action['execution'];
@@ -201,7 +169,6 @@ function createSelectLocationTable(result, action) {
 function createCards(result) {
 
     for (i = 0; i < result.data.length ; i++) {
-
         const id = result.data[i]['id'];
         const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
         const job = result.data[i]['jobTitle']; 
@@ -209,8 +176,7 @@ function createCards(result) {
         const department = result.data[i]['department'];
         const location = result.data[i]['location'];
 
-
-        let html = `<div class='col-sm-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id}><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
+        let html = `<div class='col-sm-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id} data-string="${name}"><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
         <h3 class="name">${name}</h3>                            
         <p class="title">${job}</p>
         <p class="description">${email}</p>
@@ -263,7 +229,7 @@ function displayAllEmployeesByLastName() {
                 }
 
                 selectionEmployeeTable = result;
-
+                searchMain();
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -1819,19 +1785,11 @@ $(document).on("click", "#location-delete-form", function() {
     $('#location-delete-name').html(locationDetailsResult['data2'][0]['location']);
     $('#delete-location-close-btn').attr('data-target', '#locationModal');
 
-    // if (locationDetailsResult['data'].length > 0) {
-        $('#delete-location-final').hide();
-        $('#delete-location-able').hide();
-        $('#delete-location-unable').show();
-        $('#location-delete-name').hide();
-    // } else {
-    //     $('#delete-location-final').show();
-    //     $('#delete-location-able').show();
-    //     $('#delete-location-unable').hide();
-    //     $('#location-delete-name').show();
-    //     $('#location-delete-name').html(empytLocationDetailsResult[0]['location']);
-    // }
-    
+    $('#delete-location-final').hide();
+    $('#delete-location-able').hide();
+    $('#delete-location-unable').show();
+    $('#location-delete-name').hide();
+
 });
 
 // **************************************************************************************** //
@@ -1854,7 +1812,6 @@ $(document).on("click", "#table-view", function(e) {
     } else {
         displayAllEmployeesByLastName();
     }
-
 
 });
 
@@ -2498,6 +2455,38 @@ function searchTable() {
         }
       }
     }
+}
+
+
+function searchMain() {
+    // Declare variables
+    let input = document.getElementById("mainSearch");
+    let filter = input.value.toUpperCase();
+    let table = document.getElementById("all-employees");
+    let tr = table.getElementsByTagName("tr");
+
+    // Search main table
+    for (let i = 0; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            let txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+    // Search cards
+    $(".employee-card").each(function() {
+        if ($(this).data("string").toUpperCase().indexOf(filter) < 0) {
+            $(this).hide();
+        } else {
+            $(this).show();
+        }
+    });
+
 }
 
 // *********************** Register serviceWorker ***************************************** //

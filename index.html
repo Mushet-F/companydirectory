@@ -27,83 +27,88 @@
   </head>
   <body>
     <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Company Directory</a>
-      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button> 
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Company Directory</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button> 
+        <ul id="search-nav" class="navbar-nav px-3">
+            <li>
+                <input id="mainSearch" class="form-control" type="text" placeholder="Search employees" onkeyup="searchMain()">
+            </li>
+        </ul>
     </nav>
 
     <div class="container-fluid">
         <div class="row">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-            <div class="sidebar-sticky pt-3">
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>Actions</span>
-                </h6>
-                <ul class="nav flex-column mb-2">
-                    <li onclick="sortDropdown()" id="sidebar-item-sort" class="sidebar-item sidebar-main-item dropbtn">
-                        Sort
-                        <div id="sortDropdown" class="dropdown-content">
-                            <span class="sidebar-item closeMenu" id="sort-fname">First Name</span>
-                            <span class="sidebar-item closeMenu" id="sort-lname">Last Name</span>
-                            <span class="sidebar-item closeMenu" id="sort-id">Employee ID</span>
-                            <span class="sidebar-item closeMenu" id="sort-job">Job Title</span>
-                            <span class="sidebar-item closeMenu" id="sort-department">Department</span>
-                            <span class="sidebar-item closeMenu" id="sort-location">Location</span>
-                        </div>
-                    </li>
-                    <li onclick="filterDropdown()" id="sidebar-item-filter" class="sidebar-item sidebar-main-item dropbtn">
-                        Filter
-                        <div id="filterDropdown" class="dropdown-content">
-                            <span href="#" onclick="filterDepartmentDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-department">Department</span>
-                            <div id="filterDepartmentDropdown" class="dropdown-content dropdown-content-filter">
-                                
+                <div id="sidebar-div" class="sidebar-sticky pt-3">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Actions</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li onclick="sortDropdown()" id="sidebar-item-sort" class="sidebar-item sidebar-main-item dropbtn">
+                            Sort
+                            <div id="sortDropdown" class="dropdown-content">
+                                <span class="sidebar-item closeMenu" id="sort-fname">First Name</span>
+                                <span class="sidebar-item closeMenu" id="sort-lname">Last Name</span>
+                                <span class="sidebar-item closeMenu" id="sort-id">Employee ID</span>
+                                <span class="sidebar-item closeMenu" id="sort-job">Job Title</span>
+                                <span class="sidebar-item closeMenu" id="sort-department">Department</span>
+                                <span class="sidebar-item closeMenu" id="sort-location">Location</span>
                             </div>
-                            <span href="#" onclick="filterLocationDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-location">Location</span>
-                            <div id="filterLocationDropdown" class="dropdown-content dropdown-content-filter">
+                        </li>
+                        <li onclick="filterDropdown()" id="sidebar-item-filter" class="sidebar-item sidebar-main-item dropbtn">
+                            Filter
+                            <div id="filterDropdown" class="dropdown-content">
+                                <span href="#" onclick="filterDepartmentDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-department">Department</span>
+                                <div id="filterDepartmentDropdown" class="dropdown-content dropdown-content-filter">
+                                    
+                                </div>
+                                <span href="#" onclick="filterLocationDropdown()" class="dropbtn sidebar-filter-item sidebar-item" id="filter-location">Location</span>
+                                <div id="filterLocationDropdown" class="dropdown-content dropdown-content-filter">
 
+                                </div>
+                                <button id="filter-apply" class="sidebar-button closeMenu">APPLY</button>
+                                <button id="filter-reset" class="sidebar-button closeMenu">RESET</button>
                             </div>
-                            <button id="filter-apply" class="sidebar-button closeMenu">APPLY</button>
-                            <button id="filter-reset" class="sidebar-button closeMenu">RESET</button>
-                        </div>
-                    </li>
-                    <li onclick="addDropdown()" id="sidebar-item-add" class="sidebar-item sidebar-main-item dropbtn">
-                        Create
-                        <div id="addDropdown" class="dropdown-content">
-                            <span class="sidebar-item" id="create-employee-btn" data-toggle="modal" data-target="#createEmployeeModal">Employee</span>
-                            <span class="sidebar-item" id="create-department-btn" data-toggle="modal" data-target="#createDepartmentModal">Department</span>
-                            <span class="sidebar-item" data-toggle="modal" data-target="#createLocationModal">Location</span>
-                        </div>
-                    </li>
-                    <li onclick="editDropdown()" id="sidebar-item-edit" class="sidebar-item sidebar-main-item dropbtn">
-                        Edit
-                        <div id="editDropdown" class="dropdown-content">
-                            <span class="sidebar-item" id="edit-employee-btn" data-toggle="modal" data-target="#selectionEmployeeModal">Employee</span>
-                            <span class="sidebar-item" id="edit-department-btn" data-toggle="modal" data-target="#selectionDepartmentModal">Department</span>
-                            <span class="sidebar-item" id="edit-location-btn" data-toggle="modal" data-target="#selectionLocationModal">Location</span>
-                        </div>
-                    </li>
-                    <li onclick="deleteDropdown()" id="sidebar-item-delete" class="sidebar-item sidebar-main-item dropbtn">
-                        Delete
-                        <div id="deleteDropdown" class="dropdown-content">
-                            <span class="sidebar-item" id="delete-employee-btn" data-toggle="modal" data-target="#selectionEmployeeModal">Employee</span>
-                            <span class="sidebar-item" id="delete-department-btn" data-toggle="modal" data-target="#selectionDepartmentModal">Department</span>
-                            <span class="sidebar-item" id="delete-location-btn" data-toggle="modal" data-target="#selectionLocationModal">Location</span>
-                        </div>
-                    </li>
-                </ul>
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>View</span>
-                </h6>
-                <ul class="nav flex-column">
-                    <li class="sidebar-item sidebar-main-item closeMenu" id="table-view">
-                        Table
-                    </li>
-                    <li class="sidebar-item sidebar-main-item closeMenu" id="grid-view">
-                        Grid
-                    </li>
-                </ul>   
-            </div>
+                        </li>
+                        <li onclick="addDropdown()" id="sidebar-item-add" class="sidebar-item sidebar-main-item dropbtn">
+                            Create
+                            <div id="addDropdown" class="dropdown-content">
+                                <span class="sidebar-item" id="create-employee-btn" data-toggle="modal" data-target="#createEmployeeModal">Employee</span>
+                                <span class="sidebar-item" id="create-department-btn" data-toggle="modal" data-target="#createDepartmentModal">Department</span>
+                                <span class="sidebar-item" data-toggle="modal" data-target="#createLocationModal">Location</span>
+                            </div>
+                        </li>
+                        <li onclick="editDropdown()" id="sidebar-item-edit" class="sidebar-item sidebar-main-item dropbtn">
+                            Edit
+                            <div id="editDropdown" class="dropdown-content">
+                                <span class="sidebar-item" id="edit-employee-btn" data-toggle="modal" data-target="#selectionEmployeeModal">Employee</span>
+                                <span class="sidebar-item" id="edit-department-btn" data-toggle="modal" data-target="#selectionDepartmentModal">Department</span>
+                                <span class="sidebar-item" id="edit-location-btn" data-toggle="modal" data-target="#selectionLocationModal">Location</span>
+                            </div>
+                        </li>
+                        <li onclick="deleteDropdown()" id="sidebar-item-delete" class="sidebar-item sidebar-main-item dropbtn">
+                            Delete
+                            <div id="deleteDropdown" class="dropdown-content">
+                                <span class="sidebar-item" id="delete-employee-btn" data-toggle="modal" data-target="#selectionEmployeeModal">Employee</span>
+                                <span class="sidebar-item" id="delete-department-btn" data-toggle="modal" data-target="#selectionDepartmentModal">Department</span>
+                                <span class="sidebar-item" id="delete-location-btn" data-toggle="modal" data-target="#selectionLocationModal">Location</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>View</span>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="sidebar-item sidebar-main-item closeMenu" id="table-view">
+                            Table
+                        </li>
+                        <li class="sidebar-item sidebar-main-item closeMenu" id="grid-view">
+                            Grid
+                        </li>
+                    </ul>   
+                </div>
             </nav>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="gallery">
@@ -219,7 +224,7 @@
                             <div class="modal-body modal-body-table">
                                 <div>
                                     <div id="div-search">
-                                        <input type="text" id="selectionSearch" onkeyup="searchTable()" placeholder="Search for names.."> 
+                                        <input type="text" id="selectionSearch" onkeyup="searchTable()" placeholder="Search employees"> 
                                     </div>
                                     <table id="employee-select-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
                                     </table>
