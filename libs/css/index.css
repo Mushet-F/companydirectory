@@ -67,7 +67,6 @@ body {
   left: 0;
   z-index: 100;
   padding: 48px 0 0; 
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
   background-color: #D1E8E2;
 }
 
@@ -208,6 +207,13 @@ th {
 .tableFixHead { 
   overflow-y: auto; 
   height: 90vh; 
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 767.5px) {
+  .tableFixHead {
+    height: 82vh; 
+  }
 }
 
 .tableFixHead thead th { 
