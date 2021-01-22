@@ -54,8 +54,6 @@ body {
   }
 }
 
-
-
 .navbar .navbar-toggler {
   top: .25rem;
   right: 1rem;
@@ -114,14 +112,6 @@ body {
   border: none;
   background-color: #D1E8E2;
 }
-
-/* .sidebar-item:hover {
-  background-color: #FFCB9A;
-}
-
-.dropbtn:hover {
-  background-color: #FFCB9A;
-} */
 
 .dropdown-content {
   display: none;

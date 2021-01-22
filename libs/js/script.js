@@ -25,7 +25,7 @@ function createTable(result) {
         </thead>
         <tbody id="tbody-employees">`;
 
-    $("#all-employees").append(table);
+    $("#main-table").append(table);
 
     for (i = 0; i < result.data.length ; i++) {
 
@@ -47,11 +47,11 @@ function createTable(result) {
         <td class="td-location" data-toggle="modal" data-target="#locationModal" value="${locationID}">${location} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
-        $("#all-employees").append(tbody);
+        $("#main-table").append(tbody);
         
     }
 
-    $("#all-employees").append('</tbody>');
+    $("#main-table").append('</tbody>');
 
     currentView = 'table';
 }
@@ -135,8 +135,8 @@ function createCards(result) {
 function clearCurrentResults() {
 
     if(currentView === 'table') {
-        $("#all-employees thead").remove();
-        $("#all-employees tbody").remove();
+        $("#main-table thead").remove();
+        $("#main-table tbody").remove();
     } else if(currentView === 'grid') {
         $(".employee-card").remove();
     }
@@ -198,7 +198,7 @@ function searchMain() {
 
     let input = document.getElementById("mainSearch");
     let filter = input.value.toUpperCase();
-    let table = document.getElementById("all-employees");
+    let table = document.getElementById("main-table");
     let tr = table.getElementsByTagName("tr");
 
     // Search main table
@@ -649,7 +649,7 @@ function displayDepartmentDetailsModal(department) {
 
 }
 
-let empytDepartmentDetailsResult;
+let emptyDepartmentDetailsResult;
 
 // If deparment is empty (no employees), get details
 const getEmptyDepartmentDetails = async id => {
@@ -779,8 +779,8 @@ function updateDepartmentDetails() {
                 
                 departmentDetailsResult = await getDepartmentDetails(id);
                 if (departmentDetailsResult.length === 0) {
-                    empytDepartmentDetailsResult = await getEmptyDepartmentDetails(id);
-                    departmentDetailsResult = empytDepartmentDetailsResult;
+                    emptyDepartmentDetailsResult = await getEmptyDepartmentDetails(id);
+                    departmentDetailsResult = emptyDepartmentDetailsResult;
                     displayEmptyDepartment(departmentDetailsResult);
                 } else {
                     displayDepartmentDetailsModal(departmentDetailsResult);
@@ -834,7 +834,7 @@ function updateDepartmentDetails() {
 // Delete selected department 
 function deleteDepartmentByID() {
 
-    const id = empytDepartmentDetailsResult[0]['id'];
+    const id = emptyDepartmentDetailsResult[0]['id'];
 
     $.ajax({
         url: "libs/php/deleteDepartmentByID.php",
@@ -1196,28 +1196,6 @@ const getLocationName = async id => {
     });
 }
 
-// Get location id from name
-const getLocationId = async name => {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: "libs/php/getLocationId.php",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                name: name
-            },
-            success: function(result) {
-
-                resolve(result['data'][0]['id']);
-
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                reject(errorThrown);
-            }
-        }); 
-    });
-}
-
 // Delete
 
 let emptyLocationId;
@@ -1484,7 +1462,7 @@ $(document).on("click", "#department-delete-form", function() {
         $('#delete-department-able').show();
         $('#delete-department-unable').hide();
         $('#department-delete-name').show();
-        $('#department-delete-name').html(empytDepartmentDetailsResult[0]['department']);
+        $('#department-delete-name').html(emptyDepartmentDetailsResult[0]['department']);
     }
     
 });
@@ -1522,8 +1500,8 @@ $(document).on("click", ".location-departments", async function() {
     departmentDetailsResult = await getDepartmentDetails(departmentID);
 
     if (departmentDetailsResult.length === 0) {
-        empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
-        departmentDetailsResult = empytDepartmentDetailsResult;
+        emptyDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+        departmentDetailsResult = emptyDepartmentDetailsResult;
         displayEmptyDepartment(departmentDetailsResult);
     } else {
         displayDepartmentDetailsModal(departmentDetailsResult);
@@ -1569,8 +1547,8 @@ $(document).on("click", "#locationCloseBtn", async function() {
                 departmentDetailsResult = nextModal['details'];
                 if(departmentDetailsResult[0]['empty'] === 'yes') {
                     let departmentID = departmentDetailsResult[0]['id'];
-                    empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
-                    departmentDetailsResult = empytDepartmentDetailsResult;
+                    emptyDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+                    departmentDetailsResult = emptyDepartmentDetailsResult;
                     displayEmptyDepartment(departmentDetailsResult);
                 } else {
                     displayDepartmentDetailsModal(departmentDetailsResult);
@@ -2163,8 +2141,8 @@ $(".table").on("click", "td", async function() {
             departmentID = $(this).attr('value');
             departmentDetailsResult = await getDepartmentDetails(departmentID);
             if (departmentDetailsResult.length === 0) {
-                empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
-                departmentDetailsResult = empytDepartmentDetailsResult;
+                emptyDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+                departmentDetailsResult = emptyDepartmentDetailsResult;
             }
             $('#edit-department-close-btn').attr('data-toggle', 'modal');
             $('#edit-department-close-btn').attr('data-target', '#selectionDepartmentModal');
@@ -2195,7 +2173,7 @@ $(".table").on("click", "td", async function() {
         case 'td-name name-column-modal td-delete-department':
             departmentID = $(this).attr('value');
             departmentDetailsResult = await getDepartmentDetails(departmentID);  
-            empytDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+            emptyDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
 
             $('#delete-department-close-btn').attr('data-target', '#selectionDepartmentModal');
 
@@ -2209,7 +2187,7 @@ $(".table").on("click", "td", async function() {
                 $('#delete-department-able').show();
                 $('#delete-department-unable').hide();
                 $('#department-delete-name').show();
-                $('#department-delete-name').html(empytDepartmentDetailsResult[0]['department']);
+                $('#department-delete-name').html(emptyDepartmentDetailsResult[0]['department']);
             }
             break;
         case 'td-name name-column-modal td-delete-location':
