@@ -57,8 +57,9 @@ function createTable(result) {
 }
 
 // Create table to select and then edit or delete an employee
-function createSelectEmployeeTable(result, action) {
+function createSelectTable(result, action) {
 
+    const selection = action['selection'];
     const execution = action['execution'];
     const target = action['target'];
  
@@ -71,94 +72,30 @@ function createSelectEmployeeTable(result, action) {
         </thead>
         <tbody>`;
 
-    $("#employee-select-table").append(table);
+    $(`#${selection}-select-table`).append(table);
 
-    for (i = 0; i < result.data.length ; i++) {
+    for (i = 0; i < result.length ; i++) {
 
-        const id = result.data[i]['id'];
-        const name = result.data[i]['firstName'] + " " + result.data[i]['lastName'];
+        const id = result[i]['id'];
+        let name;
+        if (selection === 'employee') {
+            name = result[i]['firstName'] + " " + result[i]['lastName'];
+        } else if (selection === 'department' || selection === 'location') {
+            name = result[i]['name'];
+        }
+        
 
         let tbody = `<tr>
         <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td class="td-name name-column-modal td-${execution}-employee" data-dismiss="modal" data-toggle="modal" data-target="${target}" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
+        <td class="td-name name-column-modal td-${execution}-${selection}" data-dismiss="modal" data-toggle="modal" data-target="${target}" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
-        $("#employee-select-table").append(tbody);
+        $(`#${selection}-select-table`).append(tbody);
         
     }
 
-    $("#employee-select-table").append('</tbody>');
+    $(`#${selection}-select-table`).append('</tbody>');
     
-
-}
-
-// Create table to select and then edit or delete a deparment
-function createSelectDepartmentTable(result, action) {
-
-    const execution = action['execution'];
-    const target = action['target'];
-
-    let table = `  
-        <thead>
-            <tr>
-                <th class="id-column-modal">ID</th>
-                <th class="name-column-modal">Department</th>
-            </tr>
-        </thead>
-        <tbody>`;
-
-    $("#department-select-table").append(table);
-
-    for (i = 0; i < result.length ; i++) {
-
-        const id = result[i]['id'];
-        const name = result[i]['name'];
-
-        let tbody = `<tr>
-        <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td class="td-name name-column-modal td-${execution}-department" data-dismiss="modal" data-toggle="modal" data-target="${target}" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
-        </tr>`;
-
-        $("#department-select-table").append(tbody);
-        
-    }
-
-    $("#department-select-table").append('</tbody>');
-
-}
-
-// Create table to select and then edit or delete a location
-function createSelectLocationTable(result, action) {
-
-    const execution = action['execution'];
-    const target = action['target'];
-
-    let table = `  
-        <thead>
-            <tr>
-                <th class="id-column-modal">ID</th>
-                <th class="name-column-modal">Location</th>
-            </tr>
-        </thead>
-        <tbody>`;
-
-    $("#location-select-table").append(table);
-
-    for (i = 0; i < result.length ; i++) {
-
-        const id = result[i]['id'];
-        const name = result[i]['name'];
-
-        let tbody = `<tr>
-        <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
-        <td class="td-name name-column-modal td-${execution}-location" data-dismiss="modal" data-toggle="modal" data-target="${target}" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
-        </tr>`;
-
-        $("#location-select-table").append(tbody);
-        
-    }
-
-    $("#location-select-table").append('</tbody>');
 
 }
 
@@ -205,20 +142,6 @@ function clearCurrentResults() {
     }
 
 }
-
-// **************************************************************************************** //
-
-// ********************** Tracker array *************************************************** //
-
-// Array tracker for navigating through modals
-let trackingModals = [];
-
-// Click event for closing modal top corner "X" button for quick escape
-$(document).on("click", ".close", function() {
-
-    trackingModals = [];
-    
-});
 
 // **************************************************************************************** //
 
@@ -272,7 +195,7 @@ $(".table").on("click", "td", async function() {
 // ********************** Search employees in tables or cards ***************************** //
 
 function searchMain() {
-    // Declare variables
+
     let input = document.getElementById("mainSearch");
     let filter = input.value.toUpperCase();
     let table = document.getElementById("all-employees");
@@ -304,7 +227,21 @@ function searchMain() {
 
 // **************************************************************************************** //
 
-// ************ Retrieving and displaying data for Employee Modals ************************ //
+// ********************** Tracker array *************************************************** //
+
+// Array tracker for navigating through modals
+let trackingModals = [];
+
+// Click event for closing modal top corner "X" button for quick escape
+$(document).on("click", ".close", function() {
+
+    trackingModals = [];
+    
+});
+
+// **************************************************************************************** //
+
+// ******************* CRUD functions for Employee within Modals ************************** //
 
 let employeeDetailsResult;
 
@@ -579,7 +516,7 @@ function deleteEmployeeByID() {
 
 // **************************************************************************************** //
 
-// ************ Retrieving and displaying data for Department Modals ********************** //
+// ******************* CRUD functions for Department within Modals ************************ //
 
 let departmentDetailsResult;
 
@@ -771,7 +708,7 @@ const getAllDepartments = async () => {
     });
 }
 
-// Creating dropdown list all departments employee edit modal or filter department
+// Creating dropdown to list all departments in employee edit modal or filter department in side menu
 const createDepartmentsDropdownList = (departments, listFor) => {
 
     let departmentDropdownHtml = '';
@@ -930,7 +867,7 @@ function deleteDepartmentByID() {
 
 // **************************************************************************************** //
 
-// ************ Retrieving and displaying data for Location Modals ********************** //
+// ******************* CRUD functions for Location within Modals ************************** //
 
 let locationDetailsResult;
 // Create
@@ -1109,7 +1046,7 @@ const getAllLocations = async () => {
     });
 }
 
-// Displaying all locations in a dropdown list for the edit modal
+// Creating dropdown to list all locations in department edit modal or filter location in side menu
 const createLocationsDropdownList = (locations, listFor) => {
 
     let locationDropdownHtml = '';
@@ -1261,7 +1198,6 @@ const getLocationName = async id => {
 
 // Get location id from name
 const getLocationId = async name => {
-
     return new Promise((resolve, reject) => {
         $.ajax({
             url: "libs/php/getLocationId.php",
@@ -1324,7 +1260,7 @@ function deleteLocationByID() {
 // ********************** Click events for employee modal ********************************* //
 
 // Selecting an department in employee modal
-$(document).on("click", "#modal-employee-department", async function(e) {
+$(document).on("click", "#modal-employee-department", async function() {
 
     let departmentID = $(this).attr('value');
     departmentDetailsResult = await getDepartmentDetails(departmentID);
@@ -1347,7 +1283,7 @@ $(document).on("click", "#modal-employee-department", async function(e) {
 });
 
 // Selecting the location in employee modal
-$(document).on("click", "#modal-employee-location", async function(e) {
+$(document).on("click", "#modal-employee-location", async function() {
 
     let locationID = $(this).attr('value');
     locationDetailsResult = await getLocationDetails(locationID);
@@ -1371,7 +1307,7 @@ $(document).on("click", "#modal-employee-location", async function(e) {
 });
 
 // Click employees modal close button and whether to redirect to another modal
-$(document).on("click", "#employeeCloseBtn", async function(e) {
+$(document).on("click", "#employeeCloseBtn", async function() {
 
     if(trackingModals.length > 0) {
         trackingModals.pop();
@@ -1438,7 +1374,7 @@ $(document).on("click", "#employee-delete-btn", function() {
 // ********************** Click events for department modal ******************************* //
 
 // Selecting an employee in department modal
-$(document).on("click", ".department-employee", async function(e) {
+$(document).on("click", ".department-employee", async function() {
 
     let employeeId = $(this).attr('value');
     employeeDetailsResult = await getEmployeeDetails(employeeId);
@@ -1460,7 +1396,7 @@ $(document).on("click", ".department-employee", async function(e) {
 });
 
 // Selecting the location in department modal
-$(document).on("click", "#modal-department-location", async function(e) {
+$(document).on("click", "#modal-department-location", async function() {
 
     let locationID = $(this).attr('value');
     locationDetailsResult = await getLocationDetails(locationID);
@@ -1484,7 +1420,7 @@ $(document).on("click", "#modal-department-location", async function(e) {
 });
 
 // Click department modal close button and whether to redirect to another modal
-$(document).on("click", "#departmentCloseBtn", async function(e) {
+$(document).on("click", "#departmentCloseBtn", async function() {
 
     if(trackingModals.length > 0) {
         trackingModals.pop();
@@ -1522,7 +1458,7 @@ $(document).on("click", "#departmentCloseBtn", async function(e) {
 });
 
 // Clicking department edit button 
-$(document).on("click", "#department-edit-btn", async function(e) {
+$(document).on("click", "#department-edit-btn", async function() {
 
     const locations = await getAllLocations();
     const listFor = 'modal';
@@ -1558,7 +1494,7 @@ $(document).on("click", "#department-delete-form", function() {
 // ********************** Click events for location modal ********************************* //
 
 // Selecting an employee in location modal
-$(document).on("click", ".location-employee", async function(e) {
+$(document).on("click", ".location-employee", async function() {
 
     let employeeId = $(this).attr('value');
     employeeDetailsResult = await getEmployeeDetails(employeeId);
@@ -1609,7 +1545,7 @@ $(document).on("click", ".location-departments", async function() {
 });
 
 // Click location modal close button and whether to redirect to another modal
-$(document).on("click", "#locationCloseBtn", async function(e) {
+$(document).on("click", "#locationCloseBtn", async function() {
 
     if(trackingModals.length > 0) {
         trackingModals.pop();
@@ -1893,7 +1829,7 @@ function applyFilterRequest(request) {
 // ********************** Click events for sorting employees ****************************** //
 
 // Sort all employees by first name
-$(document).on("click", "#sort-fname", function(e) { 
+$(document).on("click", "#sort-fname", function() { 
  
     clearCurrentResults();
 
@@ -1910,7 +1846,7 @@ $(document).on("click", "#sort-fname", function(e) {
 });
 
 // Sort all employees by last name
-$(document).on("click", "#sort-lname", function(e) { 
+$(document).on("click", "#sort-lname", function() { 
  
     clearCurrentResults();
 
@@ -1927,7 +1863,7 @@ $(document).on("click", "#sort-lname", function(e) {
 });
 
 // Sort all employees by id
-$(document).on("click", "#sort-id", function(e) { 
+$(document).on("click", "#sort-id", function() { 
  
     clearCurrentResults();
 
@@ -1944,7 +1880,7 @@ $(document).on("click", "#sort-id", function(e) {
 });
 
 // Sort all employees by job title
-$(document).on("click", "#sort-job", function(e) { 
+$(document).on("click", "#sort-job", function() { 
  
     clearCurrentResults();
 
@@ -1961,7 +1897,7 @@ $(document).on("click", "#sort-job", function(e) {
 });
 
 // Sort all employees by department
-$(document).on("click", "#sort-department", function(e) { 
+$(document).on("click", "#sort-department", function() { 
  
     clearCurrentResults();
 
@@ -1978,7 +1914,7 @@ $(document).on("click", "#sort-department", function(e) {
 });
 
 // Sort all employees by location
-$(document).on("click", "#sort-location", function(e) { 
+$(document).on("click", "#sort-location", function() { 
  
     clearCurrentResults();
 
@@ -2041,7 +1977,7 @@ $('#filter-reset').click(function() {
 // ****** Click events for creating, editing and deleting employees from side menu ******** //
 
 // Clicking create button for employees (department dropdown list needs created) in side menu
-$(document).on("click", "#create-employee-btn", async function(e) {
+$(document).on("click", "#create-employee-btn", async function() {
     const departments = await getAllDepartments();
     const listFor = 'modal';
     const departmentDropdownHtml = createDepartmentsDropdownList(departments, listFor);
@@ -2057,11 +1993,12 @@ $(document).on("click", "#edit-employee-btn", function() {
     $("#selectionSearch").val('');
 
     const action = {
+        selection: 'employee',
         execution: 'edit',
         target: '#editEmployeeModal'
     };
 
-    createSelectEmployeeTable(selectionEmployeeTable, action);
+    createSelectTable(selectionEmployeeTable['data'], action);
 
 });
 
@@ -2073,13 +2010,39 @@ $(document).on("click", "#delete-employee-btn", function() {
     $("#selectionSearch").val('');
 
     const action = {
+        selection: 'employee',
         execution: 'delete',
         target: '#deleteEmployeeModal',
     };
 
-    createSelectEmployeeTable(selectionEmployeeTable, action);
+    createSelectTable(selectionEmployeeTable['data'], action);
 
 });
+
+// **************************************************************************************** //
+
+// ********************** Search employees in tables inside select modal ****************** //
+
+function searchTable() {
+
+    let input = document.getElementById("selectionSearch");
+    let filter = input.value.toUpperCase();
+    let table = document.getElementById("employee-select-table");
+    let tr = table.getElementsByTagName("tr");
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+}
 
 // **************************************************************************************** //
 
@@ -2101,13 +2064,14 @@ $(document).on("click", "#edit-department-btn", async function() {
     $("#department-select-table tbody").remove();
 
     const action = {
+        selection: 'department',
         execution: 'edit',
         target: '#editDepartmentModal'
     };
 
     let departments = await getAllDepartments();
 
-    createSelectDepartmentTable(departments, action);
+    createSelectTable(departments, action);
 
 });
 
@@ -2118,13 +2082,14 @@ $(document).on("click", "#delete-department-btn", async function() {
     $("#department-select-table tbody").remove();
 
     const action = {
+        selection: 'department',
         execution: 'delete',
         target: '#deleteDepartmentModal',
     };
 
     let departments = await getAllDepartments();
 
-    createSelectDepartmentTable(departments, action);
+    createSelectTable(departments, action);
 
 });
 
@@ -2139,13 +2104,14 @@ $(document).on("click", "#edit-location-btn", async function() {
     $("#location-select-table tbody").remove();
 
     const action = {
+        selection: 'location',
         execution: 'edit',
         target: '#editLocationModal'
     };
 
     let locations = await getAllLocations();
 
-    createSelectLocationTable(locations, action);
+    createSelectTable(locations, action);
 
 });
 
@@ -2156,13 +2122,14 @@ $(document).on("click", "#delete-location-btn", async function() {
     $("#location-select-table tbody").remove();
 
     const action = {
+        selection: 'location',
         execution: 'delete',
         target: '#deleteLocationModal'
     };
 
     let locations = await getAllLocations();
 
-    createSelectLocationTable(locations, action);
+    createSelectTable(locations, action);
 
 });
 
@@ -2276,7 +2243,7 @@ $(".table").on("click", "td", async function() {
 // ********************** Click events for selecting view ********************************* //
 
 // Table view option is selected
-$(document).on("click", "#table-view", function(e) { 
+$(document).on("click", "#table-view", function() { 
  
     clearCurrentResults(); 
 
@@ -2295,7 +2262,7 @@ $(document).on("click", "#table-view", function(e) {
 });
 
 // Grid view option is selected
-$(document).on("click", "#grid-view", function(e) { 
+$(document).on("click", "#grid-view", function() { 
 
     clearCurrentResults();
 
@@ -2427,7 +2394,7 @@ function filterLocationDropdown() {
     $("#filterDepartmentDropdown").removeClass("show");
 }
  
-$(document).on("click", ".input-drop", function(e) { 
+$(document).on("click", ".input-drop", function() { 
 
     $("#filterDropdown").addClass("show");
     $("#sidebar-item-filter").addClass("active-dropdown");
@@ -2507,30 +2474,6 @@ $(window).resize(function() {
 });
 
 // **************************************************************************************** //
-
-// ********************** Search employees in tables or cards ***************************** //
-
-function searchTable() {
-    // Declare variables
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("selectionSearch");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("employee-select-table");
-    tr = table.getElementsByTagName("tr");
-
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[1];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
-    }
-}
 
 // *********************** Register serviceWorker ***************************************** //
 
