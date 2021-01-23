@@ -2435,6 +2435,26 @@ window.onclick = function(event) {
 
 // ********************** Close sidebar in mobile applications **************************** //
 
+// Find loading window width and set side menu ability to close sidebarMenu
+function initialWindowWidth() {
+
+    const width = window.innerWidth;
+
+    if (width < 768) {
+        $(".closeMenu").attr( "data-toggle", "collapse" );
+        $(".closeMenu").attr( "data-target", "#sidebarMenu" );
+        
+    }
+    else if (width > 768) {
+        $(".closeMenu").removeAttr( "data-toggle", "collapse" );
+        $(".closeMenu").removeAttr( "data-target", "#sidebarMenu" );
+    }
+
+}
+
+initialWindowWidth();
+
+// Find window width if screen resizes and set side menu ability to close sidebarMenu
 $(window).resize(function() {
 
     const width = window.innerWidth;
