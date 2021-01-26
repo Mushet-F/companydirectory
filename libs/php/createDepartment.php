@@ -18,15 +18,6 @@
 
 	}
 
-	if ($_POST['checkbox'] === 'false') {
-
-		$input = 'checkbox';
-		$message = 'Please select checkbox';
-		$error = (object) [$input => $message];
-		$formValidation[] = $error;
-
-	}
-
 	if (!empty($formValidation)) {
 
 		$output['status']['code'] = "400";

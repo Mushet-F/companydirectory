@@ -289,7 +289,7 @@ th {
 }
 
 .fa-expand-alt {
-  color: #2d30ff;
+  color: #ff2d2d;
 }
 
 @media (max-width: 1112.5px) {
@@ -357,12 +357,8 @@ th {
 }
 
 
-.id-column-modal {
-  width: 20vh;
-}
-
 .name-column-modal {
-  width: 70vh;
+  width: 100rem;
 }
 
 /* Cards */

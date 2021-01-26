@@ -15,7 +15,6 @@ function createTable(result) {
     let table = `  
         <thead>
             <tr>
-                <th id="id-column">ID</th>
                 <th id="name-column">Name</th>
                 <th id="job-column">Job Title</th>
                 <th id="email-column">Email</th>
@@ -39,7 +38,6 @@ function createTable(result) {
         const locationID = result.data[i]['locationID'];
 
         let tbody = `<tr>
-        <td class="td-id">${id} <i class="fas fa-grip-lines-vertical"></i></td>
         <td class="td-name" data-toggle="modal" data-target="#employeeModal" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
         <td class="td-job">${job}</td>
         <td class="td-email">${email}</td>
@@ -66,7 +64,6 @@ function createSelectTable(result, action) {
     let table = `  
         <thead>
             <tr>
-                <th class="id-column-modal">ID</th>
                 <th class="name-column-modal">Name</th>
             </tr>
         </thead>
@@ -86,7 +83,6 @@ function createSelectTable(result, action) {
         
 
         let tbody = `<tr>
-        <td class="td-id id-column-modal">${id} <i class="fas fa-grip-lines-vertical"></i></td>
         <td class="td-name name-column-modal td-${execution}-${selection}" data-dismiss="modal" data-toggle="modal" data-target="${target}" value="${id}">${name} <i class="fas fa-expand-alt"></i></td>
         </tr>`;
 
@@ -203,7 +199,7 @@ function searchMain() {
 
     // Search main table
     for (let i = 0; i < tr.length; i++) {
-        let td = tr[i].getElementsByTagName("td")[1];
+        let td = tr[i].getElementsByTagName("td")[0];
         if (td) {
             let txtValue = td.textContent || td.innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -254,7 +250,6 @@ function createEmployee() {
     const jobTitle = $('#employee-create-jobTitle').val();
     const email = $('#employee-create-email').val();
     const departmentID = $('#employee-create-department option:selected').val();
-    const checkbox = $('#employee-create-checkbox').is(':checked');
 
     $.ajax({
         url: "libs/php/createEmployee.php",
@@ -265,8 +260,7 @@ function createEmployee() {
             lastName: lastName,
             jobTitle: jobTitle,
             email: email,
-            departmentID: departmentID,
-            checkbox: checkbox
+            departmentID: departmentID
         },
         success: async function(result) {
 
@@ -353,7 +347,6 @@ function displayEmployeeDetailsModal(employee) {
 
     const name = employee['firstName'] + ' ' + employee['lastName'];
 
-    $('#modal-employee-id').html(employee['id']);
     $('#modal-employee-name').html(name);
     $('#modal-employee-job').html(employee['jobTitle']);
     $('#modal-employee-email').html(employee['email']);
@@ -526,7 +519,6 @@ function createDepartment() {
 
     const name = $('#department-create-name').val();
     const locationID = $('#department-create-location').val();
-    const checkbox = $('#department-create-checkbox').is(':checked');
 
     $.ajax({
         url: "libs/php/createDepartment.php",
@@ -534,8 +526,7 @@ function createDepartment() {
         dataType: 'json',
         data: {
             name: name,
-            locationID: locationID,
-            checkbox: checkbox
+            locationID: locationID
         },
         success: async function(result) {
  
@@ -610,7 +601,6 @@ const getDepartmentDetails = async id => {
 // Displaying the data for department details modal
 function displayDepartmentDetailsModal(department) {
 
-    $('#modal-department-id').html(department[0]['id']);
     $('#modal-department-name').html(department[0]['department']);
     $('#modal-department-location').html(department[0]['location']);
     $('#modal-department-number-employees').html(department.length);
@@ -678,7 +668,6 @@ const getEmptyDepartmentDetails = async id => {
 // Displaying the data for an empty department
 function displayEmptyDepartment(department) {
 
-    $('#modal-department-id').html(department[0]['id']);
     $('#modal-department-name').html(department[0]['department']);
     $('#modal-department-location').html(department[0]['location']);
     $('#modal-department-number-employees').html('0');
@@ -875,15 +864,13 @@ let locationDetailsResult;
 function createLocation() {
 
     const name = $('#location-create-name').val();
-    const checkbox = $('#location-create-checkbox').is(':checked');
 
     $.ajax({
         url: "libs/php/createLocation.php",
         type: 'POST',
         dataType: 'json',
         data: {
-            name: name,
-            checkbox: checkbox
+            name: name
         },
         success: async function(result) {
 
@@ -959,7 +946,6 @@ const getLocationDetails = async id => {
 // Displaying the data for location details modal
 function displayLocationDetailsModal(location) {
 
-    $('#modal-location-id').html(location['data2'][0]['locationID']);
     $('#modal-location-name').html(location['data2'][0]['location']);
 
     $('#edit-location-close-btn').attr('data-toggle', 'modal');
@@ -1017,7 +1003,7 @@ function displayLocationDetailsModal(location) {
 function displayEmptyLocation(id, name) {
 
     emptyLocationId = id;
-    $('#modal-location-id').html(id);
+
     $('#modal-location-name').html(name);
 
     $('#modal-location-departments').html('');
@@ -2010,7 +1996,7 @@ function searchTable() {
 
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[1];
+      td = tr[i].getElementsByTagName("td")[0];
       if (td) {
         txtValue = td.textContent || td.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {

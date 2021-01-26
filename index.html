@@ -137,8 +137,6 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p class="labels">Employee ID</p>
-                                <p class="labels-values"><span id="modal-employee-id"></span></p>
                                 <p class="labels">Name</p>
                                 <p class="labels-values"><span class="employee-highlight" id="modal-employee-name"></span></p>
                                 <p class="labels">Job Title</p>
@@ -226,7 +224,7 @@
                                     <div id="div-search">
                                         <input type="text" id="selectionSearch" onkeyup="searchTable()" placeholder="Search employees"> 
                                     </div>
-                                    <table id="employee-select-table" class="table table-hover table-md table-striped table-bordered" style="width:100%">
+                                    <table id="employee-select-table" class="table table-hover table-md table-striped table-bordered">
                                     </table>
                                 </div>
                             </div>
@@ -274,11 +272,6 @@
 
                                         </select>
                                     </div>
-                                    <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="employee-create-checkbox">
-                                        <label class="form-check-label" for="employee-create-checkbox">Confirm changes</label>
-                                        <p><span class="form-error-message" id="employee-create-error-checkbox"></span></p>
-                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -321,8 +314,6 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p class="labels">Department ID</p>
-                                <p class="labels-values"><span id="modal-department-id"></span></p>
                                 <p class="labels">Department</p>
                                 <p class="labels-values"><span class="department-highlight" id="modal-department-name"></span></p>
                                 <p class="labels">Location</p>
@@ -425,11 +416,6 @@
 
                                         </select>
                                     </div>
-                                    <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="department-create-checkbox">
-                                        <label class="form-check-label" for="department-create-checkbox">Confirm changes</label>
-                                        <p><span class="form-error-message" id="department-create-error-checkbox"></span></p>
-                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -452,7 +438,7 @@
                             </div>
                             <div class="modal-body">
                                 <p class="delete-info" id="delete-department-able">You sure you want to delete department, <span id="department-delete-name"></span>?</p>
-                                <p class="delete-info" id="delete-department-unable">You are not allowed to delete departments that still has employees.</p>
+                                <p class="delete-info" id="delete-department-unable">You are not allowed to delete departments that still contains employees.</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" id="delete-department-close-btn">Close</button>
@@ -473,8 +459,6 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p class="labels">Location ID</p>
-                                <p class="labels-values"><span id="modal-location-id"></span></p>
                                 <p class="labels">Location</p>
                                 <p class="labels-values"><span class="location-highlight" id="modal-location-name"></span></p>
                                 <p class="labels">Departments</p>
@@ -565,11 +549,6 @@
                                         <input type="text" class="form-control" id="location-create-name">
                                         <span class="form-error-message" id="location-create-error-name"></span>
                                     </div>
-                                    <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="location-create-checkbox">
-                                        <label class="form-check-label" for="location-create-checkbox">Confirm changes</label>
-                                        <p><span class="form-error-message" id="location-create-error-checkbox"></span></p>
-                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -592,7 +571,7 @@
                             </div>
                             <div class="modal-body">
                                 <p class="delete-info" id="delete-location-able">You sure you want to delete location, <span id="location-delete-name"></span>?</p>
-                                <p class="delete-info" id="delete-location-unable">You are not allowed to delete locations that still has employees.</p>
+                                <p class="delete-info" id="delete-location-unable">You are not allowed to delete locations that still contains employees.</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"  data-toggle="modal" id="delete-location-close-btn">Close</button>
