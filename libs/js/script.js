@@ -746,10 +746,10 @@ const getDepartmentNameById = async (id) => {
 }
 
 // Check if department contains any employees
-const getDeparmentEmployeeCount = async (id) => {
+const getDepartmentEmployeeCount = async (id) => {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: "libs/php/getDeparmentEmployeeCount.php",
+            url: "libs/php/getDepartmentEmployeeCount.php",
             type: 'POST',
             dataType: 'json',
             data: {
@@ -1535,7 +1535,7 @@ $(document).on("click", "#department-delete-form", async function() {
     const name = $("#modal-department-name").text();
     const request = `name =  \'${name}\'`;
     const departmentID = await getDepartmentIdByName(request);
-    const employeeCount = await getDeparmentEmployeeCount(departmentID[0]['id']);
+    const employeeCount = await getDepartmentEmployeeCount(departmentID[0]['id']);
 
     if (employeeCount[0]['Count'] > 0) {
         $('#delete-department-final').hide();
@@ -2248,7 +2248,7 @@ $(".table").on("click", "td", async function() {
         case 'td-name name-column-modal td-delete-department':
             departmentID = $(this).attr('value');
             const departmentName = await getDepartmentNameById(departmentID);
-            const departmentEmployeeCount = await getDeparmentEmployeeCount(departmentID);
+            const departmentEmployeeCount = await getDepartmentEmployeeCount(departmentID);
 
             if (departmentEmployeeCount[0]['Count'] > 0) {
                 $('#delete-department-final').hide();
