@@ -697,6 +697,78 @@ const getAllDepartments = async () => {
     });
 }
 
+// Get department name by deparment id
+const getDepartmentIdByName = async (name) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getDepartmentIdByName.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                name: name
+            },
+            success: function(result) {
+
+                const departmentId = result['data'];
+
+                resolve(departmentId);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Get department id by deparment name
+const getDepartmentNameById = async (id) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getDepartmentNameById.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id
+            },
+            success: function(result) {
+
+                const departmentName = result['data'][0]['name'];
+
+                resolve(departmentName);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Check if department contains any employees
+const getDeparmentEmployeeCount = async (id) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getDeparmentEmployeeCount.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id
+            },
+            success: function(result) {
+                
+                const employeeCount = result['data'];
+
+                resolve(employeeCount);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
 // Creating dropdown to list all departments in employee edit modal or filter department in side menu
 const createDepartmentsDropdownList = (departments, listFor) => {
 
@@ -1032,6 +1104,52 @@ const getAllLocations = async () => {
     });
 }
 
+// Get location name from id
+const getLocationName = async id => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getLocationName.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id,
+            },
+            success: function(result) {
+
+                resolve(result['data'][0]['location']);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
+// Check if location contains any employees
+const getLocationEmployeeCount = async (id) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "libs/php/getLocationEmployeeCount.php",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id
+            },
+            success: function(result) {
+                
+                const employeeCount = result['data'];
+
+                resolve(employeeCount);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                reject(errorThrown);
+            }
+        }); 
+    });
+}
+
 // Creating dropdown to list all locations in department edit modal or filter location in side menu
 const createLocationsDropdownList = (locations, listFor) => {
 
@@ -1158,28 +1276,6 @@ async function updateLocationDetails() {
             reject(errorThrown);
         }
     }); 
-}
-
-// Get location name from id
-const getLocationName = async id => {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: "libs/php/getLocationName.php",
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                id: id,
-            },
-            success: function(result) {
-
-                resolve(result['data'][0]['location']);
-
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                reject(errorThrown);
-            }
-        }); 
-    });
 }
 
 // Delete
@@ -1434,11 +1530,14 @@ $(document).on("click", "#department-edit-btn", async function() {
 });
 
 // Clicking department delete button
-$(document).on("click", "#department-delete-form", function() {
-    
-    $('#delete-department-close-btn').attr('data-target', '#departmentModal');
+$(document).on("click", "#department-delete-form", async function() {
 
-    if (departmentDetailsResult.length > 0) {
+    const name = $("#modal-department-name").text();
+    const request = `name =  \'${name}\'`;
+    const departmentID = await getDepartmentIdByName(request);
+    const employeeCount = await getDeparmentEmployeeCount(departmentID[0]['id']);
+
+    if (employeeCount[0]['Count'] > 0) {
         $('#delete-department-final').hide();
         $('#delete-department-able').hide();
         $('#delete-department-unable').show();
@@ -1448,8 +1547,11 @@ $(document).on("click", "#department-delete-form", function() {
         $('#delete-department-able').show();
         $('#delete-department-unable').hide();
         $('#department-delete-name').show();
-        $('#department-delete-name').html(emptyDepartmentDetailsResult[0]['department']);
+        $('#department-delete-name').html(name);
     }
+    
+    $('#delete-department-close-btn').attr('data-target', '#departmentModal');
+
     
 });
 
@@ -1550,19 +1652,6 @@ $(document).on("click", "#locationCloseBtn", async function() {
             }
         }
     } 
-
-});
-
-// Clicking locaiton delete button
-$(document).on("click", "#location-delete-form", function() {
-
-    $('#location-delete-name').html(locationDetailsResult['data2'][0]['location']);
-    $('#delete-location-close-btn').attr('data-target', '#locationModal');
-
-    $('#delete-location-final').hide();
-    $('#delete-location-able').hide();
-    $('#delete-location-unable').show();
-    $('#location-delete-name').hide();
 
 });
 
@@ -2107,7 +2196,7 @@ $(".table").on("click", "td", async function() {
     let typeOfCellSelect = $(this).attr('class');
     let employeeID;
     let departmentID;
-    let name;
+    let locationName;
     const listFor = 'modal';
 
     switch (typeOfCellSelect) {
@@ -2151,19 +2240,17 @@ $(".table").on("click", "td", async function() {
         case 'td-name name-column-modal td-delete-employee':
             employeeID = $(this).attr('value');
             employeeDetailsResult = await getEmployeeDetails(employeeID);
-            name = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
-            $('#employee-delete-name').html(name);
+            const employeeName = employeeDetailsResult['firstName'] + ' ' + employeeDetailsResult['lastName'];
+            $('#employee-delete-name').html(employeeName);
             $('#delete-close-btn').attr('data-toggle', 'modal');
             $('#delete-close-btn').attr('data-target', '#selectionEmployeeModal');
             break;
         case 'td-name name-column-modal td-delete-department':
             departmentID = $(this).attr('value');
-            departmentDetailsResult = await getDepartmentDetails(departmentID);  
-            emptyDepartmentDetailsResult = await getEmptyDepartmentDetails(departmentID);
+            const departmentName = await getDepartmentNameById(departmentID);
+            const departmentEmployeeCount = await getDeparmentEmployeeCount(departmentID);
 
-            $('#delete-department-close-btn').attr('data-target', '#selectionDepartmentModal');
-
-            if (departmentDetailsResult.length > 0) {
+            if (departmentEmployeeCount[0]['Count'] > 0) {
                 $('#delete-department-final').hide();
                 $('#delete-department-able').hide();
                 $('#delete-department-unable').show();
@@ -2173,15 +2260,18 @@ $(".table").on("click", "td", async function() {
                 $('#delete-department-able').show();
                 $('#delete-department-unable').hide();
                 $('#department-delete-name').show();
-                $('#department-delete-name').html(emptyDepartmentDetailsResult[0]['department']);
+                $('#department-delete-name').html(departmentName);
             }
+
+            $('#delete-department-close-btn').attr('data-target', '#selectionDepartmentModal');            
             break;
         case 'td-name name-column-modal td-delete-location':
-            emptyLocationId = $(this).attr('value');
-            locationDetailsResult = await getLocationDetails(emptyLocationId);
-            locationName = await getLocationName(emptyLocationId);
 
-            if (locationDetailsResult['data'].length > 0) {
+            const locationID = $(this).attr('value');
+            const locationName = await getLocationName(locationID);
+            const locationEmployeeCount = await getLocationEmployeeCount(locationID);
+
+            if (locationEmployeeCount[0]['Count'] > 0) {
                 $('#delete-location-final').hide();
                 $('#delete-location-able').hide();
                 $('#delete-location-unable').show();
