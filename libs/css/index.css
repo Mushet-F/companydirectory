@@ -268,11 +268,11 @@ th {
   cursor: pointer;
 }
 
-#id-column {
-  min-width: 65px;
+#name-column {
+  min-width: 190px;
 }
 
-#name-column {
+#job-column {
   min-width: 190px;
 }
 
@@ -292,15 +292,15 @@ th {
   color: #ff2d2d;
 }
 
-@media (max-width: 1112.5px) {
-  .table .td-job, .table #job-column {
+@media (max-width: 1153.5px) {
+  .table .td-email, .table #email-column {
     display: none;
   }
 
 }
 
-@media (max-width: 992.5px) {
-  .table .td-job, .table #job-column {
+@media (max-width: 945.5px) {
+  .table .td-location, .table #location-column {
     display: none;
   }
 
@@ -323,7 +323,7 @@ th {
   }
 }
 
-@media (max-width: 416.5px) {
+@media (max-width: 354.5px) {
   .table .td-job, .table #job-column {
     display: none;
   }
