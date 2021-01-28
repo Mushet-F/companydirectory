@@ -709,7 +709,7 @@ const getDepartmentIdByName = async (name) => {
             },
             success: function(result) {
 
-                const departmentId = result['data'];
+                const departmentId = result['data'][0]['id'];
 
                 resolve(departmentId);
 
@@ -895,7 +895,7 @@ function updateDepartmentDetails() {
 // Delete selected department 
 function deleteDepartmentByID() {
 
-    const id = emptyDepartmentDetailsResult[0]['id'];
+    const id = $('#delete-department-final').attr('value');
 
     $.ajax({
         url: "libs/php/deleteDepartmentByID.php",
@@ -1071,6 +1071,7 @@ function displayLocationDetailsModal(location) {
 
 }
 
+let emptyLocationId;
 // Displaying the data for an empty location
 function displayEmptyLocation(id, name) {
 
@@ -1280,12 +1281,11 @@ async function updateLocationDetails() {
 
 // Delete
 
-let emptyLocationId;
-
 // Delete selected location 
 function deleteLocationByID() {
 
-    const id = emptyLocationId;
+    // const id = emptyLocationId;
+    const id = $('#delete-location-final').attr('value');
 
     $.ajax({
         url: "libs/php/deleteLocationByID.php",
@@ -1535,7 +1535,7 @@ $(document).on("click", "#department-delete-form", async function() {
     const name = $("#modal-department-name").text();
     const request = `name =  \'${name}\'`;
     const departmentID = await getDepartmentIdByName(request);
-    const employeeCount = await getDepartmentEmployeeCount(departmentID[0]['id']);
+    const employeeCount = await getDepartmentEmployeeCount(departmentID);
 
     if (employeeCount[0]['Count'] > 0) {
         $('#delete-department-final').hide();
@@ -1549,7 +1549,8 @@ $(document).on("click", "#department-delete-form", async function() {
         $('#department-delete-name').show();
         $('#department-delete-name').html(name);
     }
-    
+
+    $("#delete-department-final").attr("value", departmentID);
     $('#delete-department-close-btn').attr('data-target', '#departmentModal');
 
     
@@ -2263,12 +2264,14 @@ $(".table").on("click", "td", async function() {
                 $('#department-delete-name').html(departmentName);
             }
 
+            $("#delete-department-final").attr("value", departmentID);
+
             $('#delete-department-close-btn').attr('data-target', '#selectionDepartmentModal');            
             break;
         case 'td-name name-column-modal td-delete-location':
 
             const locationID = $(this).attr('value');
-            const locationName = await getLocationName(locationID);
+            locationName = await getLocationName(locationID);
             const locationEmployeeCount = await getLocationEmployeeCount(locationID);
 
             if (locationEmployeeCount[0]['Count'] > 0) {
@@ -2284,6 +2287,7 @@ $(".table").on("click", "td", async function() {
                 $('#location-delete-name').html(locationName);
             }
 
+            $("#delete-location-final").attr("value", locationID);
             $('#delete-location-close-btn').attr('data-target', '#selectionLocationModal');
             break;
         default:
