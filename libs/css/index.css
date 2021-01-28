@@ -300,7 +300,7 @@ th {
 }
 
 @media (max-width: 945.5px) {
-  .table .td-location, .table #location-column {
+  .table .td-job, .table #job-column {
     display: none;
   }
 
@@ -376,13 +376,13 @@ th {
 
 .team-boxed .employee-card {
   text-align:center;
+  margin-bottom: 30px;
 }
 
 .team-boxed .employee-card .box {
   text-align:center;
-  padding:30px;
+  padding:10px;
   background-color:#ffc691;
-  margin-bottom:30px;
   color: #116466;
   cursor: pointer;
 }

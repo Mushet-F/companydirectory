@@ -109,7 +109,7 @@ function createCards(result) {
         const department = result.data[i]['department'];
         const location = result.data[i]['location'];
 
-        let html = `<div class='col-sm-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id} data-string="${name}"><div class='box'><img class='rounded-circle' src='./img/avatar.png'>
+        let html = `<div class='col-sm-6 col-lg-4 employee-card' data-toggle="modal" data-target="#employeeModal" value=${id} data-string="${name}"><div class='box h-100'><img class='rounded-circle' src='./img/avatar.png'>
         <h3 class="name">${name}</h3>                            
         <p class="title">${job}</p>
         <p class="description">${email}</p>
